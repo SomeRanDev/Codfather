@@ -1,0 +1,20 @@
+-lib gdscript
+
+-cp HaxeCode/godot_bindings
+-cp HaxeCode/src
+
+-D reflaxe_measure
+-D reflaxe_extern_meta
+
+-D gdscript-output=GodotProject/addons/SharkMafia
+
+-D generate_godot_plugin
+-D godot_direct_singletons
+
+-D godot_plugin_name=SharkMafia
+-D godot_plugin_description=The GDScript plugin for Shark Mafia.
+-D godot_plugin_author=Maybee Rezbit
+-D godot_plugin_version=1.0.0
+-D godot_plugin_script_name=plugin
+
+game
