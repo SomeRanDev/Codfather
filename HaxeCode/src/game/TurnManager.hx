@@ -20,7 +20,7 @@ class TurnManager extends Node {
 	}
 
 	function sort_entities(a: TurnSlave, b: TurnSlave): Bool {
-		return a.get_speed() < b.get_speed();
+		return a.get_speed() > b.get_speed();
 	}
 
 	public function add_entity(entity: TurnSlave): Void {

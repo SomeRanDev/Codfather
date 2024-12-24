@@ -31,7 +31,7 @@ class MapSprite extends Sprite2D {
 		setup_image();
 	}
 
-	public function set_player_position(player_position: Vector2i) {
+	public function set_player_position(player_position: Vector3i) {
 		if(player_sprite == null) {
 			player_sprite = new ColorRect();
 			player_sprite.color = Color.RED;
@@ -42,7 +42,7 @@ class MapSprite extends Sprite2D {
 		if(image == null) return;
 
 		var map_size = new Vector2i(level_data.width, level_data.height);
-		player_sprite.position = new Vector2(((map_size / -2) + player_position) * wall_pixel_length);
+		player_sprite.position = new Vector2(((map_size / -2) + player_position.to_vec2i()) * wall_pixel_length);
 
 		var player_index = (player_position.y * level_data.width) + player_position.x;
 		if(handled_tiles[player_index] == 2) return;
@@ -147,6 +147,7 @@ class MapSprite extends Sprite2D {
 	}
 
 	function set_pixel_black_if_empty(x: Int, y: Int) {
+		if(x < 0 || x >= image.get_width() || y < 0 || y >= image.get_height()) return;
 		if(image.get_pixel(x, y).a < 0.1) {
 			image.set_pixel(x, y, Color.BLACK);
 		}

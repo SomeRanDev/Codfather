@@ -21,6 +21,7 @@ class World extends Node3D {
 
 		dynamic_level_data.manual_ready();
 		map.manual_ready();
+		player.manual_ready();
 		
 		setup_entities();
 
@@ -28,14 +29,14 @@ class World extends Node3D {
 	}
 
 	function setup_entities() {
-		player.set_tilemap_position(level_data.player_start_position);
+		player.set_starting_position(level_data.player_start_position.to_vec3i(0));
 		turn_manager.add_entity(player);
 
 		final npc_scene = cast(GD.load("res://Objects/TestNPC.tscn"), PackedScene);
 		for(npc_position in level_data.test_npcs) {
 			var npc: NPC = cast npc_scene.instantiate();
 			npc.setup(dynamic_level_data);
-			npc.set_tilemap_position(npc_position);
+			npc.set_starting_position(npc_position.to_vec3i(Godot.randi_range(0, 1)));
 			turn_manager.add_entity(npc);
 			add_child(npc);
 		}

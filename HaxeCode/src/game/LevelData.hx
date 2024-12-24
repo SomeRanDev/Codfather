@@ -28,7 +28,9 @@ class LevelData extends Node {
 		for(x in 0...width) {
 			for(y in 0...height) {
 				final level_edges_buffer_f: Float = LEVEL_EDGES_BUFFER;
-				final force_wall_amount = if(x < LEVEL_EDGES_BUFFER) {
+				final force_wall_amount = if(x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+					1;
+				} else if(x < LEVEL_EDGES_BUFFER) {
 					1.0 - (x / level_edges_buffer_f);
 				} else if(x > width - LEVEL_EDGES_BUFFER) {
 					(x - (width - LEVEL_EDGES_BUFFER)) / level_edges_buffer_f;

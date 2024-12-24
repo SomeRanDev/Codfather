@@ -1,5 +1,7 @@
 package game;
 
+import game.data.Direction;
+import game.data.Direction.DirectionHelpers;
 import godot.*;
 
 class NPC extends TurnSlave {
@@ -7,43 +9,61 @@ class NPC extends TurnSlave {
 	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$MeshRotator/Mesh");
 
 	var level_data: DynamicLevelData;
-	var tilemap_position: Vector2i;
+	var tilemap_position: Vector3i;
+	var is_hovered: Bool;
 
 	var moved = false;
 
+	var phase = 0;
+
 	public function setup(level_data: DynamicLevelData) {
 		this.level_data = level_data;
+
+		stats.generate_id();
 	}
 
-	public function set_tilemap_position(pos: Vector2i) {
-		var previous = tilemap_position;
-		tilemap_position = pos;
-		level_data.move_entity(previous, tilemap_position);
+	public function set_starting_position(pos: Vector3i): Bool {
+		if(level_data.place_entity(stats.id, pos)) {
+			apply_position(pos);
+			return true;
+		}
+		return false;
+	}
 
-		position = new Vector3(pos.x, 0.5, pos.y);
+	public function set_tilemap_position(pos: Vector3i): Bool {
+		final previous = tilemap_position;
+		if(level_data.move_entity(stats.id, previous, pos)) {
+			apply_position(pos);
+			return true;
+		}
+		return false;
+	}
+
+	function apply_position(pos: Vector3i) {
+		tilemap_position = pos;
+		position = new Vector3(pos.x, 0.5 + (pos.z == 1 ? 1 : 0), pos.y);
 	}
 
 	override function process_turn() {
-		var direction = Godot.randi_range(0, 4);
-		final next = switch(direction) {
-			case 0: new Vector2i(-1, 0);
-			case 1: new Vector2i(1, 0);
-			case 2: new Vector2i(0, -1);
-			case 3: new Vector2i(0, 1);
-			case _: Vector2i.ZERO;
+		final direction: Direction = {
+			switch(Math.round(phase / 2)) {
+				case 0: Right;
+				case 1: Down;
+				case 2: Left;
+				case 3: Up;
+				case _: Up;
+			}
 		}
 
-		mesh_rotator.rotation = switch(direction) {
-			case 2: new Vector3(0, Math.PI * 1.5, 0);
-			case 3: new Vector3(0, Math.PI * 0.5, 0);
-			case 0: new Vector3(0, 0, 0);
-			case 1: new Vector3(0, Math.PI, 0);
-			case _: Vector3.ZERO;
-		}
+		final next_position = tilemap_position + direction.as_vec3i();
+		if(level_data.tile_free(next_position)) {
+			if(set_tilemap_position(next_position)) {
+				moved = true;
+				mesh_rotator.rotation.y = direction.rotation();
 
-		if(level_data.tile_free(tilemap_position + next)) {
-			set_tilemap_position(tilemap_position + next);
-			moved = true;
+				phase++;
+				if(phase >= 8) { phase = 0; }
+			}
 		} else {
 			moved = false;
 		}

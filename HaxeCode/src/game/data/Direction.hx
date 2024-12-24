@@ -1,6 +1,7 @@
 package game.data;
 
 import godot.Vector2i;
+import godot.Vector3i;
 
 @:using(game.data.Direction.DirectionHelpers)
 enum Direction {
@@ -11,6 +12,16 @@ enum Direction {
 }
 
 class DirectionHelpers {
+	public static function random(): Direction {
+		return switch(godot.Godot.randi_range(0, 4)) {
+			case 0: Up;
+			case 1: Down;
+			case 2: Left;
+			case 3: Right;
+			case _: Up;
+		}
+	}
+
 	public static function rotation(self: Direction): Float {
 		return rotation_ratio(self) * Math.PI;
 	}
@@ -30,6 +41,15 @@ class DirectionHelpers {
 			case Down: new Vector2i(0, 1);
 			case Left: new Vector2i(-1, 0);
 			case Right: new Vector2i(1, 0);
+		}
+	}
+
+	public static function as_vec3i(self: Direction): Vector3i {
+		return switch(self) {
+			case Up: new Vector3i(0, -1, 0);
+			case Down: new Vector3i(0, 1, 0);
+			case Left: new Vector3i(-1, 0, 0);
+			case Right: new Vector3i(1, 0, 0);
 		}
 	}
 }
