@@ -1,4 +1,5 @@
 -lib gdscript
+-lib tweenxcore
 
 -cp HaxeCode/godot_bindings
 -cp HaxeCode/src

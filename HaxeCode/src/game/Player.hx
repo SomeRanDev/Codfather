@@ -35,10 +35,12 @@ class Player extends TurnSlave {
 	@:export var level_data: DynamicLevelData;
 	@:export var map: MapSprite;
 	@:export var turn_manager: TurnManager;
+	@:export var post_process: PostProcess;
 
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$PlayerMeshRotator");
 	@:onready var mesh_holder: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder");
 	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMesh");
+	@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
 
 	var tilemap_position: Vector3i;
 
@@ -110,6 +112,8 @@ class Player extends TurnSlave {
 	}
 
 	override function _process(delta: Float): Void {
+		popup_maker.update(delta);
+
 		var movement_pressed = new Vector2i(0, 0);
 		if (Input.is_action_pressed("up"))
 			movement_pressed.y -= 1;
@@ -231,6 +235,7 @@ class Player extends TurnSlave {
 					action_animation = Blocked;
 
 					popup_maker.popup("Blocked!");
+					post_process.play_distort();
 				}
 			}
 			case Jump(is_up): {
@@ -241,6 +246,8 @@ class Player extends TurnSlave {
 				} else {
 					action_animation = is_up ? BlockedUp : BlockedDown;
 
+					popup_maker.popup("Blocked!");
+					post_process.play_distort();
 				}
 			}
 			case Nothing: {}

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bugmosmqtfba8"]
+
+[ext_resource type="Script" uid="uid://cd3kdiqwrboop" path="res://addons/SharkMafia/game_effects_PopupLabel.gd" id="1_35e5r"]
+
+[node name="Label3D" type="Label3D"]
+pixel_size = 0.01
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = "Blocked!"
+script = ExtResource("1_35e5r")
