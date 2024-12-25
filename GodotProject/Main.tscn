@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bcftqd3cl6taf"]
+[gd_scene load_steps=26 format=3 uid="uid://bcftqd3cl6taf"]
 
 [ext_resource type="Script" uid="uid://rvheeahu2t8q" path="res://addons/SharkMafia/World.gd" id="1_c6i3y"]
 [ext_resource type="Shader" uid="uid://dqy78gv8w18b3" path="res://Code/Shader/PostProcess.gdshader" id="1_trn2v"]
@@ -15,6 +15,8 @@
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="12_c2ibq"]
 [ext_resource type="Script" uid="uid://pr8mqjte2chv" path="res://addons/SharkMafia/MapSprite.gd" id="12_kjvhd"]
 [ext_resource type="Script" uid="uid://b278fpuqmcytf" path="res://addons/SharkMafia/TurnManager.gd" id="13_5tuhn"]
+[ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="14_fpfj3"]
+[ext_resource type="Script" path="res://addons/SharkMafia/CharacterAnimator.gd" id="15_sc1dx"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_03owx"]
 flip_faces = true
@@ -18075,6 +18077,21 @@ surface_material_override/0 = SubResource("StandardMaterial3D_fos0i")
 [node name="PopupMaker" type="Node3D" parent="Player/PlayerMeshRotator/PlayerMeshHolder"]
 script = ExtResource("12_c2ibq")
 metadata/_custom_type_script = ExtResource("12_c2ibq")
+
+[node name="Shadow" type="Sprite3D" parent="Player/PlayerMeshRotator/PlayerMeshHolder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.49, 0)
+visible = false
+modulate = Color(1, 1, 1, 0.435294)
+pixel_size = 0.02
+axis = 1
+texture = ExtResource("14_fpfj3")
+
+[node name="CharacterAnimator" type="Node" parent="Player" node_paths=PackedStringArray("mesh", "mesh_holder", "shadow")]
+script = ExtResource("15_sc1dx")
+mesh = NodePath("../PlayerMeshRotator/PlayerMeshHolder/PlayerMesh")
+mesh_holder = NodePath("../PlayerMeshRotator/PlayerMeshHolder")
+shadow = NodePath("../PlayerMeshRotator/PlayerMeshHolder/Shadow")
+metadata/_custom_type_script = ExtResource("15_sc1dx")
 
 [node name="Map" type="Sprite2D" parent="." node_paths=PackedStringArray("level_data")]
 texture_filter = 1

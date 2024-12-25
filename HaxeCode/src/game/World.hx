@@ -12,6 +12,8 @@ class World extends Node3D {
 	@:export var turn_manager: TurnManager;
 
 	override function _ready(): Void {
+		trace("Game start!!");
+
 		var rebuild_level = false;
 
 		if(rebuild_level) {
@@ -36,9 +38,12 @@ class World extends Node3D {
 		for(npc_position in level_data.test_npcs) {
 			var npc: NPC = cast npc_scene.instantiate();
 			npc.setup(dynamic_level_data);
-			npc.set_starting_position(npc_position.to_vec3i(Godot.randi_range(0, 1)));
 			turn_manager.add_entity(npc);
 			add_child(npc);
+
+			npc.show_speed_particles(true);
+			npc.set_starting_position(npc_position.to_vec3i(Godot.randi_range(0, 1)));
+			npc.refresh_speed_relation(player);
 		}
 	}
 }

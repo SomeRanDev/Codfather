@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://caeb5nuked6vp"]
+
+[ext_resource type="Texture2D" uid="uid://n58bfoqkldfo" path="res://VisualAssets/2D/Dot.aseprite" id="1_rq5wb"]
+
+[node name="Dot" type="Sprite3D"]
+pixel_size = 0.0025
+billboard = 1
+texture = ExtResource("1_rq5wb")

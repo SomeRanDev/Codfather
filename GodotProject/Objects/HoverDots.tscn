@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://butbjslnj074m"]
+
+[ext_resource type="Script" uid="uid://dnntlpiaqohfu" path="res://addons/SharkMafia/HoverDots.gd" id="1_uxhoi"]
+
+[node name="HoverDots" type="Node3D"]
+process_mode = 4
+visible = false
+script = ExtResource("1_uxhoi")

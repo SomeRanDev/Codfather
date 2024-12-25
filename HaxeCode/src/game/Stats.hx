@@ -1,5 +1,7 @@
 package game;
 
+import godot.Godot;
+
 class Stats {
 	static var max_id = 10;
 
@@ -17,5 +19,9 @@ class Stats {
 
 	public function generate_id() {
 		id = max_id++;
+	}
+
+	public function randomize() {
+		speed = Godot.randi_range(2, 8);
 	}
 }

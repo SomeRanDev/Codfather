@@ -1,20 +1,12 @@
 package game;
 
+import game.Constants.JUMP_HEIGHT;
+import game.CharacterAnimator.CharacterAnimation;
 import game.effects.text_popup.PopupMaker;
 import game.data.Action;
 import game.data.Direction;
 
 import godot.*;
-
-enum PlayerAnimation {
-	Nothing;
-	Move;
-	GoUp;
-	GoDown;
-	Blocked;
-	BlockedUp;
-	BlockedDown;
-}
 
 @:using(game.Player.QueueableActionHelpers)
 enum QueueableAction {
@@ -37,10 +29,12 @@ class Player extends TurnSlave {
 	@:export var turn_manager: TurnManager;
 	@:export var post_process: PostProcess;
 
+	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$PlayerMeshRotator");
 	@:onready var mesh_holder: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder");
 	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMesh");
 	@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
+	@:onready var shadow: Sprite3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/Shadow");
 
 	var tilemap_position: Vector3i;
 
@@ -49,9 +43,10 @@ class Player extends TurnSlave {
 	var last_moved_direction: Null<Direction> = null;
 
 	var queued_turn_action: Action = Nothing;
-	var action_animation: PlayerAnimation = Nothing;
+	
 
 	static final INPUT_BUFFER_SIZE = 2;
+	static final GAME_SPEED = 7.5;
 
 	public function manual_ready() {
 		stats.id = 2;
@@ -77,8 +72,9 @@ class Player extends TurnSlave {
 
 	function apply_position(pos: Vector3i) {
 		tilemap_position = pos;
-		position = new Vector3(pos.x, 0.5 + (pos.z == 1 ? 1.0 : 0.0), pos.y);
+		position = new Vector3(pos.x, 0.5 + (pos.z == 1 ? JUMP_HEIGHT : 0.0), pos.y);
 		map.set_player_position(tilemap_position);
+		character_animator.is_up = pos.z == 1;
 	}
 
 	function can_add_to_input_queue(direction: Direction): Bool {
@@ -196,27 +192,19 @@ class Player extends TurnSlave {
 				queued_actions.remove_at(0);
 			}
 		} else {
-			movement_cooldown -= delta * 7.5;
+			movement_cooldown -= delta * GAME_SPEED;
 			if (movement_cooldown < 0) movement_cooldown = 0;
 			refresh_movement_cooldown_animation();
 		}
 	}
 
 	function refresh_movement_cooldown_animation() {
-		switch(action_animation) {
-			case Nothing: {}
-			case Move: refresh_mesh_move_animation();
-			case GoUp: refresh_mesh_move_up_animation();
-			case GoDown: refresh_mesh_move_down_animation();
-			case Blocked: refresh_mesh_block_animation();
-			case BlockedUp: refresh_mesh_block_up_animation();
-			case BlockedDown: refresh_mesh_block_down_animation();
-		}
+		character_animator.update_animation(movement_cooldown);
 		turn_manager.process_animations(1.0 - movement_cooldown);
 	}
 
 	override function process_turn() {
-		action_animation = Nothing;
+		character_animator.animation = Nothing;
 
 		if(queued_turn_action == Nothing) {
 			return;
@@ -229,10 +217,10 @@ class Player extends TurnSlave {
 					last_moved_direction = direction;
 
 					mesh_rotator.rotation.y = direction.rotation();
-					action_animation = Move;
+					character_animator.animation = Move;
 				} else {
 					mesh_rotator.rotation.y = direction.rotation();
-					action_animation = Blocked;
+					character_animator.animation = Blocked;
 
 					popup_maker.popup("Blocked!");
 					post_process.play_distort();
@@ -242,9 +230,9 @@ class Player extends TurnSlave {
 				final next = new Vector3i(0, 0, is_up ? 1 : -1);
 				final next_tile = tilemap_position + next;
 				if(level_data.tile_free(next_tile) && set_tilemap_position(next_tile)) {
-					action_animation = is_up ? GoUp : GoDown;
+					character_animator.animation = is_up ? GoUp : GoDown;
 				} else {
-					action_animation = is_up ? BlockedUp : BlockedDown;
+					character_animator.animation = is_up ? BlockedUp : BlockedDown;
 
 					popup_maker.popup("Blocked!");
 					post_process.play_distort();
@@ -260,46 +248,5 @@ class Player extends TurnSlave {
 		// This function should remain empty...
 	}
 
-	function back_and_forth(r: Float): Float {
-		return if(r < 0.5) {
-			r / 0.5;
-		} else {
-			1 - ((r - 0.5) / 0.5);
-		}
-	}
-
-	function refresh_mesh_move_animation() {
-		final r = movement_cooldown;
-		final r2 = back_and_forth(r);
-		mesh.scale = new Vector3(1 + r2, 1 - 0.5 * r2, 1);
-		mesh_holder.position = new Vector3(1, 0, 0) * r;
-	}
-
-	function refresh_mesh_move_up_animation() {
-		final r = movement_cooldown;
-		final r2 = back_and_forth(r);
-		mesh.scale = new Vector3(1 - 0.5 * r2, 1 + r2, 1 - 0.5 * r2);
-		mesh_holder.position = new Vector3(0, -1, 0) * r;
-	}
-
-	function refresh_mesh_move_down_animation() {
-		final r = movement_cooldown;
-		final r2 = back_and_forth(r);
-		mesh.scale = new Vector3(1 - 0.5 * r2, 1 + r2, 1 - 0.5 * r2);
-		mesh_holder.position = new Vector3(0, 1, 0) * r;
-	}
-
-	function refresh_mesh_block_animation() { refresh_mesh_block_animation_with_offset(new Vector3(-0.5, 0, 0)); }
-	function refresh_mesh_block_up_animation() { refresh_mesh_block_animation_with_offset(new Vector3(0, 0, 0.5)); }
-	function refresh_mesh_block_down_animation() { refresh_mesh_block_animation_with_offset(new Vector3(0, 0, -0.5)); }
-
-	function refresh_mesh_block_animation_with_offset(offset: Vector3) {
-		final r = movement_cooldown;
-		final r2 = if(r < 0.8) {
-			r / 0.8;
-		} else {
-			1 - ((r - 0.8) / 0.2);
-		}
-		mesh_holder.position = offset * r;
-	}
+	
 }
