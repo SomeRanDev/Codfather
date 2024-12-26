@@ -5,6 +5,10 @@ class ArrayExtensions {
 		self.splice(0, 1);
 	}
 
+	public static inline function remove_and_get_first<T>(self: Array<T>): T {
+		return self.splice(0, 1)[0];
+	}
+
 	public static inline function remove_at<T>(self: Array<T>, index: Int) {
 		self.splice(index, 1);
 	}

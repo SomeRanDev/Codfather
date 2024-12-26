@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://1byiniir6dsh"]
+
+[ext_resource type="Script" uid="uid://bbpv5f7m6k7o" path="res://addons/SharkMafia/game_ui_SkillListItem.gd" id="1_fhkiy"]
+[ext_resource type="Texture2D" uid="uid://dkq36aspugkf4" path="res://VisualAssets/2D/Cursor.aseprite" id="1_md3eu"]
+[ext_resource type="LabelSettings" uid="uid://dcd77po2ba4eb" path="res://VisualAssets/Fonts/SkillList/StatsLabelSettings.tres" id="3_e0grm"]
+
+[node name="SkillListItem" type="HBoxContainer"]
+theme_override_constants/separation = 12
+script = ExtResource("1_fhkiy")
+
+[node name="Cursor" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("1_md3eu")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "[Skill Name]"
+label_settings = ExtResource("3_e0grm")

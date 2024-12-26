@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bcftqd3cl6taf"]
+[gd_scene load_steps=28 format=3 uid="uid://bcftqd3cl6taf"]
 
 [ext_resource type="Script" uid="uid://rvheeahu2t8q" path="res://addons/SharkMafia/World.gd" id="1_c6i3y"]
 [ext_resource type="Shader" uid="uid://dqy78gv8w18b3" path="res://Code/Shader/PostProcess.gdshader" id="1_trn2v"]
@@ -17,6 +17,24 @@
 [ext_resource type="Script" uid="uid://b278fpuqmcytf" path="res://addons/SharkMafia/TurnManager.gd" id="13_5tuhn"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="14_fpfj3"]
 [ext_resource type="Script" path="res://addons/SharkMafia/CharacterAnimator.gd" id="15_sc1dx"]
+[ext_resource type="Shader" uid="uid://dckfi34a2h06e" path="res://Code/Shader/CRT_2D.gdshader" id="18_kjvhd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5tuhn"]
+shader = ExtResource("18_kjvhd")
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/scan_line_amount = 1.0
+shader_parameter/warp_amount = 0.1
+shader_parameter/noise_amount = 0.03
+shader_parameter/interference_amount = 0.2
+shader_parameter/grille_amount = 0.1
+shader_parameter/grille_size = 1.0
+shader_parameter/vignette_amount = 0.6
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/aberation_amount = 0.5
+shader_parameter/roll_line_amount = 0.3
+shader_parameter/roll_speed = 1.0
+shader_parameter/scan_line_strength = -8.0
+shader_parameter/pixel_strength = -2.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_03owx"]
 flip_faces = true
@@ -74,6 +92,9 @@ tilemap = NodePath("Tilemap")
 player = NodePath("Player")
 map = NodePath("Map")
 turn_manager = NodePath("TurnManager")
+
+[node name="2D" type="CanvasGroup" parent="."]
+material = SubResource("ShaderMaterial_5tuhn")
 
 [node name="PostProcess" type="MeshInstance3D" parent="."]
 layers = 2
@@ -18042,12 +18063,13 @@ offset = Vector3(0, 7, 4)
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_03owx")
 
-[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("level_data", "map", "turn_manager", "post_process", "popup_maker")]
+[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("level_data", "map", "turn_manager", "post_process", "_2d", "popup_maker")]
 script = ExtResource("11_sc1dx")
 level_data = NodePath("../DynamicLevelData")
 map = NodePath("../Map")
 turn_manager = NodePath("../TurnManager")
 post_process = NodePath("../PostProcess")
+_2d = NodePath("../2D")
 popup_maker = NodePath("PlayerMeshRotator/PlayerMeshHolder/PopupMaker")
 
 [node name="PlayerMeshRotator" type="Node3D" parent="Player"]
@@ -18065,7 +18087,7 @@ omni_attenuation = 0.05
 
 [node name="TopLight" type="OmniLight3D" parent="Player/PlayerMeshRotator/PlayerMeshHolder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-light_energy = 0.2
+light_energy = 0.5
 shadow_enabled = true
 omni_range = 10.0
 

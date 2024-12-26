@@ -1,5 +1,6 @@
 package game;
 
+import game.Attack.ALL_SKILLS;
 import game.effects.text_popup.PopupMaker;
 
 import godot.*;
@@ -19,13 +20,16 @@ class TurnSlave extends Node3D {
 	public function process_animation(ratio: Float): Void {
 	}
 
-	public function take_attack(attacker: TurnSlave, attack: Attack): Bool {
+	public function take_attack(attacker: TurnSlave, skill_id: Int): Bool {
 		var damage: Int = 0;
 
-		switch(attack) {
-			case BasicAttack: {
-				damage = Math.floor(attacker.stats.power / 2);
-			}
+		if(skill_id == -1) {
+			damage = Math.floor(attacker.stats.power / 2);
+		} else {
+			final skill = ALL_SKILLS[skill_id];
+			final ratio = stats.tough == 0 ? 1 : (attacker.stats.power / stats.tough);
+			final power = Godot.randf_range(skill.min_power, skill.max_power);
+			damage = Math.floor(Math.max(ratio * power, 1));
 		}
 
 		if(damage > 0) {

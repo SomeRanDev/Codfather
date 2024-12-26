@@ -1,0 +1,115 @@
+[gd_scene load_steps=7 format=3 uid="uid://bqd5qecc2ptbw"]
+
+[ext_resource type="Texture2D" uid="uid://1ccbxf2ysdi5" path="res://VisualAssets/2D/Window.png" id="1_88fmf"]
+[ext_resource type="Script" uid="uid://b1kbw2jmnmg4n" path="res://addons/SharkMafia/game_ui_SkillDescription.gd" id="1_vx0sw"]
+[ext_resource type="LabelSettings" uid="uid://dbgfpj7vueehl" path="res://VisualAssets/Fonts/SkillList/NameLabelSettings.tres" id="3_ynvfl"]
+[ext_resource type="LabelSettings" uid="uid://hxkylp7n45hl" path="res://VisualAssets/Fonts/SkillList/DescriptionLabelSettings.tres" id="4_bale8"]
+[ext_resource type="LabelSettings" uid="uid://dcd77po2ba4eb" path="res://VisualAssets/Fonts/SkillList/StatsLabelSettings.tres" id="5_bale8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vx0sw"]
+
+[node name="SkillDescription" type="PanelContainer"]
+offset_right = 500.0
+offset_bottom = 171.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_vx0sw")
+script = ExtResource("1_vx0sw")
+
+[node name="Background" type="NinePatchRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_88fmf")
+patch_margin_left = 32
+patch_margin_top = 32
+patch_margin_right = 32
+patch_margin_bottom = 32
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Indent" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Chomp"
+label_settings = ExtResource("3_ynvfl")
+
+[node name="Padding" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Bites and eats the target.
+Restores health on success."
+label_settings = ExtResource("4_bale8")
+horizontal_alignment = 2
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="Stats" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Power" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="PowerLabel" type="Label" parent="MarginContainer/VBoxContainer/Stats/Power"]
+layout_mode = 2
+text = "Power"
+label_settings = ExtResource("5_bale8")
+horizontal_alignment = 1
+
+[node name="PowerValue" type="Label" parent="MarginContainer/VBoxContainer/Stats/Power"]
+layout_mode = 2
+text = "2~4"
+label_settings = ExtResource("4_bale8")
+horizontal_alignment = 1
+
+[node name="Target" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="TargetLabel" type="Label" parent="MarginContainer/VBoxContainer/Stats/Target"]
+layout_mode = 2
+text = "Target"
+label_settings = ExtResource("5_bale8")
+horizontal_alignment = 1
+
+[node name="TargetValue" type="Label" parent="MarginContainer/VBoxContainer/Stats/Target"]
+layout_mode = 2
+text = "1"
+label_settings = ExtResource("4_bale8")
+horizontal_alignment = 1
+
+[node name="Range" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="RangeLabel" type="Label" parent="MarginContainer/VBoxContainer/Stats/Range"]
+layout_mode = 2
+text = "Range"
+label_settings = ExtResource("5_bale8")
+horizontal_alignment = 1
+
+[node name="RangeValue" type="Label" parent="MarginContainer/VBoxContainer/Stats/Range"]
+layout_mode = 2
+text = "Next to You"
+label_settings = ExtResource("4_bale8")
+horizontal_alignment = 1

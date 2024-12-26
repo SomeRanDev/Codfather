@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqvw4aqghd16b"]
+
+[ext_resource type="Script" path="res://addons/SharkMafia/game_ui_SkillListMenu.gd" id="1_3i0h2"]
+[ext_resource type="PackedScene" uid="uid://bqd5qecc2ptbw" path="res://Objects/UI/Gameplay/SkillDescription.tscn" id="1_rpprd"]
+[ext_resource type="PackedScene" uid="uid://cwp0swdo3pdpp" path="res://Objects/UI/Gameplay/SkillList.tscn" id="2_3i0h2"]
+
+[node name="SkillListMenu" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_3i0h2")
+metadata/_edit_use_anchors_ = true
+
+[node name="Padding" type="Control" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkillDescriptionContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="LeftPadding" type="Control" parent="SkillDescriptionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillDescription" parent="SkillDescriptionContainer" instance=ExtResource("1_rpprd")]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+
+[node name="RightPadding" type="Control" parent="SkillDescriptionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InBetweenPadding" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="SkillListContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="LeftPadding" type="Control" parent="SkillListContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillList" parent="SkillListContainer" instance=ExtResource("2_3i0h2")]
+layout_mode = 2
+
+[node name="RightPadding" type="Control" parent="SkillListContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Padding2" type="Control" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
