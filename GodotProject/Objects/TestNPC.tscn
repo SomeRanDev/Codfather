@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dtpn1mb2y6tde"]
+[gd_scene load_steps=7 format=3 uid="uid://dtpn1mb2y6tde"]
 
 [ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_wfbte"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="2_neiyk"]
+[ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="3_cmyqx"]
 [ext_resource type="Script" path="res://addons/SharkMafia/CharacterAnimator.gd" id="3_riyet"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_neiyk"]
@@ -9,8 +10,9 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_riyet"]
 albedo_color = Color(0, 0, 1, 1)
 
-[node name="TestNpc" type="Node3D"]
+[node name="TestNpc" type="Node3D" node_paths=PackedStringArray("popup_maker")]
 script = ExtResource("1_wfbte")
+popup_maker = NodePath("MeshRotator/MeshHolder/PopupMaker")
 
 [node name="MeshRotator" type="Node3D" parent="."]
 
@@ -27,6 +29,10 @@ modulate = Color(1, 1, 1, 0.435294)
 pixel_size = 0.02
 axis = 1
 texture = ExtResource("2_neiyk")
+
+[node name="PopupMaker" type="Node3D" parent="MeshRotator/MeshHolder"]
+script = ExtResource("3_cmyqx")
+metadata/_custom_type_script = ExtResource("3_cmyqx")
 
 [node name="CharacterAnimator" type="Node" parent="." node_paths=PackedStringArray("mesh", "mesh_holder", "shadow")]
 script = ExtResource("3_riyet")

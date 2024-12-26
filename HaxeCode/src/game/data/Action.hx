@@ -6,4 +6,5 @@ enum Action {
 	Nothing;
 	Move(direction: Direction);
 	Jump(is_up: Bool);
+	BasicAttack(direction: Direction);
 }

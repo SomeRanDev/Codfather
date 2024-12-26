@@ -1,9 +1,11 @@
 package game;
 
 import godot.*;
+import GDScript as GD;
 
 class TurnManager extends Node {
 	var entities: Array<TurnSlave> = [];
+	var entity_map: Dictionary = new Dictionary();
 
 	public function process_turns(): Bool {
 		cast(entities, GodotArray).sort_custom(new Callable(this, "sort_entities"));
@@ -25,5 +27,15 @@ class TurnManager extends Node {
 
 	public function add_entity(entity: TurnSlave): Void {
 		entities.push(entity);
+
+		GD.assert(entity.stats.id > 0, "Added entity without setting up ID.");
+		entity_map.set(entity.stats.id, entity);
+	}
+
+	public function get_entity(id: Int): Null<TurnSlave> {
+		if(entity_map.has(id)) {
+			return entity_map.get(id);
+		}
+		return null;
 	}
 }

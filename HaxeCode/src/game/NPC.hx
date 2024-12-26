@@ -56,7 +56,7 @@ class NPC extends TurnSlave {
 		show_speed_particles(stats.speed > player.stats.speed);
 	}
 
-	public function show_speed_particles(show: Bool) {
+	function show_speed_particles(show: Bool) {
 		if(show && move_particles == null) {
 			move_particles = cast FAST_PARTICLES.instantiate();
 			mesh.add_child(move_particles);
@@ -78,7 +78,6 @@ class NPC extends TurnSlave {
 				}
 			}
 		}
-
 
 		final direction: Direction = {
 			switch(Math.round(phase / 2)) {
@@ -114,5 +113,9 @@ class NPC extends TurnSlave {
 				move_particles.emitting = true;
 			}
 		}
+	}
+
+	override function _process(delta: Float) {
+		popup_maker.update(delta);
 	}
 }

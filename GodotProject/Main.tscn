@@ -92,9 +92,10 @@ tiles = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 player_start_position = Vector2i(9, 20)
 test_npcs = [Vector2i(11, 30), Vector2i(13, 32), Vector2i(17, 30), Vector2i(19, 26), Vector2i(19, 48), Vector2i(19, 50), Vector2i(21, 18), Vector2i(25, 24), Vector2i(25, 44), Vector2i(27, 24), Vector2i(29, 27), Vector2i(31, 36), Vector2i(34, 16), Vector2i(35, 20), Vector2i(36, 46), Vector2i(37, 35), Vector2i(38, 11), Vector2i(52, 30), Vector2i(52, 31), Vector2i(53, 13), Vector2i(53, 47)]
 
-[node name="DynamicLevelData" type="Node" parent="." node_paths=PackedStringArray("level_data")]
+[node name="DynamicLevelData" type="Node" parent="." node_paths=PackedStringArray("level_data", "turn_manager")]
 script = ExtResource("4_c2ibq")
 level_data = NodePath("../LevelData")
+turn_manager = NodePath("../TurnManager")
 
 [node name="Tilemap" type="Node3D" parent="." node_paths=PackedStringArray("level_data")]
 script = ExtResource("5_j4qnp")
@@ -18041,12 +18042,13 @@ offset = Vector3(0, 7, 4)
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_03owx")
 
-[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("level_data", "map", "turn_manager", "post_process")]
+[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("level_data", "map", "turn_manager", "post_process", "popup_maker")]
 script = ExtResource("11_sc1dx")
 level_data = NodePath("../DynamicLevelData")
 map = NodePath("../Map")
 turn_manager = NodePath("../TurnManager")
 post_process = NodePath("../PostProcess")
+popup_maker = NodePath("PlayerMeshRotator/PlayerMeshHolder/PopupMaker")
 
 [node name="PlayerMeshRotator" type="Node3D" parent="Player"]
 
@@ -18055,17 +18057,17 @@ post_process = NodePath("../PostProcess")
 [node name="CameraTargetPosition" type="Node3D" parent="Player/PlayerMeshRotator/PlayerMeshHolder"]
 
 [node name="InsideLight" type="OmniLight3D" parent="Player/PlayerMeshRotator/PlayerMeshHolder"]
-light_energy = 0.2
 light_cull_mask = 4294967293
 shadow_enabled = true
 shadow_caster_mask = 4294967293
-omni_range = 4.0
+omni_range = 10.0
+omni_attenuation = 0.05
 
 [node name="TopLight" type="OmniLight3D" parent="Player/PlayerMeshRotator/PlayerMeshHolder"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+light_energy = 0.2
 shadow_enabled = true
 omni_range = 10.0
-omni_attenuation = 0.1
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="Player/PlayerMeshRotator/PlayerMeshHolder"]
 layers = 2

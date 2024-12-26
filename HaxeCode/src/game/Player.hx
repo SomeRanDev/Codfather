@@ -12,6 +12,7 @@ import godot.*;
 enum QueueableAction {
 	Move(direction: Direction);
 	Jump;
+	BasicAttack(direction: Direction);
 }
 
 class QueueableActionHelpers {
@@ -33,7 +34,7 @@ class Player extends TurnSlave {
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$PlayerMeshRotator");
 	@:onready var mesh_holder: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder");
 	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMesh");
-	@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
+	//@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
 	@:onready var shadow: Sprite3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/Shadow");
 
 	var tilemap_position: Vector3i;
@@ -107,6 +108,17 @@ class Player extends TurnSlave {
 		return movement_cooldown <= 0 && queued_actions.length == 0;
 	}
 
+	/**
+		Called when an arrow key is pressed this frame.
+	**/
+	function on_direction_pressed(direction: Direction) {
+		if(level_data.is_attackable(tilemap_position + direction.as_vec3i())) {
+			queued_actions = [BasicAttack(direction)];
+		} else if(can_add_to_input_queue(direction)) {
+			queued_actions.push_circular(Move(direction), INPUT_BUFFER_SIZE);
+		}
+	}
+
 	override function _process(delta: Float): Void {
 		popup_maker.update(delta);
 
@@ -131,25 +143,25 @@ class Player extends TurnSlave {
 			movement_just_pressed.x += 1;
 
 		if(movement_just_pressed.y == -1) {
-			if(can_add_to_input_queue(Up)) queued_actions.push_circular(Move(Up), INPUT_BUFFER_SIZE);
+			on_direction_pressed(Up);
 		} else if(movement_pressed.y == -1 && no_cooldown_and_queued_movement()) {
 			queued_actions.push(Move(Up));
 		}
 
 		if(movement_just_pressed.y == 1) {
-			if(can_add_to_input_queue(Down)) queued_actions.push_circular(Move(Down), INPUT_BUFFER_SIZE);
+			on_direction_pressed(Down);
 		} else if(movement_pressed.y == 1 && no_cooldown_and_queued_movement()) {
 			queued_actions.push(Move(Down));
 		}
 
 		if(movement_just_pressed.x == -1) {
-			if(can_add_to_input_queue(Left)) queued_actions.push_circular(Move(Left), INPUT_BUFFER_SIZE);
+			on_direction_pressed(Left);
 		} else if(movement_pressed.x == -1 && no_cooldown_and_queued_movement()) {
 			queued_actions.push(Move(Left));
 		}
 
 		if(movement_just_pressed.x == 1) {
-			if(can_add_to_input_queue(Right)) queued_actions.push_circular(Move(Right), INPUT_BUFFER_SIZE);
+			on_direction_pressed(Right);
 		} else if(movement_pressed.x == 1 && no_cooldown_and_queued_movement()) {
 			queued_actions.push(Move(Right));
 		}
@@ -186,6 +198,16 @@ class Player extends TurnSlave {
 						}
 		
 						last_moved_direction = null;
+					}
+					case BasicAttack(direction): {
+						last_moved_direction = null;
+						if(level_data.is_attackable(tilemap_position + direction.as_vec3i())) {
+							queued_turn_action = BasicAttack(direction);
+							turn_manager.process_turns();
+		
+							movement_cooldown = 1;
+							refresh_movement_cooldown_animation();
+						}
 					}
 				}
 
@@ -238,6 +260,23 @@ class Player extends TurnSlave {
 					post_process.play_distort();
 				}
 			}
+			case BasicAttack(direction): {
+				final attack_position = tilemap_position + direction.as_vec3i();
+				final entity = level_data.get_entity(attack_position);
+
+				character_animator.animation = DirectionalAttack;
+
+				if(entity != null) {
+					if(entity.take_attack(this, BasicAttack)) {
+						mesh_rotator.rotation.y = direction.rotation();
+					} else {
+						popup_maker.popup("Failed!");
+					}
+				} else {
+					popup_maker.popup("Missed!");
+					post_process.play_distort();
+				}
+			}
 			case Nothing: {}
 		}
 
@@ -247,6 +286,4 @@ class Player extends TurnSlave {
 	override function process_animation(ratio: Float): Void {
 		// This function should remain empty...
 	}
-
-	
 }

@@ -4,19 +4,16 @@ import godot.*;
 import GDScript as GD;
 
 class PopupMaker extends Node3D {
+	@:const var POPUP_SCENE: PackedScene = cast GD.preload("res://Objects/Popup.tscn");
+
 	var popups: Array<PopupLabel> = [];
 
-	var popup_scene: Null<PackedScene> = null;
-
 	public function popup(text: String) {
-		if(popup_scene == null) {
-			popup_scene = cast GD.load("res://Objects/Popup.tscn");
-		}
-		final l: PopupLabel = cast popup_scene.instantiate();
+		final l: PopupLabel = cast POPUP_SCENE.instantiate();
 		get_tree().get_current_scene().add_child(l);
 
 		l.text = text;
-		l.setup(global_position, global_position + new Vector3(0, 2, 0));
+		l.setup(global_position, global_position + new Vector3(0, 3, 0));
 		popups.push(l);
 	}
 

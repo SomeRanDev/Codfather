@@ -41,7 +41,6 @@ class World extends Node3D {
 			turn_manager.add_entity(npc);
 			add_child(npc);
 
-			npc.show_speed_particles(true);
 			npc.set_starting_position(npc_position.to_vec3i(Godot.randi_range(0, 1)));
 			npc.refresh_speed_relation(player);
 		}

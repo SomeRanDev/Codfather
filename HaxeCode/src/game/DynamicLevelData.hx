@@ -4,6 +4,7 @@ import godot.*;
 
 class DynamicLevelData extends Node {
 	@:export var level_data: LevelData;
+	@:export var turn_manager: TurnManager;
 
 	var entity_array: Array<Int>;
 	var hovered_entity_array: Array<Int>;
@@ -20,7 +21,7 @@ class DynamicLevelData extends Node {
 		untyped __gdscript__("{0}.fill(0)", hovered_entity_array);
 	}
 
-	function get_id(pos: Vector3i): Int {
+	public function get_id(pos: Vector3i): Int {
 		final index = (pos.y * level_data.width) + pos.x;
 		return if(pos.z == 1) {
 			hovered_entity_array[index];
@@ -74,5 +75,20 @@ class DynamicLevelData extends Node {
 		}
 
 		return level_data.tiles[index] == 1;
+	}
+
+	public function is_attackable(pos: Vector3i) {
+		if(get_id(pos) > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public function get_entity(pos: Vector3i): Null<TurnSlave> {
+		final id = get_id(pos);
+		if(id > 0) {
+			return turn_manager.get_entity(id);
+		}
+		return null;
 	}
 }

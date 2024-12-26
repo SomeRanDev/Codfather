@@ -12,6 +12,8 @@ enum CharacterAnimation {
 	Blocked;
 	BlockedUp;
 	BlockedDown;
+
+	DirectionalAttack;
 }
 
 class CharacterAnimationHelper {
@@ -36,12 +38,13 @@ class CharacterAnimator extends Node {
 	public function update_animation(r: Float) {
 		switch(animation) {
 			case Nothing: {}
-			case Move: refresh_mesh_move_animation(r);
-			case GoUp: refresh_mesh_move_up_animation(r);
-			case GoDown: refresh_mesh_move_down_animation(r);
-			case Blocked: refresh_mesh_block_animation(r);
-			case BlockedUp: refresh_mesh_block_up_animation(r);
-			case BlockedDown: refresh_mesh_block_down_animation(r);
+			case Move: refresh_move_animation(r);
+			case GoUp: refresh_move_up_animation(r);
+			case GoDown: refresh_move_down_animation(r);
+			case Blocked: refresh_block_animation(r);
+			case BlockedUp: refresh_block_up_animation(r);
+			case BlockedDown: refresh_block_down_animation(r);
+			case DirectionalAttack: refresh_attack_animation(r);
 		}
 	}
 
@@ -53,31 +56,31 @@ class CharacterAnimator extends Node {
 		}
 	}
 
-	function refresh_mesh_move_animation(r: Float) {
+	function refresh_move_animation(r: Float) {
 		final r2 = back_and_forth(r);
 		mesh.scale = new Vector3(1 + r2, 1 - 0.5 * r2, 1);
 		mesh_holder.position = new Vector3(1, 0, 0) * r;
 	}
 
-	function refresh_mesh_move_up_animation(r: Float) {
+	function refresh_move_up_animation(r: Float) {
 		final r2 = back_and_forth(r);
 		mesh.scale = new Vector3(1 - 0.5 * r2, 1 + r2, 1 - 0.5 * r2);
 		mesh_holder.position = new Vector3(0, -JUMP_HEIGHT, 0) * r;
 		refresh_shadow_size(r);
 	}
 
-	function refresh_mesh_move_down_animation(r: Float) {
+	function refresh_move_down_animation(r: Float) {
 		final r2 = back_and_forth(r);
 		mesh.scale = new Vector3(1 - 0.5 * r2, 1 + r2, 1 - 0.5 * r2);
 		mesh_holder.position = new Vector3(0, JUMP_HEIGHT, 0) * r;
 		refresh_shadow_size(r);
 	}
 
-	function refresh_mesh_block_animation(r: Float) { refresh_mesh_block_animation_with_offset(r, new Vector3(-0.5, 0, 0)); }
-	function refresh_mesh_block_up_animation(r: Float) { refresh_mesh_block_animation_with_offset(r, new Vector3(0, 0.5, 0)); }
-	function refresh_mesh_block_down_animation(r: Float) { refresh_mesh_block_animation_with_offset(r, new Vector3(0, -0.5, 0)); }
+	function refresh_block_animation(r: Float) { refresh_block_animation_with_offset(r, new Vector3(-0.5, 0, 0)); }
+	function refresh_block_up_animation(r: Float) { refresh_block_animation_with_offset(r, new Vector3(0, 0.5, 0)); }
+	function refresh_block_down_animation(r: Float) { refresh_block_animation_with_offset(r, new Vector3(0, -0.5, 0)); }
 
-	function refresh_mesh_block_animation_with_offset(r: Float, offset: Vector3) {
+	function refresh_block_animation_with_offset(r: Float, offset: Vector3) {
 		final r2 = if(r < 0.8) {
 			r / 0.8;
 		} else {
@@ -97,5 +100,9 @@ class CharacterAnimator extends Node {
 		shadow.position.y = -(JUMP_HEIGHT + 0.49) + (r * JUMP_HEIGHT);
 		shadow.modulate.a = ((1.0 - r) * 0.5);
 		shadow.visible = r < 1.0 || is_up;
+	}
+
+	function refresh_attack_animation(r: Float) {
+		refresh_block_animation_with_offset(r, new Vector3(-0.5, 0, 0));
 	}
 }
