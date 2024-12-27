@@ -15,6 +15,7 @@ class NPC extends TurnSlave {
 	@:onready var mesh_manipulator: Node3D = untyped __gdscript__("$MeshRotator/MeshHolder/MeshManipulator");
 	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$MeshRotator/MeshHolder/MeshManipulator/Mesh");
 	@:onready var shadow: Sprite3D = untyped __gdscript__("$MeshRotator/MeshHolder/Shadow");
+	@:onready var tile_indicator: TileIndicator = untyped __gdscript__("$MeshRotator/TileIndicator");
 
 	var move_particles: Null<GPUParticles3D> = null;
 
@@ -54,7 +55,9 @@ class NPC extends TurnSlave {
 	}
 
 	public function refresh_speed_relation(player: Player) {
-		show_speed_particles(stats.speed > player.stats.speed);
+		final is_fast = stats.speed > player.stats.speed;
+		show_speed_particles(is_fast);
+		tile_indicator.set_fast(is_fast);
 	}
 
 	function show_speed_particles(show: Bool) {

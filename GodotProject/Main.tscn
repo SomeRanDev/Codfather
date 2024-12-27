@@ -18121,7 +18121,7 @@ alpha_scissor_threshold = 0.176
 texture = ExtResource("14_fpfj3")
 
 [node name="TileIndicator" parent="Player/PlayerMeshRotator" instance=ExtResource("20_3b0ty")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.49, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.48, 0)
 
 [node name="CharacterAnimator" type="Node" parent="Player" node_paths=PackedStringArray("mesh", "mesh_manipulator", "mesh_holder", "shadow", "tile_indicator")]
 script = ExtResource("15_sc1dx")

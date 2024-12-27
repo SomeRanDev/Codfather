@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3dwetb03ypxi"
-path.s3tc="res://.godot/imported/TileCorner.aseprite-02f03a4dd8a56b2f367f1a1bdc2d9042.s3tc.ctex"
+uid="uid://8q06tmykv33g"
+path.s3tc="res://.godot/imported/TileCorner_Fast2.png-001110bf5a8f4bc125cf409b691af186.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://VisualAssets/2D/TileCorner.aseprite"
-dest_files=["res://.godot/imported/TileCorner.aseprite-02f03a4dd8a56b2f367f1a1bdc2d9042.s3tc.ctex"]
+source_file="res://VisualAssets/2D/TileCorner_Fast2.png"
+dest_files=["res://.godot/imported/TileCorner_Fast2.png-001110bf5a8f4bc125cf409b691af186.s3tc.ctex"]
 
 [params]
 

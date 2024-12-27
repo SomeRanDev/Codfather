@@ -1,47 +1,48 @@
-[gd_scene load_steps=3 format=3 uid="uid://bwnqrwtod7fyj"]
+[gd_scene load_steps=5 format=3 uid="uid://bwnqrwtod7fyj"]
 
-[ext_resource type="Texture2D" uid="uid://3dwetb03ypxi" path="res://VisualAssets/2D/TileCorner.aseprite" id="1_tphax"]
 [ext_resource type="Script" path="res://addons/SharkMafia/TileIndicator.gd" id="1_ul6q3"]
+[ext_resource type="Texture2D" uid="uid://c1j8foku151e2" path="res://VisualAssets/2D/TileCorner.png" id="2_11c8w"]
+[ext_resource type="Texture2D" uid="uid://bcd0r53qy5qb8" path="res://VisualAssets/2D/TileCorner_Fast1.png" id="2_ul6q3"]
+[ext_resource type="Texture2D" uid="uid://8q06tmykv33g" path="res://VisualAssets/2D/TileCorner_Fast2.png" id="4_ydbps"]
 
 [node name="TileIndicator" type="Node3D"]
 script = ExtResource("1_ul6q3")
+normal_texture = ExtResource("2_11c8w")
+fast_texture_1 = ExtResource("2_ul6q3")
+fast_texture_2 = ExtResource("4_ydbps")
 
 [node name="BottomRight" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.5, 0, 0.5)
 cast_shadow = 0
-offset = Vector2(-8, 8)
-pixel_size = 0.02
+offset = Vector2(-23.5, 23.5)
 double_sided = false
 alpha_cut = 1
 texture_filter = 0
-texture = ExtResource("1_tphax")
+texture = ExtResource("2_11c8w")
 
 [node name="BottomLeft" type="Sprite3D" parent="."]
 transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, -0.5, 0, 0.5)
 cast_shadow = 0
-offset = Vector2(-8, 8)
-pixel_size = 0.02
+offset = Vector2(-23.5, 23.5)
 double_sided = false
 alpha_cut = 1
 texture_filter = 0
-texture = ExtResource("1_tphax")
+texture = ExtResource("2_11c8w")
 
 [node name="TopLeft" type="Sprite3D" parent="."]
 transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, -0.5, 0, -0.5)
 cast_shadow = 0
-offset = Vector2(-8, 8)
-pixel_size = 0.02
+offset = Vector2(-23.5, 23.5)
 double_sided = false
 alpha_cut = 1
 texture_filter = 0
-texture = ExtResource("1_tphax")
+texture = ExtResource("2_11c8w")
 
 [node name="TopRight" type="Sprite3D" parent="."]
 transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, 0.5, 0, -0.5)
 cast_shadow = 0
-offset = Vector2(-8, 8)
-pixel_size = 0.02
+offset = Vector2(-23.5, 23.5)
 double_sided = false
 alpha_cut = 1
 texture_filter = 0
-texture = ExtResource("1_tphax")
+texture = ExtResource("2_11c8w")
