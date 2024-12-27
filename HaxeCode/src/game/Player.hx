@@ -77,6 +77,10 @@ class Player extends TurnSlave {
 		set_direction(Right);
 	}
 
+	public override function get_speed(): Float {
+		return stats.speed + 0.0001;
+	}
+
 	public function set_starting_position(pos: Vector3i): Bool {
 		if(level_data.place_entity(stats.id, pos)) {
 			apply_position(pos);
