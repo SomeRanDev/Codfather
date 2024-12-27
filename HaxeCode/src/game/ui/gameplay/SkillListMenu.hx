@@ -1,5 +1,6 @@
 package game.ui.gameplay;
 
+import game.Attack.CANCEL_SKILL_ID;
 import game.Attack.Skill;
 import game.Attack.BASIC_SKILL_ID;
 import game.Attack.NULL_SKILL_ID;
@@ -31,8 +32,10 @@ class SkillListMenu extends VBoxContainer {
 			skill_description.set_skill(Skill.get_skill(skill_id));
 		}
 
-		if(Input.is_action_just_pressed("enter")) {
+		if(Input.is_action_just_pressed("ok")) {
 			return skill_list.get_current_skill_id();
+		} else if(Input.is_action_just_pressed("back")) {
+			return CANCEL_SKILL_ID;
 		}
 		return NULL_SKILL_ID;
 	}

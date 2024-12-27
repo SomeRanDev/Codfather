@@ -22,6 +22,15 @@ class DirectionHelpers {
 		}
 	}
 
+	public static function reverse(self: Direction): Direction {
+		return switch(self) {
+			case Up: Down;
+			case Down: Up;
+			case Left: Right;
+			case Right: Left;
+		}
+	}
+
 	public static function rotation(self: Direction): Float {
 		return rotation_ratio(self) * Math.PI;
 	}

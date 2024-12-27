@@ -30,6 +30,7 @@ class Skill {
 }
 
 final NULL_SKILL_ID = -2;
+final CANCEL_SKILL_ID = -3;
 final BASIC_SKILL_ID = -1;
 
 final BASIC_SKILL = new Skill("Chomp", BasicAttack, 2, 3, 0);

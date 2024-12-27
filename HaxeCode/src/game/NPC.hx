@@ -12,7 +12,8 @@ class NPC extends TurnSlave {
 	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$MeshRotator");
 	@:onready var mesh_holder: Node3D = untyped __gdscript__("$MeshRotator/MeshHolder");
-	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$MeshRotator/MeshHolder/Mesh");
+	@:onready var mesh_manipulator: Node3D = untyped __gdscript__("$MeshRotator/MeshHolder/MeshManipulator");
+	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$MeshRotator/MeshHolder/MeshManipulator/Mesh");
 	@:onready var shadow: Sprite3D = untyped __gdscript__("$MeshRotator/MeshHolder/Shadow");
 
 	var move_particles: Null<GPUParticles3D> = null;

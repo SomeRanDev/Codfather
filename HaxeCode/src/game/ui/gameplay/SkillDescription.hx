@@ -13,7 +13,7 @@ class SkillDescription extends PanelContainer {
 	public function set_skill(skill: Skill) {
 		name_label.text = skill.name;
 		description_label.text = "blablabla\nblabla";
-		power_label.text = skill.min_power + "~" + skill.max_power;
+		power_label.text = Math.round(skill.min_power) + "~" + Math.round(skill.max_power);
 		target_label.text = switch(skill.attack_type) {
 			case BasicAttack: {
 				"1";

@@ -146,9 +146,11 @@ class TargetSelectManager extends Node {
 		}
 	}
 
-	public function update(delta: Float, player_position: Vector3i, level_data: DynamicLevelData): Bool {
-		if(Input.is_action_just_pressed("enter")) {
-			return true;
+	public function update(delta: Float, player_position: Vector3i, level_data: DynamicLevelData): Int {
+		if(Input.is_action_just_pressed("ok")) {
+			return 1;
+		} else if(Input.is_action_just_pressed("back")) {
+			return 2;
 		}
 
 		var move_input = Vector2i.ZERO;
@@ -162,7 +164,7 @@ class TargetSelectManager extends Node {
 			move_input.x += 1;
 
 		if(move_input.x == 0 && move_input.y == 0) {
-			return false;
+			return 0;
 		}
 
 		switch(target_count) {
@@ -181,7 +183,7 @@ class TargetSelectManager extends Node {
 			case All: // do nothing...
 		}
 
-		return false;
+		return 0;
 	}
 
 	function set_selected_indexes(indexes: Array<Int>, level_data: DynamicLevelData) {
@@ -223,7 +225,15 @@ class TargetSelectManager extends Node {
 				}
 			}
 		}
-		return null;
+
+		final selected_tile_positions = [];
+		for(t in tiles) {
+			if(t.selected) {
+				selected_tile_positions.push(t.tilemap_position);
+			}
+		}
+
+		return DoSkill(skill_id, selected_tile_positions);
 	}
 
 	function target_direction_to_direction(target: TargetDirection): Direction {

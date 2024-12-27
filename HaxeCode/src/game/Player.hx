@@ -1,5 +1,6 @@
 package game;
 
+import game.Attack.CANCEL_SKILL_ID;
 import game.ui.target_select.TargetSelectManager;
 import game.Attack.NULL_SKILL_ID;
 import game.ui.gameplay.SkillListMenu;
@@ -19,6 +20,7 @@ enum QueueableAction {
 	Move(direction: Direction);
 	Jump;
 	BasicAttack(direction: Direction);
+	DoSkill(skill_id: Int, targeted_positions: Array<Vector3i>);
 }
 
 class QueueableActionHelpers {
@@ -34,21 +36,25 @@ class Player extends TurnSlave {
 	@:const var SKILL_LIST_MENU: PackedScene = GD.preload("res://Objects/UI/Gameplay/SkillListMenu.tscn");
 	@:const var TARGET_SELECT_MANAGER: PackedScene = GD.preload("res://Objects/UI/Gameplay/TargetSelectManager.tscn");
 
+	@:export var camera: Camera;
 	@:export var level_data: DynamicLevelData;
 	@:export var map: MapSprite;
 	@:export var turn_manager: TurnManager;
 	@:export var post_process: PostProcess;
 	@:export var _2d: CanvasGroup;
+	@:export var effect_manager: EffectManager;
 
 	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$PlayerMeshRotator");
 	@:onready var mesh_holder: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder");
-	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMesh");
+	@:onready var mesh_manipulator: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator");
+	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator/PlayerMesh");
 	//@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
 	@:onready var shadow: Sprite3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/Shadow");
 
 	var tilemap_position: Vector3i;
 
+	var turn_speed_ratio = 1.0;
 	var movement_cooldown: Float = 0.0;
 	var queued_actions: Array<QueueableAction> = [];
 	var last_moved_direction: Null<Direction> = null;
@@ -67,6 +73,8 @@ class Player extends TurnSlave {
 	public function manual_ready() {
 		stats.id = 2;
 		stats.speed = 3;
+
+		set_direction(Right);
 	}
 
 	public function set_starting_position(pos: Vector3i): Bool {
@@ -138,23 +146,23 @@ class Player extends TurnSlave {
 		popup_maker.update(delta);
 
 		if(target_select_manager != null) {
-			if(target_select_manager.update(delta, tilemap_position, level_data)) {
+			final target_result = target_select_manager.update(delta, tilemap_position, level_data);
+			if(target_result == 1) {
 				final action = target_select_manager.get_queuable_action();
 				if(action != null) {
 					queued_actions.push(action);
 				}
 
-				target_select_manager.cleanup();
-				remove_child(target_select_manager);
-				target_select_manager.queue_free();
-				target_select_manager = null;
+				remove_target_select_manager();
+			} else if(target_result == 2) {
+				remove_target_select_manager();
 			}
 		} else if(skill_list_menu != null) {
 			update_skill_list();
 		} else {
 			update_gameplay();
 
-			if(Input.is_action_just_pressed("enter")) {
+			if(Input.is_action_just_pressed("skills")) {
 				queued_actions = [];
 
 				skill_list_menu = cast SKILL_LIST_MENU.instantiate();
@@ -165,9 +173,14 @@ class Player extends TurnSlave {
 
 		// Refresh turn animations
 		if(movement_cooldown > 0) {
-			movement_cooldown -= delta * GAME_SPEED;
-			if (movement_cooldown < 0) movement_cooldown = 0;
+			movement_cooldown -= delta * GAME_SPEED * turn_speed_ratio;
+			if(movement_cooldown < 0) {
+				movement_cooldown = 0;
+			}
 			refresh_movement_cooldown_animation();
+			if(movement_cooldown == 0) {
+				character_animator.end_animation();
+			}
 			return;
 		}
 
@@ -226,15 +239,29 @@ class Player extends TurnSlave {
 
 	function update_skill_list() {
 		final selected_skill_id = skill_list_menu.update();
-		if(selected_skill_id != NULL_SKILL_ID) {
-			_2d.remove_child(skill_list_menu);
-			skill_list_menu.queue_free();
-			skill_list_menu = null;
+
+		if(selected_skill_id == CANCEL_SKILL_ID) {
+			remove_skill_list();
+		} else if(selected_skill_id != NULL_SKILL_ID) {
+			remove_skill_list();
 
 			target_select_manager = cast TARGET_SELECT_MANAGER.instantiate();
 			add_child(target_select_manager);
 			target_select_manager.setup(selected_skill_id, tilemap_position, look_direction, level_data);
 		}
+	}
+
+	function remove_skill_list() {
+		_2d.remove_child(skill_list_menu);
+		skill_list_menu.queue_free();
+		skill_list_menu = null;
+	}
+
+	function remove_target_select_manager() {
+		target_select_manager.cleanup();
+		remove_child(target_select_manager);
+		target_select_manager.queue_free();
+		target_select_manager = null;
 	}
 
 	function do_next_action() {
@@ -248,11 +275,7 @@ class Player extends TurnSlave {
 		switch(next_action) {
 			case Move(next_direction): {
 				if(level_data.tile_free(tilemap_position + next_direction.as_vec3i())) {
-					queued_turn_action = Move(next_direction);
-					turn_manager.process_turns();
-
-					movement_cooldown = 1;
-					refresh_movement_cooldown_animation();
+					process_turns(Move(next_direction));
 				}
 
 				last_moved_direction = next_direction;
@@ -262,11 +285,7 @@ class Player extends TurnSlave {
 				final is_up = tilemap_position.z == 0;
 				final next = new Vector3i(0, 0, is_up ? 1 : -1);
 				if(level_data.tile_free(tilemap_position + next)) {
-					queued_turn_action = Jump(is_up);
-					turn_manager.process_turns();
-
-					movement_cooldown = 1;
-					refresh_movement_cooldown_animation();
+					process_turns(Jump(is_up));
 				}
 
 				last_moved_direction = null;
@@ -274,16 +293,27 @@ class Player extends TurnSlave {
 			case BasicAttack(direction): {
 				last_moved_direction = null;
 				if(level_data.is_attackable_or_empty(tilemap_position + direction.as_vec3i())) {
-					queued_turn_action = BasicAttack(direction);
-					turn_manager.process_turns();
-
-					movement_cooldown = 1;
-					refresh_movement_cooldown_animation();
+					process_turns(BasicAttack(direction));
 				}
+			}
+			case DoSkill(skill_id, targeted_positions): {
+				last_moved_direction = null;
+
+				process_turns(DoSkill(skill_id, targeted_positions));
+				camera.shake();
 			}
 		}
 
 		queued_actions.remove_at(0);
+	}
+
+	function process_turns(action: Action) {
+		queued_turn_action = action;
+		turn_manager.process_turns();
+		character_animator.start_animation();
+
+		movement_cooldown = 1;
+		refresh_movement_cooldown_animation();
 	}
 
 	function refresh_movement_cooldown_animation() {
@@ -297,6 +327,8 @@ class Player extends TurnSlave {
 		if(queued_turn_action == Nothing) {
 			return;
 		}
+
+		turn_speed_ratio = 1.0;
 
 		switch(queued_turn_action) {
 			case Move(direction): {
@@ -331,11 +363,13 @@ class Player extends TurnSlave {
 				final entity = level_data.get_entity(attack_position);
 
 				character_animator.animation = DirectionalAttack;
+				turn_speed_ratio = 0.75;
 
 				set_direction(direction);
 
 				if(entity != null) {
 					if(entity.take_attack(this, -1)) {
+						effect_manager.add_blood_particles(entity.position);
 					} else {
 						popup_maker.popup("Failed!");
 					}
@@ -343,6 +377,22 @@ class Player extends TurnSlave {
 					popup_maker.popup("Missed!");
 					post_process.play_distort();
 				}
+			}
+			case DoSkill(skill_id, targeted_positions): {
+				for(position in targeted_positions) {
+					final entity = level_data.get_entity(position);
+					if(entity != null) {
+						if(entity.take_attack(this, skill_id)) {
+							effect_manager.add_blood_particles(entity.position);
+						} else {
+							popup_maker.popup("Failed!");
+						}
+					}
+				}
+
+				set_direction(look_direction.reverse());
+				character_animator.animation = SpinAttack;
+				turn_speed_ratio = 0.75;
 			}
 			case Nothing: {}
 		}
@@ -357,5 +407,11 @@ class Player extends TurnSlave {
 	function set_direction(direction: Direction) {
 		look_direction = direction;
 		mesh_rotator.rotation.y = direction.rotation();
+
+		mesh_manipulator.rotation_degrees.x = switch(direction) {
+			case Left: -30.0;
+			case Right: 30.0;
+			case _: 0.0;
+		}
 	}
 }

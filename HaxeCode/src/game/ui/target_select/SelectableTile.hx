@@ -1,27 +1,23 @@
 package game.ui.target_select;
 
+import game.Constants.JUMP_HEIGHT;
 import game.ui.target_select.TargetSelectManager.TargetDirection;
 import godot.*;
 import GDScript as GD;
 
 class SelectableTile extends Node3D {
 	@:const var SELECTABLE_TILE_WALL: PackedScene = GD.preload("res://Objects/UI/Gameplay/SelectableTileWall.tscn");
-	//@:onready var arrow: Sprite3D = untyped __gdscript__("$TileSelectArrow");
 
 	public var tilemap_position(default, null): Vector3i;
 	public var direction(default, null): TargetDirection;
 	public var selected(default, null): Bool = false;
-
-	//public var animation_offset = 0.0;
-
-	// var timer: Float = 0.0;
 
 	var walls: Array<MeshInstance3D> = [];
 	var wall_pool: Array<MeshInstance3D> = [];
 
 	public function set_tilemap_position(pos: Vector3i) {
 		tilemap_position = pos;
-		position = new Vector3(pos.x, pos.z, pos.y);
+		position = new Vector3(pos.x, pos.z * JUMP_HEIGHT, pos.y);
 	}
 
 	public function set_direction(d: TargetDirection) {

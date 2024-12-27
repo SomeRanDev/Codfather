@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_wfbte"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="2_neiyk"]
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="3_cmyqx"]
-[ext_resource type="Script" path="res://addons/SharkMafia/CharacterAnimator.gd" id="3_riyet"]
+[ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="3_riyet"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_neiyk"]
 
@@ -18,9 +18,11 @@ popup_maker = NodePath("MeshRotator/MeshHolder/PopupMaker")
 
 [node name="MeshHolder" type="Node3D" parent="MeshRotator"]
 
-[node name="Mesh" type="MeshInstance3D" parent="MeshRotator/MeshHolder"]
+[node name="MeshManipulator" type="Node3D" parent="MeshRotator/MeshHolder"]
+
+[node name="Mesh" type="MeshInstance3D" parent="MeshRotator/MeshHolder/MeshManipulator"]
 mesh = SubResource("BoxMesh_neiyk")
-skeleton = NodePath("../../..")
+skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_riyet")
 
 [node name="Shadow" type="Sprite3D" parent="MeshRotator/MeshHolder"]
@@ -34,9 +36,11 @@ texture = ExtResource("2_neiyk")
 script = ExtResource("3_cmyqx")
 metadata/_custom_type_script = ExtResource("3_cmyqx")
 
-[node name="CharacterAnimator" type="Node" parent="." node_paths=PackedStringArray("mesh", "mesh_holder", "shadow")]
+[node name="CharacterAnimator" type="Node" parent="." node_paths=PackedStringArray("mesh", "mesh_manipulator", "mesh_holder", "shadow")]
 script = ExtResource("3_riyet")
-mesh = NodePath("../MeshRotator/MeshHolder/Mesh")
+mesh = NodePath("../MeshRotator/MeshHolder/MeshManipulator/Mesh")
+mesh_manipulator = NodePath("../MeshRotator/MeshHolder/MeshManipulator")
 mesh_holder = NodePath("../MeshRotator/MeshHolder")
 shadow = NodePath("../MeshRotator/MeshHolder/Shadow")
+default_mesh = SubResource("BoxMesh_neiyk")
 metadata/_custom_type_script = ExtResource("3_riyet")

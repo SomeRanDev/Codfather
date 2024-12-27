@@ -1,3 +1,5 @@
 *.blend1
 *.tmp
+*.afdesign~lock~
+*.afdesign~lock~
 GodotProject/QuickTest.bat
