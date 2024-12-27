@@ -1,0 +1,90 @@
+[gd_scene load_steps=5 format=3 uid="uid://d3rxtr4h11eci"]
+
+[ext_resource type="Texture2D" uid="uid://dkq36aspugkf4" path="res://VisualAssets/2D/Cursor.aseprite" id="1_6dxlc"]
+[ext_resource type="Script" uid="uid://te2u7jbt2d7h" path="res://addons/SharkMafia/game_ui_CCOption.gd" id="1_xfpue"]
+[ext_resource type="LabelSettings" uid="uid://do0o6dikdydrs" path="res://VisualAssets/Fonts/CharacterCreator/BaseFontSize.tres" id="3_1mqbt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xfpue"]
+
+[node name="Selector" type="PanelContainer"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -41.0
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_xfpue")
+script = ExtResource("1_xfpue")
+
+[node name="Select" type="ColorRect" parent="."]
+visible = false
+layout_mode = 2
+color = Color(1, 0, 0, 1)
+
+[node name="Container" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="LeftArrow" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PaddingLeft" type="Control" parent="Container/LeftArrow"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Arrow" type="TextureRect" parent="Container/LeftArrow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+texture = ExtResource("1_6dxlc")
+expand_mode = 2
+flip_h = true
+
+[node name="PaddingRight" type="Control" parent="Container/LeftArrow"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PaddingLeft" type="Control" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="Container/Container"]
+layout_mode = 2
+text = "Species"
+label_settings = ExtResource("3_1mqbt")
+horizontal_alignment = 1
+
+[node name="ValueLabel" type="Label" parent="Container/Container"]
+layout_mode = 2
+text = "Great White Shark"
+label_settings = ExtResource("3_1mqbt")
+horizontal_alignment = 1
+
+[node name="PaddingRight" type="Control" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RightArrow" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PaddingLeft" type="Control" parent="Container/RightArrow"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Arrow" type="TextureRect" parent="Container/RightArrow"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+texture = ExtResource("1_6dxlc")
+expand_mode = 2
+
+[node name="PaddingRight" type="Control" parent="Container/RightArrow"]
+layout_mode = 2
+size_flags_vertical = 3

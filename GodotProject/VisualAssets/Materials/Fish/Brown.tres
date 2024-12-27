@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://krrx0uk2w6vy"]
+
+[ext_resource type="Shader" uid="uid://dueiuvckdbl0m" path="res://Code/Shader/FlowingFish.gdshader" id="1_omxek"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_omxek")
+shader_parameter/color = Color(0.38, 0.21128, 0.1064, 1)
+shader_parameter/is_fast = false

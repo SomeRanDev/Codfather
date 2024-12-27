@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwshu5teh2lm8"]
+
+[ext_resource type="ArrayMesh" uid="uid://cynfmxpmrvp5v" path="res://VisualAssets/Blender/Characters/PlayerHats/Brute.res" id="1_ytwy4"]
+[ext_resource type="Material" uid="uid://k4ioinablvgk" path="res://VisualAssets/Materials/Fish/Red.tres" id="2_360aj"]
+
+[node name="BruteHat" type="MeshInstance3D"]
+mesh = ExtResource("1_ytwy4")
+surface_material_override/0 = ExtResource("2_360aj")

@@ -1,0 +1,281 @@
+[gd_scene load_steps=15 format=3 uid="uid://7hr4mdpp1fs8"]
+
+[ext_resource type="Material" uid="uid://bv872rqlrfdvo" path="res://VisualAssets/Materials/UI/CRT_2D_Material.tres" id="1_aqjyc"]
+[ext_resource type="ArrayMesh" uid="uid://b18it43x6ur7b" path="res://VisualAssets/Blender/Characters/Player/GreatWhiteShark.res" id="1_fix6t"]
+[ext_resource type="Script" uid="uid://dgwhsuhck5ekt" path="res://addons/SharkMafia/game_ui_CCStatManager.gd" id="2_lg66x"]
+[ext_resource type="PackedScene" uid="uid://d3rxtr4h11eci" path="res://Objects/UI/CharacterCreator/Selector.tscn" id="2_p5tlu"]
+[ext_resource type="Script" uid="uid://cq1t7f0742ycn" path="res://addons/SharkMafia/game_PostProcess2D.gd" id="2_uju85"]
+[ext_resource type="PackedScene" uid="uid://kpswume1krat" path="res://Objects/UI/CharacterCreator/StatAllocator.tscn" id="3_54jy1"]
+[ext_resource type="Script" uid="uid://b1c1vtdsrabtn" path="res://addons/SharkMafia/game_ui_CharacterCreator.gd" id="3_ce0my"]
+[ext_resource type="LabelSettings" uid="uid://do0o6dikdydrs" path="res://VisualAssets/Fonts/CharacterCreator/BaseFontSize.tres" id="4_jnasw"]
+[ext_resource type="Script" uid="uid://cdaxvoeu651su" path="res://addons/SharkMafia/game_FullScreenPanelContainer.gd" id="4_pepyl"]
+[ext_resource type="LabelSettings" uid="uid://cn3byrc07gh1s" path="res://VisualAssets/Fonts/CharacterCreator/DescriptionFontSize.tres" id="8_7jp8n"]
+[ext_resource type="Script" uid="uid://recvei8m6d0u" path="res://addons/SharkMafia/game_ui_CCButton.gd" id="10_dmsff"]
+[ext_resource type="ArrayMesh" uid="uid://cynfmxpmrvp5v" path="res://VisualAssets/Blender/Characters/PlayerHats/Brute.res" id="12_ltwa0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p5tlu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uju85"]
+
+[node name="CharacterCreator" type="CanvasGroup"]
+material = ExtResource("1_aqjyc")
+script = ExtResource("2_uju85")
+
+[node name="CCStatManager" type="Node" parent="." node_paths=PackedStringArray("stat_point_label")]
+script = ExtResource("2_lg66x")
+stat_point_label = NodePath("../PanelContainer/Container/ConfigContainer/PointsContainer/Points")
+metadata/_custom_type_script = ExtResource("2_lg66x")
+
+[node name="CharacterCreator" type="Node" parent="." node_paths=PackedStringArray("effect", "container", "entries", "start_button", "species_selection", "class_selection", "display_model", "hat")]
+script = ExtResource("3_ce0my")
+effect = NodePath("..")
+container = NodePath("../PanelContainer")
+entries = [NodePath("../PanelContainer/Container/ConfigContainer/Species"), NodePath("../PanelContainer/Container/ConfigContainer/Class"), NodePath("../PanelContainer/Container/ConfigContainer/PowerContainer"), NodePath("../PanelContainer/Container/ConfigContainer/ToughContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpeedContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpecialContainer"), NodePath("../PanelContainer/Container/ConfigContainer/LuckyContainer"), NodePath("../PanelContainer/Container/ConfigContainer/Continue")]
+start_button = NodePath("../PanelContainer/Container/ConfigContainer/Continue")
+species_selection = NodePath("../PanelContainer/Container/ConfigContainer/Species")
+class_selection = NodePath("../PanelContainer/Container/ConfigContainer/Class")
+display_model = NodePath("../PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport/SharkDisplay")
+hat = NodePath("../PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport/SharkDisplay/Hat")
+metadata/_custom_type_script = ExtResource("3_ce0my")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_p5tlu")
+script = ExtResource("4_pepyl")
+resize_label_settings = Array[LabelSettings]([ExtResource("4_jnasw"), ExtResource("8_7jp8n")])
+
+[node name="ColorRect" type="ColorRect" parent="PanelContainer"]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Container" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="LeftPadding" type="Control" parent="PanelContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="ConfigContainer" type="VBoxContainer" parent="PanelContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.8
+theme_override_constants/separation = 4
+
+[node name="PaddingTop" type="Control" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="CreateYourCharacter" type="Label" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+text = "Create your character!"
+label_settings = ExtResource("4_jnasw")
+horizontal_alignment = 1
+
+[node name="ColorRect2" type="ColorRect" parent="PanelContainer/Container/ConfigContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="PaddingTop2" type="Control" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Species" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("description_label", "description_contents") instance=ExtResource("2_p5tlu")]
+layout_mode = 2
+label = "Species"
+choices = Array[String](["Great White Shark", "Hammerhead Shark", "Whale Shark"])
+descriptions = Array[String](["A powerful hunter that focuses on speed and power instead of gimmicks.", "A special predator with electrical receptors and wide eyes to maximize perception.", "A large, tough shark that does not prey on fish, but cannot be taken down easily."])
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="PaddingMiddle" type="Control" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Class" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("description_label", "description_contents") instance=ExtResource("2_p5tlu")]
+layout_mode = 2
+label = "Class"
+choices = Array[String](["Brute", "Disposer", "Capo"])
+descriptions = Array[String](["The frontline of the family, partaking in direct fights and missions.", "A specialist that ensures nothing remains using their scientific knowledge.", "An experienced, high-level officer that strikes fear into enemies."])
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="PaddingMiddle2" type="Control" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PointsContainer" type="HBoxContainer" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+
+[node name="PointsLabel" type="Label" parent="PanelContainer/Container/ConfigContainer/PointsContainer"]
+layout_mode = 2
+text = "Points"
+label_settings = ExtResource("4_jnasw")
+
+[node name="Padding" type="Control" parent="PanelContainer/Container/ConfigContainer/PointsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Points" type="Label" parent="PanelContainer/Container/ConfigContainer/PointsContainer"]
+layout_mode = 2
+text = "10"
+label_settings = ExtResource("4_jnasw")
+
+[node name="ColorRect" type="ColorRect" parent="PanelContainer/Container/ConfigContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="PowerContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
+layout_mode = 2
+manager = NodePath("../../../../CCStatManager")
+label = "Power"
+description = "Determines how much damage your attacks and skills do.
+
+DAMAGE = SKILL POWER ×
+(YOUR POWER ÷ ENEMY TOUGH)"
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="ToughContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
+layout_mode = 2
+manager = NodePath("../../../../CCStatManager")
+label = "Tough"
+description = "Reduces damage taken from enemy attacks and skills.
+
+DAMAGE = SKILL POWER ×
+(ENEMY POWER ÷ YOUR TOUGH)"
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="SpeedContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
+layout_mode = 2
+manager = NodePath("../../../../CCStatManager")
+label = "Speed"
+description = "Enemies with higher speed than yours will move before you. If they move away when you attack, you'll \"MISS!\""
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="SpecialContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
+layout_mode = 2
+manager = NodePath("../../../../CCStatManager")
+label = "Special"
+description = "Makes you more special. :)"
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="LuckyContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
+layout_mode = 2
+manager = NodePath("../../../../CCStatManager")
+label = "Lucky"
+description = "The higher this stat is, the more items are spawned in a level. Also lowers the prices of items in stores."
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="PaddingMiddle3" type="Control" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Continue" type="PanelContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("description_label", "description_contents")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_uju85")
+script = ExtResource("10_dmsff")
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
+[node name="Select" type="ColorRect" parent="PanelContainer/Container/ConfigContainer/Continue"]
+visible = false
+layout_mode = 2
+color = Color(1, 0.09, 0.09, 1)
+
+[node name="Label" type="Label" parent="PanelContainer/Container/ConfigContainer/Continue"]
+layout_mode = 2
+text = "Start Game!"
+label_settings = ExtResource("4_jnasw")
+horizontal_alignment = 1
+
+[node name="PaddingBottom" type="Control" parent="PanelContainer/Container/ConfigContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="DisplayContainer" type="VBoxContainer" parent="PanelContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Control" type="Control" parent="PanelContainer/Container/DisplayContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="PanelContainer/Container/DisplayContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="PanelContainer/Container/DisplayContainer/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(524, 288)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.35762)
+fov = 50.0
+
+[node name="SharkDisplay" type="MeshInstance3D" parent="PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(0.778101, 0, 0.62814, 0, 1, 0, -0.62814, 0, 0.778101, 0, 0, 0)
+mesh = ExtResource("1_fix6t")
+skeleton = NodePath("../../../../../..")
+
+[node name="Hat" type="MeshInstance3D" parent="PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport/SharkDisplay"]
+transform = Transform3D(-0.295707, -0.266777, 0.302303, -0.174198, 0.422635, 0.202571, -0.363611, 0.0144822, -0.342896, -0.345, 0.227, 0.027)
+mesh = ExtResource("12_ltwa0")
+skeleton = NodePath("../..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(0.945035, 0.155992, -0.287361, 0, 0.878859, 0.477082, 0.32697, -0.450859, 0.830552, 0, 2.10089, 5.86461)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/Container/DisplayContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PaddingLeft" type="Control" parent="PanelContainer/Container/DisplayContainer/HBoxContainer"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/Container/DisplayContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DescriptionLabel" type="Label" parent="PanelContainer/Container/DisplayContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+label_settings = ExtResource("8_7jp8n")
+
+[node name="ColorRect" type="ColorRect" parent="PanelContainer/Container/DisplayContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="Description" type="Label" parent="PanelContainer/Container/DisplayContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+label_settings = ExtResource("8_7jp8n")
+autowrap_mode = 3
+
+[node name="PaddingRight" type="Control" parent="PanelContainer/Container/DisplayContainer/HBoxContainer"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="RightPadding" type="Control" parent="PanelContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2

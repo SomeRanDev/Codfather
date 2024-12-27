@@ -1,0 +1,106 @@
+[gd_scene load_steps=8 format=3 uid="uid://b83mqrlegu4h4"]
+
+[ext_resource type="Material" uid="uid://bv872rqlrfdvo" path="res://VisualAssets/Materials/UI/CRT_2D_Material.tres" id="1_c0dwi"]
+[ext_resource type="Script" uid="uid://cdaxvoeu651su" path="res://addons/SharkMafia/game_FullScreenPanelContainer.gd" id="2_ax32a"]
+[ext_resource type="Script" uid="uid://cq1t7f0742ycn" path="res://addons/SharkMafia/game_PostProcess2D.gd" id="2_e4n62"]
+[ext_resource type="Script" uid="uid://hqmljqxmltex" path="res://addons/SharkMafia/game_Title.gd" id="3_rg4ux"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ax32a"]
+line_spacing = 0.0
+font_size = 150
+
+[sub_resource type="LabelSettings" id="LabelSettings_c0dwi"]
+font_size = 40
+
+[sub_resource type="LabelSettings" id="LabelSettings_quvj1"]
+font_size = 30
+
+[node name="Title" type="CanvasGroup"]
+material = ExtResource("1_c0dwi")
+script = ExtResource("2_e4n62")
+
+[node name="Title" type="Node" parent="." node_paths=PackedStringArray("effect", "container")]
+script = ExtResource("3_rg4ux")
+effect = NodePath("..")
+container = NodePath("../PanelContainer")
+metadata/_custom_type_script = ExtResource("3_rg4ux")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+script = ExtResource("2_ax32a")
+
+[node name="Background" type="ColorRect" parent="PanelContainer"]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PaddingTop" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TitleContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PaddingLeft" type="Control" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+text = "CODFATHER"
+label_settings = SubResource("LabelSettings_ax32a")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PaddingRight" type="Control" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubtitleContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PaddingLeft" type="Control" parent="PanelContainer/VBoxContainer/SubtitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Subtitle" type="Label" parent="PanelContainer/VBoxContainer/SubtitleContainer"]
+layout_mode = 2
+text = "a shark mafia rougelike"
+label_settings = SubResource("LabelSettings_c0dwi")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PaddingRight" type="Control" parent="PanelContainer/VBoxContainer/SubtitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PaddingMiddle" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="BeginContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PaddingLeft" type="Control" parent="PanelContainer/VBoxContainer/BeginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Begin" type="Label" parent="PanelContainer/VBoxContainer/BeginContainer"]
+layout_mode = 2
+text = "(press ENTER or A to begin)"
+label_settings = SubResource("LabelSettings_quvj1")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PaddingRight" type="Control" parent="PanelContainer/VBoxContainer/BeginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PaddingBottom" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

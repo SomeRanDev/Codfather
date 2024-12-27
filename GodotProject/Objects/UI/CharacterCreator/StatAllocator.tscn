@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://kpswume1krat"]
+
+[ext_resource type="Script" uid="uid://cpksl1xjwcpu5" path="res://addons/SharkMafia/game_ui_CCStatAllocator.gd" id="1_x6ic4"]
+[ext_resource type="LabelSettings" uid="uid://do0o6dikdydrs" path="res://VisualAssets/Fonts/CharacterCreator/BaseFontSize.tres" id="2_nqwqs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fh7kq"]
+
+[node name="StatAllocator" type="PanelContainer"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -19.5
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fh7kq")
+script = ExtResource("1_x6ic4")
+
+[node name="Select" type="ColorRect" parent="."]
+visible = false
+layout_mode = 2
+color = Color(1, 0.09, 0.09, 1)
+
+[node name="Container" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Container"]
+layout_mode = 2
+text = "Power"
+label_settings = ExtResource("2_nqwqs")
+
+[node name="Padding" type="Control" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BaseValue" type="Label" parent="Container"]
+layout_mode = 2
+text = "5"
+label_settings = ExtResource("2_nqwqs")
+
+[node name="Value" type="Label" parent="Container"]
+layout_mode = 2
+label_settings = ExtResource("2_nqwqs")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://cy2vxqarxuvx0"]
+
+[ext_resource type="ArrayMesh" uid="uid://bwbrkvcbmrrh1" path="res://VisualAssets/Blender/Characters/PlayerHats/Capo.res" id="1_8orf8"]
+[ext_resource type="Material" uid="uid://krrx0uk2w6vy" path="res://VisualAssets/Materials/Fish/Brown.tres" id="2_1lcu2"]
+
+[node name="CapoHat" type="MeshInstance3D"]
+mesh = ExtResource("1_8orf8")
+surface_material_override/0 = ExtResource("2_1lcu2")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0vgoavnaosb5"]
+
+[ext_resource type="ArrayMesh" uid="uid://pngs35558764" path="res://VisualAssets/Blender/Characters/PlayerHats/Disposer.res" id="1_m5dlg"]
+[ext_resource type="Material" uid="uid://dvlcq2goqxwrx" path="res://VisualAssets/Materials/Fish/Orange.tres" id="2_m5dlg"]
+
+[node name="DisposerHat" type="MeshInstance3D"]
+mesh = ExtResource("1_m5dlg")
+surface_material_override/0 = ExtResource("2_m5dlg")

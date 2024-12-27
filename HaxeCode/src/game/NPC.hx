@@ -58,6 +58,20 @@ class NPC extends TurnSlave {
 		final is_fast = stats.speed > player.stats.speed;
 		show_speed_particles(is_fast);
 		tile_indicator.set_fast(is_fast);
+
+		for(i in 0...mesh.mesh.get_surface_count()) {
+			final m = if(mesh.get_surface_override_material(i) == null) {
+				final m = mesh.mesh.surface_get_material(i).duplicate();
+				mesh.set_surface_override_material(i, cast(m, Material));
+				m;
+			} else {
+				mesh.get_surface_override_material(i);
+			}
+			final m = cast(m, ShaderMaterial);
+			if(m != null) {
+				m.set_shader_parameter("is_fast", is_fast);
+			}
+		}
 	}
 
 	function show_speed_particles(show: Bool) {
