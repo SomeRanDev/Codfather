@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b11awksngsxvt"
-path="res://.godot/imported/GreatWhiteShark.blend-26cd858c6c4bb721ac733ce633c9c470.scn"
+uid="uid://cvowdyytfcw6e"
+path="res://.godot/imported/Fish1.blend-75374eb715908130fb8c54cad78ccb66.scn"
 
 [deps]
 
-source_file="res://VisualAssets/Blender/Characters/GreatWhiteShark.blend"
-dest_files=["res://.godot/imported/GreatWhiteShark.blend-26cd858c6c4bb721ac733ce633c9c470.scn"]
+source_file="res://VisualAssets/Blender/Characters/Fish1.blend"
+dest_files=["res://.godot/imported/Fish1.blend-75374eb715908130fb8c54cad78ccb66.scn"]
 
 [params]
 
@@ -34,39 +34,31 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
-"Belly": {
-"use_external/enabled": true,
-"use_external/path": "uid://crf1e7bsxmgu1"
-},
 "Body": {
 "use_external/enabled": true,
-"use_external/path": "uid://bbjkxhjlxcs17"
+"use_external/path": "uid://pbytfab7ehhw"
 },
 "Eyes": {
 "use_external/enabled": true,
 "use_external/path": "uid://p3p55l76yh7m"
 },
-"InsideMouth": {
+"Mouth": {
 "use_external/enabled": true,
 "use_external/path": "uid://k4ioinablvgk"
-},
-"Teeth": {
-"use_external/enabled": true,
-"use_external/path": "uid://crf1e7bsxmgu1"
 }
 },
 "meshes": {
-"GreatWhiteShark_FinalShark": {
+"Fish1_Fish": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://VisualAssets/Blender/Characters/GreatWhiteShark/GreatWhiteShark.res"
+"save_to_file/path": "res://VisualAssets/Blender/Characters/Fish1.res"
 }
 }
 }
-blender/nodes/visible=2
+blender/nodes/visible=0
 blender/nodes/active_collection_only=false
 blender/nodes/punctual_lights=true
 blender/nodes/cameras=true

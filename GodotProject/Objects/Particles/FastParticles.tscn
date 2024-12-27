@@ -36,8 +36,8 @@ scale_curve = SubResource("CurveTexture_isn7h")
 size = Vector2(0.5, 0.5)
 
 [node name="FastParticles" type="GPUParticles3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_718k2")
+cast_shadow = 0
 emitting = false
 amount = 4
 lifetime = 0.33

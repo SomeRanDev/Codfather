@@ -31,6 +31,7 @@ class CharacterAnimator extends Node {
 	@:export var mesh_manipulator: Node3D;
 	@:export var mesh_holder: Node3D;
 	@:export var shadow: Sprite3D;
+	@:export var tile_indicator: TileIndicator;
 
 	@:export var default_mesh: Mesh;
 	@:export var attack_mesh: Mesh;
@@ -81,6 +82,9 @@ class CharacterAnimator extends Node {
 		final r2 = back_and_forth(r);
 		mesh.scale = new Vector3(1 + r2, 1 - 0.5 * r2, 1) * base_scale;
 		mesh_holder.position = new Vector3(1, 0, 0) * r;
+		if(tile_indicator != null) {
+			tile_indicator.set_animation(1.0 - r);
+		}
 	}
 
 	function refresh_move_up_animation(r: Float) {
@@ -123,7 +127,7 @@ class CharacterAnimator extends Node {
 			1.0 - (mesh_holder.position.y / JUMP_HEIGHT);
 		}
 		final r2 = 1.0 - r;
-		shadow.pixel_size = (0.01 + (0.01 * r2)) * 4.0;
+		shadow.pixel_size = (0.01 + (0.01 * r2)) * 1.75;
 		shadow.position.y = -(JUMP_HEIGHT + 0.48) + (r * JUMP_HEIGHT);
 		shadow.modulate.a = ((1.0 - r) * 0.5);
 		shadow.visible = r < 1.0 || is_up;

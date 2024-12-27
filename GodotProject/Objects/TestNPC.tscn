@@ -1,14 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://dtpn1mb2y6tde"]
+[gd_scene load_steps=8 format=3 uid="uid://dtpn1mb2y6tde"]
 
 [ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_wfbte"]
+[ext_resource type="ArrayMesh" uid="uid://cc4j2sikq1tq5" path="res://VisualAssets/Blender/Characters/Fish1.res" id="2_gmfhb"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="2_neiyk"]
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="3_cmyqx"]
 [ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="3_riyet"]
+[ext_resource type="PackedScene" uid="uid://bwnqrwtod7fyj" path="res://Objects/TileIndicator.tscn" id="6_0cqn1"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_neiyk"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_riyet"]
-albedo_color = Color(0, 0, 1, 1)
 
 [node name="TestNpc" type="Node3D" node_paths=PackedStringArray("popup_maker")]
 script = ExtResource("1_wfbte")
@@ -21,26 +20,34 @@ popup_maker = NodePath("MeshRotator/MeshHolder/PopupMaker")
 [node name="MeshManipulator" type="Node3D" parent="MeshRotator/MeshHolder"]
 
 [node name="Mesh" type="MeshInstance3D" parent="MeshRotator/MeshHolder/MeshManipulator"]
-mesh = SubResource("BoxMesh_neiyk")
+layers = 3
+cast_shadow = 0
+mesh = ExtResource("2_gmfhb")
 skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_riyet")
 
 [node name="Shadow" type="Sprite3D" parent="MeshRotator/MeshHolder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.49, 0)
 modulate = Color(1, 1, 1, 0.435294)
 pixel_size = 0.02
 axis = 1
+alpha_cut = 1
+alpha_scissor_threshold = 0.257
 texture = ExtResource("2_neiyk")
 
 [node name="PopupMaker" type="Node3D" parent="MeshRotator/MeshHolder"]
 script = ExtResource("3_cmyqx")
 metadata/_custom_type_script = ExtResource("3_cmyqx")
 
-[node name="CharacterAnimator" type="Node" parent="." node_paths=PackedStringArray("mesh", "mesh_manipulator", "mesh_holder", "shadow")]
+[node name="TileIndicator" parent="MeshRotator" instance=ExtResource("6_0cqn1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.49, 0)
+
+[node name="CharacterAnimator" type="Node" parent="." node_paths=PackedStringArray("mesh", "mesh_manipulator", "mesh_holder", "shadow", "tile_indicator")]
 script = ExtResource("3_riyet")
 mesh = NodePath("../MeshRotator/MeshHolder/MeshManipulator/Mesh")
 mesh_manipulator = NodePath("../MeshRotator/MeshHolder/MeshManipulator")
 mesh_holder = NodePath("../MeshRotator/MeshHolder")
 shadow = NodePath("../MeshRotator/MeshHolder/Shadow")
+tile_indicator = NodePath("../MeshRotator/TileIndicator")
 default_mesh = SubResource("BoxMesh_neiyk")
+base_scale = 1.5
 metadata/_custom_type_script = ExtResource("3_riyet")
