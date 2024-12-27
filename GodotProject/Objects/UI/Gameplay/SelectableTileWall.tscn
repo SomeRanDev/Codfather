@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxgu5sqpenj17"]
+
+[ext_resource type="ArrayMesh" uid="uid://dfimfl3ae6mtk" path="res://VisualAssets/Blender/UI/TileSelectHighlight.res" id="1_qhct8"]
+[ext_resource type="Material" uid="uid://da0kmpd3wf7cj" path="res://VisualAssets/Materials/UI/TileSelect.tres" id="2_yhje5"]
+
+[node name="TileSelect" type="MeshInstance3D"]
+cast_shadow = 0
+mesh = ExtResource("1_qhct8")
+surface_material_override/0 = ExtResource("2_yhje5")

@@ -1,5 +1,8 @@
 package game.ui.gameplay;
 
+import game.Attack.Skill;
+import game.Attack.BASIC_SKILL_ID;
+import game.Attack.NULL_SKILL_ID;
 import game.Attack.BASIC_SKILL;
 import game.Attack.ALL_SKILLS;
 import godot.*;
@@ -22,15 +25,16 @@ class SkillListMenu extends VBoxContainer {
 		on_resize();
 	}
 
-	public function update() {
+	public function update(): Int {
 		final skill_id = skill_list.update();
-		if(skill_id != -2) {
-			if(skill_id == -1) {
-				skill_description.set_skill(BASIC_SKILL);
-			} else {
-				skill_description.set_skill(ALL_SKILLS[skill_id]);
-			}
+		if(skill_id != NULL_SKILL_ID) {
+			skill_description.set_skill(Skill.get_skill(skill_id));
 		}
+
+		if(Input.is_action_just_pressed("enter")) {
+			return skill_list.get_current_skill_id();
+		}
+		return NULL_SKILL_ID;
 	}
 
 	function on_resize() {

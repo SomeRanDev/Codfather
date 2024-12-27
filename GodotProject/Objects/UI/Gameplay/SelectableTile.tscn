@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://fltbmtkivwhj"]
+
+[ext_resource type="ArrayMesh" uid="uid://bucda4gt7aagh" path="res://VisualAssets/Blender/UI/TileSelectArrow.res" id="1_bxj18"]
+[ext_resource type="Script" path="res://addons/SharkMafia/game_ui_SelectableTile.gd" id="1_v4y8k"]
+[ext_resource type="Texture2D" uid="uid://cki0qfho3ute7" path="res://VisualAssets/2D/TargetSelectArrow.aseprite" id="3_5fun1"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_arqvf"]
+orientation = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v4y8k"]
+albedo_color = Color(0, 0.490196, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bxj18"]
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+billboard_mode = 1
+billboard_keep_scale = true
+
+[node name="SelectableTile" type="Node3D"]
+script = ExtResource("1_v4y8k")
+
+[node name="Tile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+mesh = SubResource("QuadMesh_arqvf")
+surface_material_override/0 = SubResource("StandardMaterial3D_v4y8k")
+
+[node name="TileSelectArrow" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, 0)
+visible = false
+cast_shadow = 0
+mesh = ExtResource("1_bxj18")
+surface_material_override/0 = SubResource("StandardMaterial3D_bxj18")
+
+[node name="TileSelectArrowSprite" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.25)
+visible = false
+cast_shadow = 0
+pixel_size = 0.02
+billboard = 1
+double_sided = false
+no_depth_test = true
+alpha_cut = 1
+alpha_scissor_threshold = 0.9
+texture = ExtResource("3_5fun1")

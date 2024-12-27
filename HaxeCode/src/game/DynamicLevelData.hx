@@ -9,6 +9,10 @@ class DynamicLevelData extends Node {
 	var entity_array: Array<Int>;
 	var hovered_entity_array: Array<Int>;
 
+	public function static_data(): LevelData {
+		return level_data;
+	}
+
 	public function manual_ready() {
 		final size = level_data.width * level_data.height;
 
@@ -84,11 +88,19 @@ class DynamicLevelData extends Node {
 		return false;
 	}
 
+	public function is_attackable_or_empty(pos: Vector3i) {
+		return is_attackable(pos) || tile_free(pos);
+	}
+
 	public function get_entity(pos: Vector3i): Null<TurnSlave> {
 		final id = get_id(pos);
 		if(id > 0) {
 			return turn_manager.get_entity(id);
 		}
 		return null;
+	}
+
+	public function get_3d_index(pos: Vector3i): Int {
+		return (level_data.width * level_data.height * pos.z) + (level_data.width * pos.y) + pos.x;
 	}
 }

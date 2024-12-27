@@ -1,5 +1,7 @@
 package game;
 
+import game.ui.target_select.TargetSelectManager;
+import game.Attack.NULL_SKILL_ID;
 import game.ui.gameplay.SkillListMenu;
 import game.ui.gameplay.SkillDescription;
 import game.ui.gameplay.SkillList;
@@ -30,6 +32,7 @@ class QueueableActionHelpers {
 
 class Player extends TurnSlave {
 	@:const var SKILL_LIST_MENU: PackedScene = GD.preload("res://Objects/UI/Gameplay/SkillListMenu.tscn");
+	@:const var TARGET_SELECT_MANAGER: PackedScene = GD.preload("res://Objects/UI/Gameplay/TargetSelectManager.tscn");
 
 	@:export var level_data: DynamicLevelData;
 	@:export var map: MapSprite;
@@ -49,12 +52,14 @@ class Player extends TurnSlave {
 	var movement_cooldown: Float = 0.0;
 	var queued_actions: Array<QueueableAction> = [];
 	var last_moved_direction: Null<Direction> = null;
+	var look_direction: Direction = Right;
 
 	var queued_turn_action: Action = Nothing;
 	
 	var skills: Array<Int> = [0];
 
 	var skill_list_menu: Null<SkillListMenu> = null;
+	var target_select_manager: Null<TargetSelectManager> = null;
 
 	static final INPUT_BUFFER_SIZE = 2;
 	static final GAME_SPEED = 7.5;
@@ -132,20 +137,26 @@ class Player extends TurnSlave {
 	override function _process(delta: Float): Void {
 		popup_maker.update(delta);
 
-		if(skill_list_menu == null) {
-			update_gameplay();
-		} else {
+		if(target_select_manager != null) {
+			if(target_select_manager.update(delta, tilemap_position, level_data)) {
+				final action = target_select_manager.get_queuable_action();
+				if(action != null) {
+					queued_actions.push(action);
+				}
+
+				target_select_manager.cleanup();
+				remove_child(target_select_manager);
+				target_select_manager.queue_free();
+				target_select_manager = null;
+			}
+		} else if(skill_list_menu != null) {
 			update_skill_list();
-		}
+		} else {
+			update_gameplay();
 
-		if(Input.is_action_just_pressed("open_skill_list")) {
-			queued_actions = [];
+			if(Input.is_action_just_pressed("enter")) {
+				queued_actions = [];
 
-			if(skill_list_menu != null) {
-				_2d.remove_child(skill_list_menu);
-				skill_list_menu.queue_free();
-				skill_list_menu = null;
-			} else {
 				skill_list_menu = cast SKILL_LIST_MENU.instantiate();
 				_2d.add_child(skill_list_menu);
 				skill_list_menu.setup(skills);
@@ -214,7 +225,16 @@ class Player extends TurnSlave {
 	}
 
 	function update_skill_list() {
-		skill_list_menu.update();
+		final selected_skill_id = skill_list_menu.update();
+		if(selected_skill_id != NULL_SKILL_ID) {
+			_2d.remove_child(skill_list_menu);
+			skill_list_menu.queue_free();
+			skill_list_menu = null;
+
+			target_select_manager = cast TARGET_SELECT_MANAGER.instantiate();
+			add_child(target_select_manager);
+			target_select_manager.setup(selected_skill_id, tilemap_position, look_direction, level_data);
+		}
 	}
 
 	function do_next_action() {
@@ -236,6 +256,7 @@ class Player extends TurnSlave {
 				}
 
 				last_moved_direction = next_direction;
+				look_direction = next_direction;
 			}
 			case Jump: {
 				final is_up = tilemap_position.z == 0;
@@ -252,7 +273,7 @@ class Player extends TurnSlave {
 			}
 			case BasicAttack(direction): {
 				last_moved_direction = null;
-				if(level_data.is_attackable(tilemap_position + direction.as_vec3i())) {
+				if(level_data.is_attackable_or_empty(tilemap_position + direction.as_vec3i())) {
 					queued_turn_action = BasicAttack(direction);
 					turn_manager.process_turns();
 
@@ -283,15 +304,15 @@ class Player extends TurnSlave {
 				if(level_data.tile_free(next_tile) && set_tilemap_position(next_tile)) {
 					last_moved_direction = direction;
 
-					mesh_rotator.rotation.y = direction.rotation();
 					character_animator.animation = Move;
 				} else {
-					mesh_rotator.rotation.y = direction.rotation();
 					character_animator.animation = Blocked;
 
 					popup_maker.popup("Blocked!");
 					post_process.play_distort();
 				}
+
+				set_direction(direction);
 			}
 			case Jump(is_up): {
 				final next = new Vector3i(0, 0, is_up ? 1 : -1);
@@ -311,9 +332,10 @@ class Player extends TurnSlave {
 
 				character_animator.animation = DirectionalAttack;
 
+				set_direction(direction);
+
 				if(entity != null) {
 					if(entity.take_attack(this, -1)) {
-						mesh_rotator.rotation.y = direction.rotation();
 					} else {
 						popup_maker.popup("Failed!");
 					}
@@ -330,5 +352,10 @@ class Player extends TurnSlave {
 
 	override function process_animation(ratio: Float): Void {
 		// This function should remain empty...
+	}
+
+	function set_direction(direction: Direction) {
+		look_direction = direction;
+		mesh_rotator.rotation.y = direction.rotation();
 	}
 }

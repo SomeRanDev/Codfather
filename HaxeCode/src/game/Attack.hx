@@ -19,7 +19,18 @@ class Skill {
 		this.max_power = max_power;
 		this.knockback = knockback;
 	}
+
+	public static function get_skill(id: Int) {
+		return if(id == BASIC_SKILL_ID) {
+			BASIC_SKILL;
+		} else {
+			ALL_SKILLS[id];
+		}
+	}
 }
+
+final NULL_SKILL_ID = -2;
+final BASIC_SKILL_ID = -1;
 
 final BASIC_SKILL = new Skill("Chomp", BasicAttack, 2, 3, 0);
 

@@ -1,5 +1,7 @@
 package game.ui.gameplay;
 
+import game.Attack.BASIC_SKILL_ID;
+import game.Attack.NULL_SKILL_ID;
 import game.Attack.ALL_SKILLS;
 
 import godot.*;
@@ -31,7 +33,7 @@ class SkillList extends PanelContainer {
 		final attack_item: SkillListItem = cast ITEM_SCENE.instantiate();
 		items_container.add_child(attack_item);
 		items.push(attack_item);
-		attack_item.setup("Chomp", -1);
+		attack_item.setup("Chomp", BASIC_SKILL_ID);
 
 		for(skill in skills) {
 			final separator = if(pooled_separators.length > 0) {
@@ -58,6 +60,10 @@ class SkillList extends PanelContainer {
 		attack_item.set_selected(true);
 	}
 
+	public function get_current_skill_id(): Int {
+		return items[current_index].skill_id;
+	}
+
 	public function update(): Int {
 		var move_input = 0;
 		if (Input.is_action_just_pressed("up"))
@@ -72,7 +78,7 @@ class SkillList extends PanelContainer {
 			if(current_index < 0) current_index = items.length - 1;
 			items[current_index].set_selected(true);
 
-			return items[current_index].skill_id;
+			return get_current_skill_id();
 		} else if(move_input == 1) {
 			items[current_index].set_selected(false);
 
@@ -80,9 +86,9 @@ class SkillList extends PanelContainer {
 			if(current_index >= items.length) current_index = 0;
 			items[current_index].set_selected(true);
 
-			return items[current_index].skill_id;
+			return get_current_skill_id();
 		}
 
-		return -2;
+		return NULL_SKILL_ID;
 	}
 }
