@@ -172,7 +172,7 @@ class TurnSlave extends Node3D {
 			popup_maker.popup(Std.string(damage));
 
 			stats.health -= damage;
-			if(stats.health < 0) {
+			if(stats.health <= 0) {
 				kill();
 				killed = true;
 			} else {

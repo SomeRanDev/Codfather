@@ -8,9 +8,13 @@ class LevelText extends Node {
 
 	var floor_text_animation: Float = 3.0;
 
-	override function _ready() {
+	function make_visible() {
 		floor_text.visible = floor_subtext.visible = true;
 		floor_text.modulate.a = floor_subtext.modulate.a = 1.0;
+	}
+
+	override function _ready() {
+		make_visible();
 		floor_text.text = "Floor " + Std.string(WorldManager.floor);
 		floor_subtext.text = "(" + WorldManager.floors_remaining + " floors remaining)";
 		set_process_mode(PROCESS_MODE_INHERIT);
@@ -30,5 +34,11 @@ class LevelText extends Node {
 		if(floor_text_animation <= 0.0) {
 			set_process_mode(PROCESS_MODE_DISABLED);
 		}
+	}
+
+	public function set_death_text() {
+		make_visible();
+		floor_text.text = "DEAD";
+		floor_subtext.text = "Press ENTER to restart...";
 	}
 }

@@ -2,7 +2,7 @@
 
 [ext_resource type="Material" uid="uid://bv872rqlrfdvo" path="res://VisualAssets/Materials/UI/CRT_2D_Material.tres" id="1_c4eo0"]
 [ext_resource type="Script" uid="uid://cq1t7f0742ycn" path="res://addons/SharkMafia/game_PostProcess2D.gd" id="2_w4u4o"]
-[ext_resource type="Script" path="res://addons/SharkMafia/game_Story.gd" id="3_6hqoj"]
+[ext_resource type="Script" uid="uid://tvytja7po06o" path="res://addons/SharkMafia/game_Story.gd" id="3_6hqoj"]
 [ext_resource type="Script" uid="uid://cdaxvoeu651su" path="res://addons/SharkMafia/game_FullScreenPanelContainer.gd" id="4_6hqoj"]
 [ext_resource type="LabelSettings" uid="uid://bhic01n7eorym" path="res://VisualAssets/Fonts/Story/DescriptionLabelSettings.tres" id="5_w4u4o"]
 [ext_resource type="Script" uid="uid://recvei8m6d0u" path="res://addons/SharkMafia/game_ui_CCButton.gd" id="6_6hqoj"]

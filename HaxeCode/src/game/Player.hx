@@ -1,5 +1,6 @@
 package game;
 
+import game.ui.LevelText;
 import game.ui.FadeInOut;
 import game.Attack.Skill;
 import game.Attack.CANCEL_SKILL_ID;
@@ -49,6 +50,7 @@ class Player extends TurnSlave {
 	@:export var _2d: CanvasGroup;
 	@:export var effect_manager: EffectManager;
 	@:export var fade_in_out: FadeInOut;
+	@:export var level_text: LevelText;
 	@:export var gameplay_controls: Label;
 	@:export var gameplay_controls_stairs: VBoxContainer;
 	@:export var menu_controls: Label;
@@ -82,6 +84,7 @@ class Player extends TurnSlave {
 
 	var intro_outro_animation: Float = 1.0;
 	var is_stairs_animation = false;
+	var is_death_animation = false;
 
 	var in_menu = false;
 	var on_stairs = false;
@@ -157,8 +160,14 @@ class Player extends TurnSlave {
 	}
 
 	public override function kill() {
-		stats.health = stats.max_health;
+		stats.health = 0;
 		refresh_health_bar();
+
+		camera.shake();
+		post_process.play_distort();
+
+		is_death_animation = true;
+		intro_outro_animation = 1.0;
 	}
 
 	// =====================================
@@ -239,12 +248,38 @@ class Player extends TurnSlave {
 				}
 			}
 
+			final previous = intro_outro_animation;
+
 			if(update_animation) {
-				intro_outro_animation -= delta * (is_stairs_animation ? 2.0 : 1.0);
+				intro_outro_animation -= delta * (is_stairs_animation ? 2.0 : (is_death_animation ? 0.2 : 1.0));
 				if(intro_outro_animation < 0.0) intro_outro_animation = 0.0;
 			}
 
-			if(is_stairs_animation) {
+			if(is_death_animation) {
+				final r = 1.0 - intro_outro_animation;
+				if(r < 0.3) {
+					final r = r / 0.3;
+					mesh.rotation.x = r.cubicInOut() * Math.PI;
+				} else {
+					mesh.rotation.x = Math.PI;
+				}
+
+				if(r > 0.2) {
+					final r = (r - 0.2) / 0.8;
+					mesh.position = new Vector3(0, 3.0 * r.cubicOut(), 0);
+				}
+
+				if(previous > 0.7 && intro_outro_animation <= 0.7) {
+					level_text.set_death_text();
+				}
+
+				if(intro_outro_animation >= 0.3) {
+					if(Input.is_action_just_pressed("start")) {
+						WorldManager.reset();
+						get_tree().change_scene_to_file("res://Title.tscn");
+					}
+				}
+			} else if(is_stairs_animation) {
 				final r = 1.0 - intro_outro_animation;
 				if(r < 0.3) {
 					final r = r / 0.3;
@@ -275,6 +310,12 @@ class Player extends TurnSlave {
 			if(!fade_in_out.update_fade_out(delta)) {
 				WorldManager.next_floor();
 				get_tree().change_scene_to_file("res://Main.tscn");
+			}
+			return;
+		} else if(is_death_animation) {
+			if(Input.is_action_just_pressed("start")) {
+				WorldManager.reset();
+				get_tree().change_scene_to_file("res://Title.tscn");
 			}
 			return;
 		}

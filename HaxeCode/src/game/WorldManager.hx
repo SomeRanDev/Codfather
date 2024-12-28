@@ -16,4 +16,11 @@ class WorldManager {
 			no_more_floors = true;
 		}
 	}
+
+	public static function reset() {
+		floor = 1;
+		floors_remaining = 4;
+		should_randomize = false;
+		no_more_floors = false;
+	}
 }

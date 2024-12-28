@@ -6,8 +6,8 @@ class FullScreenPanelContainer extends PanelContainer {
 	@:export var resize_label_settings: Array<LabelSettings> = [];
 	@:export var resize_rich_texts: Array<RichTextLabel> = [];
 	
-	static var resize_label_settings_sizes: Array<Int> = [];
-	static var resize_rich_text_sizes: Array<Int> = [];
+	var resize_label_settings_sizes: Array<Int> = [];
+	var resize_rich_text_sizes: Array<Int> = [];
 
 	public function manual_ready() {
 		if(resize_label_settings_sizes.length == 0) {

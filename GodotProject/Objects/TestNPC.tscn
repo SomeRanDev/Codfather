@@ -2,14 +2,14 @@
 
 [ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_wfbte"]
 [ext_resource type="ArrayMesh" uid="uid://cc4j2sikq1tq5" path="res://VisualAssets/Blender/Characters/Fish1.res" id="2_gmfhb"]
-[ext_resource type="Script" path="res://addons/SharkMafia/game_NPCBehaviorBasicAttacker.gd" id="2_l5jxx"]
+[ext_resource type="Script" uid="uid://7ilgig2364w" path="res://addons/SharkMafia/game_NPCBehaviorBasicAttacker.gd" id="2_l5jxx"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="2_neiyk"]
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="3_cmyqx"]
 [ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="3_riyet"]
 [ext_resource type="PackedScene" uid="uid://bwnqrwtod7fyj" path="res://Objects/TileIndicator.tscn" id="6_0cqn1"]
 [ext_resource type="ArrayMesh" uid="uid://duxi6e0csjxh5" path="res://VisualAssets/Blender/UI/ExclamationPoint.res" id="6_gsgyd"]
-[ext_resource type="Script" path="res://addons/SharkMafia/game_Exclamation.gd" id="7_gsgyd"]
-[ext_resource type="Script" path="res://addons/SharkMafia/game_NPCBehaviorCircle.gd" id="7_xpx1k"]
+[ext_resource type="Script" uid="uid://e40w3x3tewj3" path="res://addons/SharkMafia/game_Exclamation.gd" id="7_gsgyd"]
+[ext_resource type="Script" uid="uid://6bdf5halmcnk" path="res://addons/SharkMafia/game_NPCBehaviorCircle.gd" id="7_xpx1k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_karc0"]
 albedo_color = Color(1, 0, 0, 1)
