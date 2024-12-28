@@ -17,7 +17,7 @@ class PopupMaker extends Node3D {
 		}
 
 		l.text = text;
-		l.setup(global_position, global_position + new Vector3(0, 3, 0));
+		l.setup(global_position, global_position + new Vector3(0, 2, 0));
 		popups.push(l);
 	}
 

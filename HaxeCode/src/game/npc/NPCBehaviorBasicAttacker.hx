@@ -21,10 +21,14 @@ class NPCBehaviorBasicAttacker extends NPCBehaviorBase {
 		final npc_position = npc.tilemap_position;
 
 		if(!going_after_player && level_data.distance_to_player_squared(npc_position) <= (5*5)) {
-			if(level_data.check_if_points_can_see_each_other(level_data.get_player_position(), npc_position)) {
-				going_after_player = true;
-				npc.popup_maker.popup("!");
-				return Nothing;
+			// Due to camera position, we don't want enemy noticing player super far below camera.
+			// Limit it to 3 squares below camera.
+			if(npc_position.y - level_data.get_player_position().y < 3) {
+				if(level_data.check_if_points_can_see_each_other(level_data.get_player_position(), npc_position)) {
+					going_after_player = true;
+					npc.start_exclamation();
+					return Nothing;
+				}
 			}
 		} else if(going_after_player && level_data.distance_to_player_squared(npc_position) > (10*10)) {
 			going_after_player = false;

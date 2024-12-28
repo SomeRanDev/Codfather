@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://bcftqd3cl6taf"]
+[gd_scene load_steps=39 format=3 uid="uid://bcftqd3cl6taf"]
 
 [ext_resource type="Script" uid="uid://rvheeahu2t8q" path="res://addons/SharkMafia/World.gd" id="1_c6i3y"]
 [ext_resource type="Shader" uid="uid://dqy78gv8w18b3" path="res://Code/Shader/PostProcess.gdshader" id="1_trn2v"]
@@ -9,7 +9,6 @@
 [ext_resource type="Script" uid="uid://kghpsmatuoha" path="res://addons/SharkMafia/LevelData.gd" id="3_c6i3y"]
 [ext_resource type="Script" uid="uid://dy7wt3uuqrb50" path="res://addons/SharkMafia/PostProcess.gd" id="3_j4qnp"]
 [ext_resource type="Script" uid="uid://beger0cx3eflu" path="res://addons/SharkMafia/DynamicLevelData.gd" id="4_c2ibq"]
-[ext_resource type="Texture2D" uid="uid://tfyks2524q2b" path="res://VisualAssets/2D/Tooth.png" id="4_hhcpw"]
 [ext_resource type="LabelSettings" uid="uid://0mgbpsnbk23t" path="res://VisualAssets/Fonts/Game/ControlsLabelSettings.tres" id="4_mxvw5"]
 [ext_resource type="Script" uid="uid://blgbnq7s2sirn" path="res://addons/SharkMafia/Tilemap.gd" id="5_j4qnp"]
 [ext_resource type="ArrayMesh" uid="uid://c05nph77x35xs" path="res://VisualAssets/Blender/World/WallTop1.res" id="6_c6i3y"]
@@ -19,6 +18,7 @@
 [ext_resource type="Script" path="res://addons/SharkMafia/game_FadeInOut.gd" id="7_w3rk5"]
 [ext_resource type="Environment" uid="uid://cfdgm3n6xvh4s" path="res://VisualAssets/Environment.tres" id="8_03owx"]
 [ext_resource type="Material" uid="uid://byjhgwk6kjfly" path="res://VisualAssets/Materials/World/AlternativeTile.tres" id="8_j4qnp"]
+[ext_resource type="PackedScene" uid="uid://1cqehtgkcfui" path="res://Objects/UI/Gameplay/Tooth.tscn" id="9_40n85"]
 [ext_resource type="Script" uid="uid://dk3l88a0tcam0" path="res://addons/SharkMafia/Camera.gd" id="9_fpfj3"]
 [ext_resource type="Script" uid="uid://hkajp5eck3dy" path="res://addons/SharkMafia/Player.gd" id="11_sc1dx"]
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="12_c2ibq"]
@@ -29,7 +29,6 @@
 [ext_resource type="ArrayMesh" uid="uid://b18it43x6ur7b" path="res://VisualAssets/Blender/Characters/Player/GreatWhiteShark.res" id="15_3b0ty"]
 [ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="15_sc1dx"]
 [ext_resource type="PackedScene" uid="uid://cwgpav171uiuq" path="res://Objects/Stairs.tscn" id="16_hri7i"]
-[ext_resource type="ArrayMesh" uid="uid://dcaoiva2g7l7x" path="res://VisualAssets/Blender/World/Stairs.res" id="16_w3rk5"]
 [ext_resource type="PackedScene" uid="uid://bwnqrwtod7fyj" path="res://Objects/TileIndicator.tscn" id="20_3b0ty"]
 [ext_resource type="ArrayMesh" uid="uid://b1bhk3uyrs03u" path="res://VisualAssets/Blender/Characters/Player/GreatWhiteShark_MouthOpen.res" id="21_bg4s2"]
 
@@ -160,11 +159,15 @@ horizontal_alignment = 1
 
 [node name="ToothContainer" type="GridContainer" parent="2D/FullScreenPanelContainer/UIContainer/PlayerStats"]
 layout_mode = 2
+size_flags_vertical = 3
 columns = 10
 
-[node name="Tooth" type="TextureRect" parent="2D/FullScreenPanelContainer/UIContainer/PlayerStats/ToothContainer"]
+[node name="Tooth" parent="2D/FullScreenPanelContainer/UIContainer/PlayerStats/ToothContainer" instance=ExtResource("9_40n85")]
 layout_mode = 2
-texture = ExtResource("4_hhcpw")
+
+[node name="Control" type="Control" parent="2D/FullScreenPanelContainer/UIContainer/PlayerStats"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Padding2" type="Control" parent="2D/FullScreenPanelContainer/UIContainer"]
 layout_mode = 2
@@ -8017,9 +8020,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 23)
 mesh = SubResource("QuadMesh_wkp8b")
 surface_material_override/0 = ExtResource("8_j4qnp")
 
-[node name="Stairs" type="MeshInstance3D" parent="Tilemap" instance=ExtResource("16_hri7i")]
+[node name="Stairs" parent="Tilemap" instance=ExtResource("16_hri7i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 24)
-mesh = ExtResource("16_w3rk5")
 
 [node name="@MeshInstance3D@409159" type="MeshInstance3D" parent="Tilemap"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 25)

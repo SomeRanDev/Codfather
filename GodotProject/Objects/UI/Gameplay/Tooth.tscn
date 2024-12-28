@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://1cqehtgkcfui"]
+
+[ext_resource type="Texture2D" uid="uid://tfyks2524q2b" path="res://VisualAssets/2D/Tooth.png" id="1_axxbw"]
+
+[node name="Tooth" type="TextureRect"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_axxbw")
+expand_mode = 1
+stretch_mode = 5

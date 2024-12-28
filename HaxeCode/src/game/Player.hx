@@ -39,6 +39,7 @@ class Player extends TurnSlave {
 	@:const var TARGET_SELECT_MANAGER: PackedScene = GD.preload("res://Objects/UI/Gameplay/TargetSelectManager.tscn");
 	@:const var EMPTY_TOOTH_TEXTURE: CompressedTexture2D = GD.preload("res://VisualAssets/2D/EmptyTooth.png");
 	@:const var TOOTH_TEXTURE: CompressedTexture2D = GD.preload("res://VisualAssets/2D/Tooth.png");
+	@:const var TOOTH_SCENE: PackedScene = GD.preload("res://Objects/UI/Gameplay/Tooth.tscn");
 
 	@:export var camera: Camera;
 	@:export var level_data: DynamicLevelData;
@@ -497,7 +498,7 @@ class Player extends TurnSlave {
 	function refresh_teeth() {
 		var count = tooth_container.get_child_count();
 		while(count < max_teeth) {
-			final tr = new TextureRect();
+			final tr = cast(TOOTH_SCENE.instantiate(), TextureRect);
 			tr.texture = EMPTY_TOOTH_TEXTURE;
 			tooth_container.add_child(tr);
 			count = tooth_container.get_child_count();

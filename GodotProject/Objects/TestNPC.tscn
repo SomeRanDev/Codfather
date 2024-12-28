@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dtpn1mb2y6tde"]
+[gd_scene load_steps=12 format=3 uid="uid://dtpn1mb2y6tde"]
 
 [ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_wfbte"]
 [ext_resource type="ArrayMesh" uid="uid://cc4j2sikq1tq5" path="res://VisualAssets/Blender/Characters/Fish1.res" id="2_gmfhb"]
@@ -7,7 +7,15 @@
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="3_cmyqx"]
 [ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="3_riyet"]
 [ext_resource type="PackedScene" uid="uid://bwnqrwtod7fyj" path="res://Objects/TileIndicator.tscn" id="6_0cqn1"]
+[ext_resource type="ArrayMesh" uid="uid://duxi6e0csjxh5" path="res://VisualAssets/Blender/UI/ExclamationPoint.res" id="6_gsgyd"]
+[ext_resource type="Script" path="res://addons/SharkMafia/game_Exclamation.gd" id="7_gsgyd"]
 [ext_resource type="Script" path="res://addons/SharkMafia/game_NPCBehaviorCircle.gd" id="7_xpx1k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_karc0"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 0.5
 
 [node name="TestNpc" type="Node3D" node_paths=PackedStringArray("behavior", "popup_maker")]
 script = ExtResource("1_wfbte")
@@ -42,6 +50,12 @@ axis = 1
 alpha_cut = 1
 alpha_scissor_threshold = 0.257
 texture = ExtResource("2_neiyk")
+
+[node name="Exclamation" type="MeshInstance3D" parent="MeshRotator/MeshHolder"]
+transform = Transform3D(0.333, 0, 0, 0, 0.333, 0, 0, 0, 0.333, 0, 0.31076, 0)
+mesh = ExtResource("6_gsgyd")
+surface_material_override/0 = SubResource("StandardMaterial3D_karc0")
+script = ExtResource("7_gsgyd")
 
 [node name="PopupMaker" type="Node3D" parent="MeshRotator/MeshHolder"]
 script = ExtResource("3_cmyqx")

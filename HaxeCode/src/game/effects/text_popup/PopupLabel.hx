@@ -19,7 +19,7 @@ class PopupLabel extends Label3D {
 	}
 
 	public function update(delta: Float) {
-		time += delta * 1.0;
+		time += delta * 2.0;
 		if(time > 1.0) time = 1.0;
 
 		if(y_offset != target_y_offset) {
@@ -47,6 +47,6 @@ class PopupLabel extends Label3D {
 	}
 
 	public function shift_up() {
-		target_y_offset += 0.5;
+		target_y_offset += 0.7;
 	}
 }

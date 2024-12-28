@@ -1,5 +1,6 @@
 package game;
 
+import game.effects.Exclamation;
 import game.npc.NPCBehaviorBase;
 import game.Constants.JUMP_HEIGHT;
 import game.data.Direction;
@@ -18,6 +19,7 @@ class NPC extends TurnSlave {
 	@:onready var mesh_manipulator: Node3D = untyped __gdscript__("$MeshRotator/MeshHolder/MeshManipulator");
 	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$MeshRotator/MeshHolder/MeshManipulator/Mesh");
 	@:onready var shadow: Sprite3D = untyped __gdscript__("$MeshRotator/MeshHolder/Shadow");
+	@:onready var exclamation: Exclamation = untyped __gdscript__("$MeshRotator/MeshHolder/Exclamation");
 	@:onready var tile_indicator: TileIndicator = untyped __gdscript__("$MeshRotator/TileIndicator");
 
 	var move_particles: Null<GPUParticles3D> = null;
@@ -137,5 +139,9 @@ class NPC extends TurnSlave {
 		level_data.remove_id(stats.id, tilemap_position);
 		turn_manager.remove_entity(this);
 		queue_free();
+	}
+
+	public function start_exclamation() {
+		exclamation.start_effect();
 	}
 }
