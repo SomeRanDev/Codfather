@@ -22,6 +22,12 @@ class LevelData extends Node {
 
 	@:export public var desired_enemy_count: Vector2i; // x = min, y = max
 
+	public function randomize_noise() {
+		if(world_generation_noise != null) {
+			world_generation_noise.seed = Godot.randi_range(0, 9999999);
+		}
+	}
+
 	public function build_world() {
 		tiles = [];
 		tile_type_count = new Dictionary();

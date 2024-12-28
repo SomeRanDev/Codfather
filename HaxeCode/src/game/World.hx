@@ -13,15 +13,17 @@ class World extends Node3D {
 	@:export var turn_manager: TurnManager;
 	@:export var ui_container: FullScreenPanelContainer;
 	@:export var effect_manager: EffectManager;
+	@:export var camera: Camera;
 
 	override function _ready(): Void {
 		trace("Game start!!");
 
 		ui_container.manual_ready();
 
-		var rebuild_level = false;
+		var rebuild_level = WorldManager.should_randomize;
 
 		if(rebuild_level) {
+			level_data.randomize_noise();
 			level_data.build_world();
 			tilemap.build_world();
 		}
@@ -33,6 +35,8 @@ class World extends Node3D {
 		setup_entities();
 
 		map.set_top_left();
+
+		camera.snap_to_target();
 	}
 
 	function setup_entities() {

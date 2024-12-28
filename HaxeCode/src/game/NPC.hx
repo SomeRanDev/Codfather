@@ -33,6 +33,10 @@ class NPC extends TurnSlave {
 
 		stats.generate_id();
 		stats.randomize();
+
+		stats.power = 1;
+		stats.max_health = 5;
+		stats.health = 5;
 	}
 
 	public function set_starting_position(pos: Vector3i): Bool {
@@ -107,7 +111,7 @@ class NPC extends TurnSlave {
 	}
 
 	override function process_turn() {
-		default_turn_processing(character_animator, effect_manager, level_data, null);
+		default_turn_processing(character_animator, effect_manager, level_data, null, null);
 	}
 
 	override function process_animation(ratio: Float) {

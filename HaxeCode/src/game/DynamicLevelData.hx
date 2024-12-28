@@ -299,9 +299,7 @@ class DynamicLevelData extends Node {
 
 		while(frontier.length > 0) {
 			final current = frontier.remove_and_get_first();
-			trace(current, to);
 			if(current == to) {
-				trace("broke because found!!");
 				break;
 			}
 
@@ -314,8 +312,15 @@ class DynamicLevelData extends Node {
 			pathfind_process_neighbor(depth, to, current, down, frontier, frontier_depth, came_from);
 			pathfind_process_neighbor(depth, to, current, left, frontier, frontier_depth, came_from);
 			pathfind_process_neighbor(depth, to, current, right, frontier, frontier_depth, came_from);
-			if(current.z == 0) pathfind_process_neighbor(depth, to, current, up_z, frontier, frontier_depth, came_from);
-			else pathfind_process_neighbor(depth, to, current, down_z, frontier, frontier_depth, came_from);
+
+			// Do not allow up/down movement ON target position
+			if(current.x != to.x || current.y != to.y) {
+				if(current.z == 0) {
+					pathfind_process_neighbor(depth, to, current, up_z, frontier, frontier_depth, came_from);
+				} else {
+					pathfind_process_neighbor(depth, to, current, down_z, frontier, frontier_depth, came_from);
+				}
+			}
 		}
 
 		if(pathfind_cache_keys.length > 10) {

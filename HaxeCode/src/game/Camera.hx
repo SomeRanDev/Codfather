@@ -30,4 +30,8 @@ class Camera extends Camera3D {
 	public function shake() {
 		shake_ratio = 1.0;
 	}
+
+	public function snap_to_target() {
+		cached_position = camera_target_position.global_position;
+	}
 }

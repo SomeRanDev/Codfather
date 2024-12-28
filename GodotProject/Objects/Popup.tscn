@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://cd3kdiqwrboop" path="res://addons/SharkMafia/game_effects_PopupLabel.gd" id="1_35e5r"]
 
 [node name="Label3D" type="Label3D"]
+transform = Transform3D(1, 0, 0, 0, 0.866026, 0.5, 0, -0.5, 0.866026, 0, 0, 0)
 pixel_size = 0.0025
-billboard = 1
 double_sided = false
 fixed_size = true
 alpha_cut = 1

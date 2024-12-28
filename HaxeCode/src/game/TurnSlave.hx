@@ -1,5 +1,6 @@
 package game;
 
+import game.Attack.BASIC_SKILL_ID;
 import game.data.Direction;
 import game.Attack.Skill;
 import game.data.Action;
@@ -7,6 +8,12 @@ import game.Attack.ALL_SKILLS;
 import game.effects.text_popup.PopupMaker;
 
 import godot.*;
+
+enum TakeAttackResult {
+	Nothing;
+	Damaged;
+	Killed;
+}
 
 class TurnSlave extends Node3D {
 	@:export var popup_maker: PopupMaker;
@@ -48,7 +55,8 @@ class TurnSlave extends Node3D {
 	}
 
 	public function default_turn_processing(
-		character_animator: CharacterAnimator, effect_manager: EffectManager, level_data: DynamicLevelData, post_process: Null<PostProcess>
+		character_animator: CharacterAnimator, effect_manager: EffectManager, level_data: DynamicLevelData,
+		post_process: Null<PostProcess>, camera: Null<Camera>,
 	): Float {
 		character_animator.animation = Nothing;
 
@@ -100,10 +108,14 @@ class TurnSlave extends Node3D {
 				set_direction(direction);
 
 				if(entity != null) {
-					if(entity.take_attack(this, -1)) {
-						effect_manager.add_blood_particles(entity.position);
-					} else {
-						popup_maker.popup("Failed!");
+					switch(entity.take_attack(this, BASIC_SKILL_ID)) {
+						case Nothing: popup_maker.popup("Failed!");
+						case Damaged: effect_manager.add_blood_particles(entity.position);
+						case Killed: {
+							effect_manager.add_bone_particles(entity.position, 5.0);
+							effect_manager.add_blood_particles(entity.position, 10.0);
+							if(camera != null) camera.shake();
+						}
 					}
 				} else {
 					popup_maker.popup("Missed!");
@@ -122,10 +134,14 @@ class TurnSlave extends Node3D {
 					for(position in targeted_positions) {
 						final entity = level_data.get_entity(position);
 						if(entity != null) {
-							if(entity.take_attack(this, skill_id)) {
-								effect_manager.add_blood_particles(entity.position);
-							} else {
-								popup_maker.popup("Failed!");
+							switch(entity.take_attack(this, skill_id)) {
+								case Nothing: popup_maker.popup("Failed!");
+								case Damaged: effect_manager.add_blood_particles(entity.position);
+								case Killed: {
+									effect_manager.add_bone_particles(entity.position, 5.0);
+									effect_manager.add_blood_particles(entity.position, 10.0);
+									if(camera != null) camera.shake();
+								}
 							}
 						}
 					}
@@ -143,28 +159,31 @@ class TurnSlave extends Node3D {
 		return turn_speed_ratio;
 	}
 
-	public function take_attack(attacker: TurnSlave, skill_id: Int): Bool {
+	public function take_attack(attacker: TurnSlave, skill_id: Int): TakeAttackResult {
 		var damage: Int = 0;
 
-		if(skill_id == -1) {
-			damage = Math.floor(attacker.stats.power / 2);
-		} else {
-			final skill = ALL_SKILLS[skill_id];
-			final ratio = stats.tough == 0 ? 1 : (attacker.stats.power / stats.tough);
-			final power = Godot.randf_range(skill.min_power, skill.max_power);
-			damage = Math.floor(Math.max(ratio * power, 1));
-		}
+		final skill = Skill.get_skill(skill_id);
+		final ratio = stats.tough == 0 ? 1 : (attacker.stats.power / stats.tough);
+		final power = Godot.randf_range(skill.min_power, skill.max_power);
+		damage = Math.floor(Math.max(ratio * power, 1));
 
+		var killed = false;
 		if(damage > 0) {
 			popup_maker.popup(Std.string(damage));
 
 			stats.health -= damage;
 			if(stats.health < 0) {
 				kill();
+				killed = true;
+			} else {
+				on_damaged();
 			}
 		}
 
-		return true;
+		return killed ? Killed : (damage > 0 ? Damaged : Nothing);
+	}
+
+	public function on_damaged() {
 	}
 
 	public function kill() {

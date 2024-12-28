@@ -8,11 +8,13 @@ class PopupMaker extends Node3D {
 
 	var popups: Array<PopupLabel> = [];
 
-	var delete_when_possible = false;
-
 	public function popup(text: String) {
 		final l: PopupLabel = cast POPUP_SCENE.instantiate();
 		get_tree().get_current_scene().add_child(l);
+
+		for(p in popups) {
+			p.shift_up();
+		}
 
 		l.text = text;
 		l.setup(global_position, global_position + new Vector3(0, 3, 0));

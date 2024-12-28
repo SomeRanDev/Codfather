@@ -47,6 +47,7 @@ class Player extends TurnSlave {
 	@:export var _2d: CanvasGroup;
 	@:export var effect_manager: EffectManager;
 	@:export var gameplay_controls: Label;
+	@:export var gameplay_controls_stairs: VBoxContainer;
 	@:export var menu_controls: Label;
 
 	@:export var health_bar: ColorRect;
@@ -75,6 +76,12 @@ class Player extends TurnSlave {
 
 	var skill_list_menu: Null<SkillListMenu> = null;
 	var target_select_manager: Null<TargetSelectManager> = null;
+
+	var intro_outro_animation: Float = 1.0;
+	var is_stairs_animation = false;
+
+	var in_menu = false;
+	var on_stairs = false;
 
 	static final INPUT_BUFFER_SIZE = 2;
 	static final GAME_SPEED = 7.5;
@@ -105,7 +112,7 @@ class Player extends TurnSlave {
 	}
 
 	public override function process_turn() {
-		turn_speed_ratio = default_turn_processing(character_animator, effect_manager, level_data, post_process);
+		turn_speed_ratio = default_turn_processing(character_animator, effect_manager, level_data, post_process, camera);
 	}
 
 	override function process_animation(ratio: Float): Void {
@@ -136,6 +143,15 @@ class Player extends TurnSlave {
 		refresh_teeth();
 	}
 
+	public override function on_damaged() {
+		refresh_health_bar();
+	}
+
+	public override function kill() {
+		stats.health = stats.max_health;
+		refresh_health_bar();
+	}
+
 	// =====================================
 
 	public function set_starting_position(pos: Vector3i): Bool {
@@ -151,6 +167,17 @@ class Player extends TurnSlave {
 		position = new Vector3(pos.x, 0.5 + (pos.z == 1 ? JUMP_HEIGHT : 0.0), pos.y);
 		map.set_player_position(tilemap_position);
 		character_animator.is_up = pos.z == 1;
+
+		final now_on_stairs = if(tilemap_position.z == 0) {
+			final stairs = level_data.static_data().stairs_position;
+			tilemap_position.x == stairs.x && tilemap_position.y == stairs.y;
+		} else {
+			false;
+		}
+		if(on_stairs != now_on_stairs) {
+			on_stairs = now_on_stairs;
+			refresh_gameplay_controls();
+		}
 	}
 
 	function can_add_to_input_queue(direction: Direction): Bool {
@@ -195,6 +222,43 @@ class Player extends TurnSlave {
 	}
 
 	override function _process(delta: Float): Void {
+		if(intro_outro_animation > 0.0) {
+			intro_outro_animation -= delta * (is_stairs_animation ? 2.0 : 1.0);
+			if(intro_outro_animation < 0.0) intro_outro_animation = 0.0;
+
+			if(is_stairs_animation) {
+				final r = 1.0 - intro_outro_animation;
+				if(r < 0.3) {
+					final r = r / 0.3;
+					mesh.position = new Vector3(0, r.cubicOut() * 2.0, 0);
+					mesh.rotation.z = r.quartOut() * Math.PI * -0.25;
+				} else {
+					final r = (r - 0.3) / 0.7;
+					mesh.position = new Vector3(0, 2.0 + (r.cubicIn() * -2.2), 0);
+					mesh.rotation.z = Math.PI * (-0.25 + r.cubicInOut() * 2.0);
+				}
+
+				if(r > 0.8) {
+					final r = (r - 0.8) / 0.2;
+					mesh_holder.scale = Vector3.ONE * (1.0 - r);
+				}
+
+				if(intro_outro_animation == 0.0) {
+					WorldManager.floor += 1;
+					WorldManager.should_randomize = true;
+					get_tree().change_scene_to_file("res://Main.tscn");
+				}
+			} else {
+				final r = (1.0 - intro_outro_animation).cubicOut();
+				mesh.position = new Vector3(0, 5.0 - (r * 5.0), 0);
+				mesh.rotation.y = (1.0 - r) * 14.0;
+			}
+
+			return;
+		} else if(is_stairs_animation) {
+			return;
+		}
+
 		popup_maker.update(delta);
 
 		if(target_select_manager != null) {
@@ -220,7 +284,9 @@ class Player extends TurnSlave {
 				skill_list_menu = cast SKILL_LIST_MENU.instantiate();
 				_2d.add_child(skill_list_menu);
 				skill_list_menu.setup(skills, teeth);
-				set_gameplay_controls_visible(false);
+
+				in_menu = true;
+				refresh_gameplay_controls();
 			}
 		}
 
@@ -295,7 +361,9 @@ class Player extends TurnSlave {
 
 		if(selected_skill_id == CANCEL_SKILL_ID) {
 			remove_skill_list();
-			set_gameplay_controls_visible(true);
+
+			in_menu = false;
+			refresh_gameplay_controls();
 		} else if(selected_skill_id != NULL_SKILL_ID) {
 			remove_skill_list();
 
@@ -312,7 +380,8 @@ class Player extends TurnSlave {
 	}
 
 	function remove_target_select_manager() {
-		set_gameplay_controls_visible(true);
+		in_menu = false;
+		refresh_gameplay_controls();
 
 		target_select_manager.cleanup();
 		remove_child(target_select_manager);
@@ -338,6 +407,14 @@ class Player extends TurnSlave {
 				look_direction = next_direction;
 			}
 			case Jump: {
+				if(on_stairs) {
+					is_stairs_animation = true;
+					intro_outro_animation = 1.0;
+
+					gameplay_controls_stairs.visible = false;
+					return;
+				}
+
 				final is_up = tilemap_position.z == 0;
 				final next = new Vector3i(0, 0, is_up ? 1 : -1);
 				if(level_data.tile_free(tilemap_position + next)) {
@@ -379,9 +456,10 @@ class Player extends TurnSlave {
 		turn_manager.process_animations(1.0 - movement_cooldown);
 	}
 
-	function set_gameplay_controls_visible(visible: Bool) {
-		gameplay_controls.visible = visible;
-		menu_controls.visible = !visible;
+	function refresh_gameplay_controls() {
+		gameplay_controls.visible = !in_menu && !on_stairs;
+		gameplay_controls_stairs.visible = !in_menu && on_stairs;
+		menu_controls.visible = in_menu;
 	}
 
 	function refresh_health_bar() {

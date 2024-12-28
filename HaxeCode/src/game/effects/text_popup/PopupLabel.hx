@@ -9,6 +9,9 @@ class PopupLabel extends Label3D {
 	var start_position: Vector3;
 	var target_position: Vector3;
 
+	var y_offset: Float = 0.0;
+	var target_y_offset: Float = 0.0;
+
 	public function setup(start: Vector3, end: Vector3) {
 		start_position = start;
 		target_position = end;
@@ -19,7 +22,11 @@ class PopupLabel extends Label3D {
 		time += delta * 1.0;
 		if(time > 1.0) time = 1.0;
 
-		global_position = start_position.lerp(target_position, time.cubicOut());
+		if(y_offset != target_y_offset) {
+			y_offset = y_offset.lerp(target_y_offset, delta * 20.0);
+		}
+
+		global_position = start_position.lerp(target_position, time.cubicOut()) + new Vector3(0, y_offset, 0);
 
 		if(time < 0.2) {
 			final r = time / 0.2;
@@ -37,5 +44,9 @@ class PopupLabel extends Label3D {
 		}
 
 		return false;
+	}
+
+	public function shift_up() {
+		target_y_offset += 0.5;
 	}
 }

@@ -1,13 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://dufa0a0v442l5"]
+[gd_scene load_steps=7 format=3 uid="uid://c2blxl4icd8ei"]
 
-[ext_resource type="Texture2D" uid="uid://bjspudetni8cc" path="res://VisualAssets/2D/Blood.aseprite" id="1_inj5d"]
+[ext_resource type="Texture2D" uid="uid://db5dmu8q0s2c0" path="res://VisualAssets/2D/Bone.aseprite" id="1_iy4jd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vb8r"]
 transparency = 2
 alpha_scissor_threshold = 1.0
 alpha_antialiasing_mode = 0
 shading_mode = 0
-albedo_texture = ExtResource("1_inj5d")
+albedo_texture = ExtResource("1_iy4jd")
 disable_receive_shadows = true
 billboard_mode = 3
 billboard_keep_scale = true
@@ -23,6 +23,8 @@ point_count = 4
 curve = SubResource("Curve_8ba4y")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dp55c"]
+angle_min = -720.0
+angle_max = 720.0
 direction = Vector3(0, 1, 0)
 spread = 90.0
 initial_velocity_min = 4.0
@@ -34,7 +36,7 @@ scale_curve = SubResource("CurveTexture_tu8rd")
 
 [sub_resource type="QuadMesh" id="QuadMesh_cuucx"]
 
-[node name="BloodParticles" type="GPUParticles3D"]
+[node name="BoneParticles" type="GPUParticles3D"]
 material_override = SubResource("StandardMaterial3D_6vb8r")
 cast_shadow = 0
 emitting = false

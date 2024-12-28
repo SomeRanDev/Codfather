@@ -72,7 +72,7 @@ data = {
 [sub_resource type="ImageTexture" id="ImageTexture_20pc6"]
 image = SubResource("Image_3b0ty")
 
-[node name="World" type="Node3D" node_paths=PackedStringArray("level_data", "dynamic_level_data", "tilemap", "player", "map", "turn_manager", "ui_container", "effect_manager")]
+[node name="World" type="Node3D" node_paths=PackedStringArray("level_data", "dynamic_level_data", "tilemap", "player", "map", "turn_manager", "ui_container", "effect_manager", "camera")]
 script = ExtResource("1_c6i3y")
 level_data = NodePath("LevelData")
 dynamic_level_data = NodePath("DynamicLevelData")
@@ -82,16 +82,18 @@ map = NodePath("Map")
 turn_manager = NodePath("TurnManager")
 ui_container = NodePath("2D/FullScreenPanelContainer")
 effect_manager = NodePath("EffectManager")
+camera = NodePath("Camera3D")
 
 [node name="2D" type="CanvasGroup" parent="."]
 material = ExtResource("2_3b0ty")
 
-[node name="FullScreenPanelContainer" type="PanelContainer" parent="2D"]
+[node name="FullScreenPanelContainer" type="PanelContainer" parent="2D" node_paths=PackedStringArray("resize_rich_texts")]
 offset_right = 1152.0
 offset_bottom = 648.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_hhcpw")
 script = ExtResource("3_bg4s2")
 resize_label_settings = Array[LabelSettings]([ExtResource("4_mxvw5")])
+resize_rich_texts = [NodePath("UIContainer/ControlsContainer/GameplayControlsStairs/Line1")]
 metadata/_custom_type_script = ExtResource("3_bg4s2")
 
 [node name="UIContainer" type="GridContainer" parent="2D/FullScreenPanelContainer"]
@@ -183,6 +185,23 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "[Z] Change swim height
 [X] View Skills"
+label_settings = ExtResource("4_mxvw5")
+horizontal_alignment = 1
+
+[node name="GameplayControlsStairs" type="VBoxContainer" parent="2D/FullScreenPanelContainer/UIContainer/ControlsContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Line1" type="RichTextLabel" parent="2D/FullScreenPanelContainer/UIContainer/ControlsContainer/GameplayControlsStairs"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[rainbow freq=0.4 sat=0.8 val=1.0][outline_color=#000][outline_size=8][center][wave][Z] Go down stairs[/wave][/center][/outline_size][/outline_color][/rainbow]"
+fit_content = true
+
+[node name="Line2" type="Label" parent="2D/FullScreenPanelContainer/UIContainer/ControlsContainer/GameplayControlsStairs"]
+layout_mode = 2
+text = "[X] View Skills"
 label_settings = ExtResource("4_mxvw5")
 horizontal_alignment = 1
 
@@ -18842,7 +18861,7 @@ offset = Vector3(0, 7, 4)
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_03owx")
 
-[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("camera", "level_data", "map", "turn_manager", "post_process", "_2d", "effect_manager", "gameplay_controls", "menu_controls", "health_bar", "health_bar_padding", "health_bar_amount", "tooth_container", "popup_maker")]
+[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("camera", "level_data", "map", "turn_manager", "post_process", "_2d", "effect_manager", "gameplay_controls", "gameplay_controls_stairs", "menu_controls", "health_bar", "health_bar_padding", "health_bar_amount", "tooth_container", "popup_maker")]
 script = ExtResource("11_sc1dx")
 camera = NodePath("../Camera3D")
 level_data = NodePath("../DynamicLevelData")
@@ -18852,6 +18871,7 @@ post_process = NodePath("../PostProcess")
 _2d = NodePath("../2D")
 effect_manager = NodePath("../EffectManager")
 gameplay_controls = NodePath("../2D/FullScreenPanelContainer/UIContainer/ControlsContainer/GameplayControls")
+gameplay_controls_stairs = NodePath("../2D/FullScreenPanelContainer/UIContainer/ControlsContainer/GameplayControlsStairs")
 menu_controls = NodePath("../2D/FullScreenPanelContainer/UIContainer/ControlsContainer/MenuControls")
 health_bar = NodePath("../2D/FullScreenPanelContainer/UIContainer/PlayerStats/HealthMargin/HealthBarContainer/HealthBar")
 health_bar_padding = NodePath("../2D/FullScreenPanelContainer/UIContainer/PlayerStats/HealthMargin/HealthBarContainer/HealthBarPadding")
