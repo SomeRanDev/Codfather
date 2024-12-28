@@ -254,4 +254,10 @@ class TargetSelectManager extends Node {
 		tiles = [];
 		selectable_tiles.clear();
 	}
+
+	function _notification(what: Int) {
+		if(what == Object.NOTIFICATION_PREDELETE) {
+			cleanup();
+		}
+	}
 }

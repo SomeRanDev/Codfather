@@ -85,4 +85,10 @@ class SelectableTile extends Node3D {
 		}
 		wall_pool = [];
 	}
+
+	function _notification(what: Int) {
+		if(what == Object.NOTIFICATION_PREDELETE) {
+			cleanup();
+		}
+	}
 }

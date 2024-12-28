@@ -25,8 +25,12 @@ class Tilemap extends Node3D {
 		if(level_data == null)
 			return;
 
-		while(get_child_count(true) > 0)
-			remove_child(get_child(0, true));
+		
+		while(get_child_count(true) > 0) {
+			final c = get_child(0, true);
+			remove_child(c);
+			c.queue_free();
+		}
 
 		for(x in 0...level_data.width)
 			for(y in 0...level_data.height)
@@ -49,6 +53,11 @@ class Tilemap extends Node3D {
 		return get_tree().get_root();
 	}
 
+	function setup_owner(n: Node) {
+		if(Engine.is_editor_hint())
+			n.owner = find_owner();
+	}
+
 	function create_stairs(x: Int, y: Int) {
 		var m = if(stairs_scene != null) {
 			cast stairs_scene.instantiate();
@@ -60,7 +69,7 @@ class Tilemap extends Node3D {
 		}
 		m.position = new Vector3(x, 0.0, y);
 		add_child(m);
-		m.owner = find_owner();
+		setup_owner(m);
 	}
 
 	function create_walkable_tile(x: Int, y: Int) {
@@ -72,7 +81,7 @@ class Tilemap extends Node3D {
 		else
 			m.set_surface_override_material(0, normal_floor_material);
 		add_child(m);
-		m.owner = find_owner();
+		setup_owner(m);
 	}
 
 	function create_unwalkable_tile(x: Int, y: Int) {
@@ -81,7 +90,7 @@ class Tilemap extends Node3D {
 		cap.position = new Vector3(x, 1.5, y);
 		cap.rotation = new Vector3(0.0, Godot.randi_range(0, 4) * Math.PI * 0.5, 0.0);
 		add_child(cap);
-		cap.owner = find_owner();
+		setup_owner(cap);
 
 		if(level_data.has_tile(x - 1, y)) {
 			final m = new MeshInstance3D();
@@ -89,7 +98,7 @@ class Tilemap extends Node3D {
 			m.position = new Vector3(x, 0.0, y);
 			m.rotation = new Vector3(0.0, Math.PI, 0.0);
 			add_child(m);
-			m.owner = find_owner();
+			setup_owner(m);
 		}
 		if(level_data.has_tile(x + 1, y)) {
 			final m = new MeshInstance3D();
@@ -97,7 +106,7 @@ class Tilemap extends Node3D {
 			m.position = new Vector3(x, 0.0, y);
 			m.rotation = new Vector3(0.0, 0.0, 0.0);
 			add_child(m);
-			m.owner = find_owner();
+			setup_owner(m);
 		}
 		if(level_data.has_tile(x, y + 1)) {
 			final m = new MeshInstance3D();
@@ -105,7 +114,7 @@ class Tilemap extends Node3D {
 			m.position = new Vector3(x, 0.0, y);
 			m.rotation = new Vector3(0.0, Math.PI * 1.5, 0.0);
 			add_child(m);
-			m.owner = find_owner();
+			setup_owner(m);
 		}
 		if(level_data.has_tile(x, y - 1)) {
 			final m = new MeshInstance3D();
@@ -113,7 +122,7 @@ class Tilemap extends Node3D {
 			m.position = new Vector3(x, 0.0, y);
 			m.rotation = new Vector3(0.0, Math.PI * 0.5, 0.0);
 			add_child(m);
-			m.owner = find_owner();
+			setup_owner(m);
 		}
 	}
 }

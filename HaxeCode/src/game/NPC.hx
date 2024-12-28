@@ -42,6 +42,7 @@ class NPC extends TurnSlave {
 	public function set_starting_position(pos: Vector3i): Bool {
 		if(level_data.place_entity(stats.id, pos)) {
 			apply_position(pos);
+			character_animator.setup_shadow(pos.z == 1);
 			return true;
 		}
 		return false;

@@ -25,8 +25,10 @@ class PopupMaker extends Node3D {
 		var i = 0;
 		while(i < popups.length) {
 			if(popups[i].update(delta)) {
-				get_tree().get_current_scene().remove_child(popups[i]);
+				final p = popups[i];
+				get_tree().get_current_scene().remove_child(p);
 				popups.remove_at(i);
+				p.queue_free();
 				continue;
 			}
 			i++;

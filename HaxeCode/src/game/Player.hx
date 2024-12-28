@@ -1,5 +1,6 @@
 package game;
 
+import game.ui.FadeInOut;
 import game.Attack.Skill;
 import game.Attack.CANCEL_SKILL_ID;
 import game.ui.target_select.TargetSelectManager;
@@ -46,6 +47,7 @@ class Player extends TurnSlave {
 	@:export var post_process: PostProcess;
 	@:export var _2d: CanvasGroup;
 	@:export var effect_manager: EffectManager;
+	@:export var fade_in_out: FadeInOut;
 	@:export var gameplay_controls: Label;
 	@:export var gameplay_controls_stairs: VBoxContainer;
 	@:export var menu_controls: Label;
@@ -94,7 +96,13 @@ class Player extends TurnSlave {
 
 		refresh_health_bar();
 		refresh_teeth();
+
+		//connect("tree_exiting", new Callable(this, "test"));
 	}
+
+	// function test() {
+	// 	untyped __gdscript__("print_orphan_nodes()");
+	// }
 
 	// =====================================
 
@@ -223,8 +231,17 @@ class Player extends TurnSlave {
 
 	override function _process(delta: Float): Void {
 		if(intro_outro_animation > 0.0) {
-			intro_outro_animation -= delta * (is_stairs_animation ? 2.0 : 1.0);
-			if(intro_outro_animation < 0.0) intro_outro_animation = 0.0;
+			var update_animation = true;
+			if(!is_stairs_animation) {
+				if(fade_in_out.update_fade_in(delta)) {
+					update_animation = false;
+				}
+			}
+
+			if(update_animation) {
+				intro_outro_animation -= delta * (is_stairs_animation ? 2.0 : 1.0);
+				if(intro_outro_animation < 0.0) intro_outro_animation = 0.0;
+			}
 
 			if(is_stairs_animation) {
 				final r = 1.0 - intro_outro_animation;
@@ -244,9 +261,7 @@ class Player extends TurnSlave {
 				}
 
 				if(intro_outro_animation == 0.0) {
-					WorldManager.floor += 1;
-					WorldManager.should_randomize = true;
-					get_tree().change_scene_to_file("res://Main.tscn");
+					// This will now go to `fade_in_out.update_fade_out`...
 				}
 			} else {
 				final r = (1.0 - intro_outro_animation).cubicOut();
@@ -256,6 +271,11 @@ class Player extends TurnSlave {
 
 			return;
 		} else if(is_stairs_animation) {
+			if(!fade_in_out.update_fade_out(delta)) {
+				WorldManager.floor += 1;
+				WorldManager.should_randomize = true;
+				get_tree().change_scene_to_file("res://Main.tscn");
+			}
 			return;
 		}
 

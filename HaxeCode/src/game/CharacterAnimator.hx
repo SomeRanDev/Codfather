@@ -70,6 +70,10 @@ class CharacterAnimator extends Node {
 		}
 	}
 
+	public function setup_shadow(is_up: Bool) {
+		refresh_shadow_size(is_up ? 1.0 : 0.0);
+	}
+
 	function back_and_forth(r: Float): Float {
 		return if(r < 0.5) {
 			r / 0.5;

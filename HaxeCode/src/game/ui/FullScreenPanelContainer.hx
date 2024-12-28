@@ -6,15 +6,19 @@ class FullScreenPanelContainer extends PanelContainer {
 	@:export var resize_label_settings: Array<LabelSettings> = [];
 	@:export var resize_rich_texts: Array<RichTextLabel> = [];
 	
-	var resize_label_settings_sizes: Array<Int> = [];
-	var resize_rich_text_sizes: Array<Int> = [];
+	static var resize_label_settings_sizes: Array<Int> = [];
+	static var resize_rich_text_sizes: Array<Int> = [];
 
 	public function manual_ready() {
-		for(ls in resize_label_settings) {
-			resize_label_settings_sizes.push(ls.font_size);
+		if(resize_label_settings_sizes.length == 0) {
+			for(ls in resize_label_settings) {
+				resize_label_settings_sizes.push(ls.font_size);
+			}
 		}
-		for(rt in resize_rich_texts) {
-			resize_rich_text_sizes.push(rt.get("theme_override_font_sizes/normal_font_size"));
+		if(resize_rich_text_sizes.length == 0) {
+			for(rt in resize_rich_texts) {
+				resize_rich_text_sizes.push(rt.get("theme_override_font_sizes/normal_font_size"));
+			}
 		}
 
 		get_viewport().connect("size_changed", new Callable(this, "on_game_resize"));
