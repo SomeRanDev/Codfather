@@ -272,8 +272,7 @@ class Player extends TurnSlave {
 			return;
 		} else if(is_stairs_animation) {
 			if(!fade_in_out.update_fade_out(delta)) {
-				WorldManager.floor += 1;
-				WorldManager.should_randomize = true;
+				WorldManager.next_floor();
 				get_tree().change_scene_to_file("res://Main.tscn");
 			}
 			return;

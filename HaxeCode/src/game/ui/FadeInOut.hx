@@ -13,8 +13,8 @@ class FadeInOut extends ColorRect {
 		fade_amount -= delta * 2.0;
 		if(fade_amount < 0.0) fade_amount = 0.0;
 
-		trace(fade_amount);
 		color.a = fade_amount;
+		visible = fade_amount > 0.0;
 
 		return fade_amount > 0.0;
 	}
@@ -28,6 +28,7 @@ class FadeInOut extends ColorRect {
 		if(fade_amount > 1.0) fade_amount = 1.0;
 
 		color.a = fade_amount;
+		visible = fade_amount > 0.0;
 
 		return fade_amount < 1.0;
 	}
