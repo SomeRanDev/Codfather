@@ -7,6 +7,7 @@ class Stats {
 
 	public var id = 0;
 
+	public var max_health = 10;
 	public var health = 10;
 
 	public var power: Int = 5;

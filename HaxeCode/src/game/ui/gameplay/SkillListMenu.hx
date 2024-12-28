@@ -17,22 +17,26 @@ class SkillListMenu extends VBoxContainer {
 	var NAME_LABEL_SETTINGS: LabelSettings = GD.preload("res://VisualAssets/Fonts/SkillList/NameLabelSettings.tres");
 	var STATS_LABEL_SETTINGS: LabelSettings = GD.preload("res://VisualAssets/Fonts/SkillList/StatsLabelSettings.tres");
 
-	public function setup(skills: Array<Int>) {
+	public function setup(skills: Array<Int>, current_player_teeth: Int) {
 		skill_list.setup(skills);
 		
-		skill_description.set_skill(BASIC_SKILL);
+		skill_description.set_skill(BASIC_SKILL, current_player_teeth);
 
 		get_viewport().connect("size_changed", new Callable(this, "on_resize"));
 		on_resize();
 	}
 
-	public function update(): Int {
+	public function update(current_player_teeth: Int): Int {
 		final skill_id = skill_list.update();
 		if(skill_id != NULL_SKILL_ID) {
-			skill_description.set_skill(Skill.get_skill(skill_id));
+			skill_description.set_skill(Skill.get_skill(skill_id), current_player_teeth);
 		}
 
 		if(Input.is_action_just_pressed("ok")) {
+			if(!skill_list.has_enough_teeth(current_player_teeth)) {
+				// Play bad sound effect...
+				return NULL_SKILL_ID;
+			}
 			return skill_list.get_current_skill_id();
 		} else if(Input.is_action_just_pressed("back")) {
 			return CANCEL_SKILL_ID;

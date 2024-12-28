@@ -1,5 +1,6 @@
 package game;
 
+import game.Attack.Skill;
 import game.Attack.CANCEL_SKILL_ID;
 import game.ui.target_select.TargetSelectManager;
 import game.Attack.NULL_SKILL_ID;
@@ -35,6 +36,8 @@ class QueueableActionHelpers {
 class Player extends TurnSlave {
 	@:const var SKILL_LIST_MENU: PackedScene = GD.preload("res://Objects/UI/Gameplay/SkillListMenu.tscn");
 	@:const var TARGET_SELECT_MANAGER: PackedScene = GD.preload("res://Objects/UI/Gameplay/TargetSelectManager.tscn");
+	@:const var EMPTY_TOOTH_TEXTURE: CompressedTexture2D = GD.preload("res://VisualAssets/2D/EmptyTooth.png");
+	@:const var TOOTH_TEXTURE: CompressedTexture2D = GD.preload("res://VisualAssets/2D/Tooth.png");
 
 	@:export var camera: Camera;
 	@:export var level_data: DynamicLevelData;
@@ -43,6 +46,14 @@ class Player extends TurnSlave {
 	@:export var post_process: PostProcess;
 	@:export var _2d: CanvasGroup;
 	@:export var effect_manager: EffectManager;
+	@:export var gameplay_controls: Label;
+	@:export var menu_controls: Label;
+
+	@:export var health_bar: ColorRect;
+	@:export var health_bar_padding: Control;
+	@:export var health_bar_amount: Label;
+
+	@:export var tooth_container: GridContainer;
 
 	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$PlayerMeshRotator");
@@ -63,6 +74,9 @@ class Player extends TurnSlave {
 	var queued_turn_action: Action = Nothing;
 	
 	var skills: Array<Int> = [0];
+	var teeth: Int = 10;
+	var max_teeth: Int = 10;
+	var turns_until_next_tooth: Int = -1;
 
 	var skill_list_menu: Null<SkillListMenu> = null;
 	var target_select_manager: Null<TargetSelectManager> = null;
@@ -75,6 +89,9 @@ class Player extends TurnSlave {
 		stats.speed = 3;
 
 		set_direction(Right);
+
+		refresh_health_bar();
+		refresh_teeth();
 	}
 
 	public override function get_speed(): Float {
@@ -171,7 +188,8 @@ class Player extends TurnSlave {
 
 				skill_list_menu = cast SKILL_LIST_MENU.instantiate();
 				_2d.add_child(skill_list_menu);
-				skill_list_menu.setup(skills);
+				skill_list_menu.setup(skills, teeth);
+				set_gameplay_controls_visible(false);
 			}
 		}
 
@@ -242,10 +260,11 @@ class Player extends TurnSlave {
 	}
 
 	function update_skill_list() {
-		final selected_skill_id = skill_list_menu.update();
+		final selected_skill_id = skill_list_menu.update(teeth);
 
 		if(selected_skill_id == CANCEL_SKILL_ID) {
 			remove_skill_list();
+			set_gameplay_controls_visible(true);
 		} else if(selected_skill_id != NULL_SKILL_ID) {
 			remove_skill_list();
 
@@ -262,6 +281,8 @@ class Player extends TurnSlave {
 	}
 
 	function remove_target_select_manager() {
+		set_gameplay_controls_visible(true);
+
 		target_select_manager.cleanup();
 		remove_child(target_select_manager);
 		target_select_manager.queue_free();
@@ -383,20 +404,28 @@ class Player extends TurnSlave {
 				}
 			}
 			case DoSkill(skill_id, targeted_positions): {
-				for(position in targeted_positions) {
-					final entity = level_data.get_entity(position);
-					if(entity != null) {
-						if(entity.take_attack(this, skill_id)) {
-							effect_manager.add_blood_particles(entity.position);
-						} else {
-							popup_maker.popup("Failed!");
+				final skill = Skill.get_skill(skill_id);
+				if(skill.get_real_cost() > teeth) {
+					popup_maker.popup("Not enough teeth!");
+				} else {
+					teeth -= skill.get_real_cost();
+					refresh_teeth();
+
+					for(position in targeted_positions) {
+						final entity = level_data.get_entity(position);
+						if(entity != null) {
+							if(entity.take_attack(this, skill_id)) {
+								effect_manager.add_blood_particles(entity.position);
+							} else {
+								popup_maker.popup("Failed!");
+							}
 						}
 					}
-				}
 
-				set_direction(look_direction.reverse());
-				character_animator.animation = SpinAttack;
-				turn_speed_ratio = 0.75;
+					set_direction(look_direction.reverse());
+					character_animator.animation = SpinAttack;
+					turn_speed_ratio = 0.75;
+				}
 			}
 			case Nothing: {}
 		}
@@ -416,6 +445,45 @@ class Player extends TurnSlave {
 			case Left: -30.0;
 			case Right: 30.0;
 			case _: 0.0;
+		}
+	}
+
+	function set_gameplay_controls_visible(visible: Bool) {
+		gameplay_controls.visible = visible;
+		menu_controls.visible = !visible;
+	}
+
+	function refresh_health_bar() {
+		health_bar_amount.text = Std.string(stats.health);
+
+		final ratio = cast(stats.health, Float) / stats.max_health;
+		if(ratio < 0.5) {
+			health_bar_padding.size_flags_stretch_ratio = 1.0;
+			health_bar.size_flags_stretch_ratio = ratio * 2.0;
+		} else {
+			health_bar_padding.size_flags_stretch_ratio = 1.0 - ((ratio - 0.5) * 2.0);
+			health_bar.size_flags_stretch_ratio = 1.0;
+		}
+	}
+
+	function refresh_teeth() {
+		var count = tooth_container.get_child_count();
+		while(count < max_teeth) {
+			final tr = new TextureRect();
+			tr.texture = EMPTY_TOOTH_TEXTURE;
+			tooth_container.add_child(tr);
+			count = tooth_container.get_child_count();
+		}
+		while(count > max_teeth) {
+			tooth_container.remove_child(tooth_container.get_child(tooth_container.get_child_count() - 1));
+			count = tooth_container.get_child_count();
+		}
+
+		for(i in 0...count) {
+			final tooth = cast(tooth_container.get_child(i), TextureRect);
+			if(tooth != null) {
+				tooth.texture = i < teeth ? TOOTH_TEXTURE : EMPTY_TOOTH_TEXTURE;
+			}
 		}
 	}
 }

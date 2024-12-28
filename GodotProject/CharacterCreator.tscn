@@ -21,9 +21,10 @@
 material = ExtResource("1_aqjyc")
 script = ExtResource("2_uju85")
 
-[node name="CCStatManager" type="Node" parent="." node_paths=PackedStringArray("stat_point_label")]
+[node name="CCStatManager" type="Node" parent="." node_paths=PackedStringArray("stat_point_label", "stat_allocators")]
 script = ExtResource("2_lg66x")
 stat_point_label = NodePath("../PanelContainer/Container/ConfigContainer/PointsContainer/Points")
+stat_allocators = [NodePath("../PanelContainer/Container/ConfigContainer/PowerContainer"), NodePath("../PanelContainer/Container/ConfigContainer/ToughContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpeedContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpecialContainer"), NodePath("../PanelContainer/Container/ConfigContainer/LuckyContainer")]
 metadata/_custom_type_script = ExtResource("2_lg66x")
 
 [node name="CharacterCreator" type="Node" parent="." node_paths=PackedStringArray("effect", "container", "entries", "start_button", "species_selection", "class_selection", "display_model", "hat")]

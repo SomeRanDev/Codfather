@@ -1,5 +1,6 @@
 package game;
 
+import game.ui.FullScreenPanelContainer;
 import godot.*;
 import GDScript as GD;
 
@@ -10,9 +11,12 @@ class World extends Node3D {
 	@:export var player: Player;
 	@:export var map: MapSprite;
 	@:export var turn_manager: TurnManager;
+	@:export var ui_container: FullScreenPanelContainer;
 
 	override function _ready(): Void {
 		trace("Game start!!");
+
+		ui_container.manual_ready();
 
 		var rebuild_level = false;
 

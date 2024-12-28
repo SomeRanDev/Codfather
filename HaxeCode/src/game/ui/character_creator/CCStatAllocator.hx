@@ -13,6 +13,9 @@ class CCStatAllocator extends CCEntry {
 	var entry_label: Label;
 	var value_label: Label;
 
+	var left_arrow: TextureRect;
+	var right_arrow: TextureRect;
+
 	var base_value: Int = 5;
 	var value_offset: Int = 0;
 
@@ -21,6 +24,9 @@ class CCStatAllocator extends CCEntry {
 
 		entry_label = untyped __gdscript__("$Container/Label");
 		value_label = untyped __gdscript__("$Container/Value");
+
+		left_arrow = untyped __gdscript__("$Container/LeftArrow");
+		right_arrow = untyped __gdscript__("$Container/RightArrow");
 
 		entry_label.text = label;
 	}
@@ -40,7 +46,7 @@ class CCStatAllocator extends CCEntry {
 		}
 
 		if(offset == -1) {
-			if(base_value + value_offset > 0) {
+			if(can_subtract()) {
 				value_offset--;
 				if(value_offset >= 0) {
 					manager.add_points(1);
@@ -48,9 +54,10 @@ class CCStatAllocator extends CCEntry {
 					manager.add_half_points(1);
 				}
 				refresh_label();
+				manager.refresh_arrows();
 			}
 		} else if(offset == 1) {
-			if((value_offset >= 0 && manager.has_points()) || (value_offset < 0 && manager.has_points_or_half_points())) {
+			if(can_add()) {
 				if(value_offset < 0) {
 					manager.add_half_points(-1);
 				} else {
@@ -59,10 +66,24 @@ class CCStatAllocator extends CCEntry {
 
 				value_offset++;
 				refresh_label();
+				manager.refresh_arrows();
 			}
 		}
 
 		return false;
+	}
+
+	public function refresh_arrows() {
+		left_arrow.self_modulate.a = can_subtract() ? 1.0 : 0.2;
+		right_arrow.self_modulate.a = can_add() ? 1.0 : 0.2;
+	}
+
+	function can_add() {
+		return (value_offset >= 0 && manager.has_points()) || (value_offset < 0 && manager.has_points_or_half_points());
+	}
+
+	function can_subtract() {
+		return base_value + value_offset > 0;
 	}
 
 	function refresh_label() {

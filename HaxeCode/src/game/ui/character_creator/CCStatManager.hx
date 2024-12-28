@@ -6,6 +6,7 @@ import godot.Node;
 class CCStatManager extends Node {
 	@:export public var stat_points(default, null): Int = 10;
 	@:export var stat_point_label: Label;
+	@:export var stat_allocators: Array<CCStatAllocator> = [];
 
 	var current_stat_points: Int;
 	var half_point: Bool = false;
@@ -50,5 +51,11 @@ class CCStatManager extends Node {
 	function refresh_label() {
 		final half_char = "½";
 		stat_point_label.text = Std.string(current_stat_points) + (half_point ? half_char : "");
+	}
+
+	public function refresh_arrows() {
+		for(sa in stat_allocators) {
+			sa.refresh_arrows();
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package game.ui.gameplay;
 
+import game.Attack.Skill;
 import game.Attack.BASIC_SKILL_ID;
 import game.Attack.NULL_SKILL_ID;
 import game.Attack.ALL_SKILLS;
@@ -62,6 +63,15 @@ class SkillList extends PanelContainer {
 
 	public function get_current_skill_id(): Int {
 		return items[current_index].skill_id;
+	}
+
+	public function has_enough_teeth(teeth: Int): Bool {
+		final skill_id = get_current_skill_id();
+		final skill = Skill.get_skill(skill_id);
+		if(skill != null) {
+			return skill.get_real_cost() <= teeth;
+		}
+		return false;
 	}
 
 	public function update(): Int {

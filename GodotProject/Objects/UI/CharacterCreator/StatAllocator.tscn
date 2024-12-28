@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://kpswume1krat"]
+[gd_scene load_steps=5 format=3 uid="uid://kpswume1krat"]
 
 [ext_resource type="Script" uid="uid://cpksl1xjwcpu5" path="res://addons/SharkMafia/game_ui_CCStatAllocator.gd" id="1_x6ic4"]
 [ext_resource type="LabelSettings" uid="uid://do0o6dikdydrs" path="res://VisualAssets/Fonts/CharacterCreator/BaseFontSize.tres" id="2_nqwqs"]
+[ext_resource type="Texture2D" uid="uid://dkq36aspugkf4" path="res://VisualAssets/2D/Cursor.aseprite" id="2_xykua"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fh7kq"]
 
@@ -25,6 +26,13 @@ color = Color(1, 0.09, 0.09, 1)
 [node name="Container" type="HBoxContainer" parent="."]
 layout_mode = 2
 
+[node name="LeftArrow" type="TextureRect" parent="Container"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_xykua")
+expand_mode = 2
+flip_h = true
+
 [node name="Label" type="Label" parent="Container"]
 layout_mode = 2
 text = "Power"
@@ -42,3 +50,9 @@ label_settings = ExtResource("2_nqwqs")
 [node name="Value" type="Label" parent="Container"]
 layout_mode = 2
 label_settings = ExtResource("2_nqwqs")
+
+[node name="RightArrow" type="TextureRect" parent="Container"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_xykua")
+expand_mode = 2
