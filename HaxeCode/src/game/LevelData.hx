@@ -18,6 +18,9 @@ class LevelData extends Node {
 
 	@:export public var player_start_position(default, null): Vector2i;
 	@:export public var test_npcs(default, null): Array<Vector2i>;
+	@:export public var stairs_position(default, null): Vector2i;
+
+	@:export public var desired_enemy_count: Vector2i; // x = min, y = max
 
 	public function build_world() {
 		tiles = [];
@@ -81,17 +84,55 @@ class LevelData extends Node {
 
 		find_player_start();
 
-		test_npcs = [];
+		final possible_stair_positions = [];
+		final possible_enemy_positions = [];
+
+		final distance_from_player_squared = 4*4;
+
 		for(x in 0...width) {
 			for(y in 0...height) {
 				if(player_start_position == new Vector2i(x, y)) {
 					continue;
 				}
 				if(has_tile(x, y)) {
-					if(Godot.randi_range(0, 80) == 1) {
-						test_npcs.push(new Vector2i(x, y));
+					// Do not let anything be too close to the player....
+					final player_offset_x = player_start_position.x - x;
+					final player_offset_y = player_start_position.y - y;
+					if((player_offset_x*player_offset_x) + (player_offset_y*player_offset_y) < distance_from_player_squared) {
+						continue;
+					}
+
+					if(
+						has_tile(x, y - 1) && has_tile(x, y - 2) && has_tile(x, y + 1) &&
+						has_tile(x + 1, y) && has_tile(x - 1, y) && // ensure visible
+						world_generation_noise.get_noise_2d(x, y) < -0.1
+					) {
+						possible_stair_positions.push(new Vector2i(x, y));
+					} else {
+						possible_enemy_positions.push(new Vector2i(x, y));
 					}
 				}
+			}
+		}
+
+		// Make stairs position
+		stairs_position = new Vector2i(0, 0);
+		if(possible_stair_positions.length == 0) possible_stair_positions.push(new Vector2i(Math.floor(width / 2), Math.floor(height / 2)));
+		stairs_position = possible_stair_positions[Godot.randi_range(0, possible_stair_positions.length - 1)];
+
+		// Make enemy positions 
+		test_npcs = [];
+		if(possible_enemy_positions.contains(stairs_position)) {
+			possible_enemy_positions.remove(stairs_position);
+		}
+		final enemy_count = Godot.randi_range(desired_enemy_count.x, desired_enemy_count.y);
+		if(possible_enemy_positions.length <= enemy_count) {
+			test_npcs = possible_enemy_positions;
+		} else {
+			for(i in 0...enemy_count) {
+				final p = possible_enemy_positions[Godot.randi_range(0, possible_enemy_positions.length - 1)];
+				possible_enemy_positions.remove(p);
+				test_npcs.push(p);
 			}
 		}
 
@@ -129,6 +170,7 @@ class LevelData extends Node {
 	}
 
 	function find_player_start() {
+		final player_start_candidates = [];
 		for(x in 0...width) {
 			for(y in 0...height) {
 				if(
@@ -137,10 +179,28 @@ class LevelData extends Node {
 					has_tile(x - 1, y - 1) && has_tile(x - 1, y + 1) &&
 					has_tile(x + 1, y - 1) && has_tile(x + 1, y + 1)
 				) {
-					player_start_position = new Vector2i(x, y);
-					return;
+					player_start_candidates.push(new Vector2i(x, y));
 				}
 			}
 		}
+
+		// Super unlikely this will run, but put here for safety.
+		if(player_start_candidates.length == 0) {
+			for(x in 0...width) {
+				for(y in 0...height) {
+					if(has_tile(x, y)) {
+						player_start_position = new Vector2i(x, y);
+						return;
+					}
+				}
+			}
+		}
+
+		if(player_start_candidates.length == 0) {
+			player_start_position = new Vector2i(0, 0);
+			return;
+		}
+
+		player_start_position = player_start_candidates[Godot.randi_range(0, player_start_candidates.length - 1)];
 	}
 }

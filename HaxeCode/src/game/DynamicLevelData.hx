@@ -64,6 +64,14 @@ class DynamicLevelData extends Node {
 		return false;
 	}
 
+	public function remove_id(id: Int, pos: Vector3i) {
+		if(get_id(pos) == id) {
+			set_id(pos, 0);
+			return true;
+		}
+		return false;
+	}
+
 	public function move_entity(id: Int, previous: Vector3i, next: Vector3i) {
 		if(get_id(previous) == id && get_id(next) == 0) {
 			set_id(previous, 0);

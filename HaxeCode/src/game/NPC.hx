@@ -23,10 +23,12 @@ class NPC extends TurnSlave {
 	var move_particles: Null<GPUParticles3D> = null;
 
 	var level_data: DynamicLevelData;
+	var turn_manager: TurnManager;
 	var effect_manager: EffectManager;
 
-	public function setup(level_data: DynamicLevelData, effect_manager: EffectManager) {
+	public function setup(level_data: DynamicLevelData, turn_manager: TurnManager, effect_manager: EffectManager) {
 		this.level_data = level_data;
+		this.turn_manager = turn_manager;
 		this.effect_manager = effect_manager;
 
 		stats.generate_id();
@@ -122,5 +124,13 @@ class NPC extends TurnSlave {
 
 	override function _process(delta: Float) {
 		popup_maker.update(delta);
+	}
+
+	public override function kill() {
+		popup_maker.detatch_and_delete_when_possible();
+
+		level_data.remove_id(stats.id, tilemap_position);
+		turn_manager.remove_entity(this);
+		queue_free();
 	}
 }

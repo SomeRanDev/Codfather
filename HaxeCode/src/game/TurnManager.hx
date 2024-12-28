@@ -39,6 +39,11 @@ class TurnManager extends Node {
 		entity_map.set(entity.stats.id, entity);
 	}
 
+	public function remove_entity(entity: TurnSlave) {
+		entities.remove(entity);
+		entity_map.erase(entity.stats.id);
+	}
+
 	public function get_entity(id: Int): Null<TurnSlave> {
 		if(entity_map.has(id)) {
 			return entity_map.get(id);

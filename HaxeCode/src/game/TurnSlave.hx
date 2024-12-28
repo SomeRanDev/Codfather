@@ -160,10 +160,13 @@ class TurnSlave extends Node3D {
 
 			stats.health -= damage;
 			if(stats.health < 0) {
-				// kill
+				kill();
 			}
 		}
 
 		return true;
+	}
+
+	public function kill() {
 	}
 }

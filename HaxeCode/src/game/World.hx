@@ -42,7 +42,7 @@ class World extends Node3D {
 		final npc_scene = cast(GD.load("res://Objects/TestNPC.tscn"), PackedScene);
 		for(npc_position in level_data.test_npcs) {
 			var npc: NPC = cast npc_scene.instantiate();
-			npc.setup(dynamic_level_data, effect_manager);
+			npc.setup(dynamic_level_data, turn_manager, effect_manager);
 			turn_manager.add_entity(npc);
 			add_child(npc);
 

@@ -115,8 +115,26 @@ class MapSprite extends Sprite2D {
 		if(!level_data.has_tile(x, y)) {
 			draw_wall(x, y);
 			return true;
+		} else if(level_data.stairs_position.x == x && level_data.stairs_position.y == y) {
+			draw_square(x, y, Color.CYAN);
+			return true;
 		}
 		return false;
+	}
+
+	function draw_square(x: Int, y: Int, color: Color) {
+		var base_x = x * wall_pixel_length;
+		var base_y = y * wall_pixel_length;
+		for(i in 0...wall_pixel_length) {
+			draw_pixel(base_x + i, base_y, color);
+			draw_pixel(base_x + i, base_y - 1, color);
+			draw_pixel(base_x, base_y + i, color);
+			draw_pixel(base_x - 1, base_y + i, color);
+			draw_pixel(base_x + i, base_y + wall_pixel_length - 1, color);
+			draw_pixel(base_x + i, base_y + wall_pixel_length, color);
+			draw_pixel(base_x + wall_pixel_length - 1, base_y + i, color);
+			draw_pixel(base_x + wall_pixel_length, base_y + i, color);
+		}
 	}
 
 	function draw_wall(x: Int, y: Int) {
@@ -124,19 +142,29 @@ class MapSprite extends Sprite2D {
 		var base_y = y * wall_pixel_length;
 		if(level_data.has_tile(x, y - 1))
 			for(i in 0...wall_pixel_length)
-				draw_pixel(base_x + i, base_y);
+				draw_white_pixel(base_x + i, base_y);
 		if(level_data.has_tile(x, y + 1))
 			for(i in 0...wall_pixel_length)
-				draw_pixel(base_x + i, base_y + wall_pixel_length - 1);
+				draw_white_pixel(base_x + i, base_y + wall_pixel_length - 1);
 		if(level_data.has_tile(x - 1, y))
 			for(i in 0...wall_pixel_length)
-				draw_pixel(base_x, base_y + i);
+				draw_white_pixel(base_x, base_y + i);
 		if(level_data.has_tile(x + 1, y))
 			for(i in 0...wall_pixel_length)
-				draw_pixel(base_x + wall_pixel_length - 1, base_y + i);
+				draw_white_pixel(base_x + wall_pixel_length - 1, base_y + i);
 	}
 
-	function draw_pixel(x: Int, y: Int) {
+	function draw_pixel(x: Int, y: Int, color: Color) {
+		if(x < 0 || x >= image.get_width() || y < 0 || y >= image.get_height()) return;
+		
+		image.set_pixel(x, y, color);
+		set_pixel_black_if_empty(x - 1, y);
+		set_pixel_black_if_empty(x + 1, y);
+		set_pixel_black_if_empty(x, y - 1);
+		set_pixel_black_if_empty(x, y + 1);
+	}
+
+	function draw_white_pixel(x: Int, y: Int) {
 		if(x < 0 || x >= image.get_width() || y < 0 || y >= image.get_height()) return;
 		
 		image.set_pixel(x, y, Color.WHITE);
