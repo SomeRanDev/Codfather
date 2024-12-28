@@ -44,7 +44,7 @@ class CharacterCreator extends Node {
 
 	override function _process(delta: Float) {
 		if(!is_transition && transition_animation > 0.0) {
-			transition_animation -= delta * 15.0;
+			transition_animation -= delta * 3.0;
 			if(transition_animation < 0.0) transition_animation = 0.0;
 			effect.set_transition_amount(transition_animation);
 			return;
@@ -53,7 +53,7 @@ class CharacterCreator extends Node {
 			if(transition_animation >= 1.0) transition_animation = 1.0;
 			effect.set_transition_amount(transition_animation);
 			if(transition_animation >= 1.0) {
-				// GO TO NEXT SCENE....
+				get_tree().change_scene_to_file("res://Story.tscn");
 			}
 			return;
 		}

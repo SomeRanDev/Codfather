@@ -12,6 +12,7 @@ class World extends Node3D {
 	@:export var map: MapSprite;
 	@:export var turn_manager: TurnManager;
 	@:export var ui_container: FullScreenPanelContainer;
+	@:export var effect_manager: EffectManager;
 
 	override function _ready(): Void {
 		trace("Game start!!");
@@ -41,7 +42,7 @@ class World extends Node3D {
 		final npc_scene = cast(GD.load("res://Objects/TestNPC.tscn"), PackedScene);
 		for(npc_position in level_data.test_npcs) {
 			var npc: NPC = cast npc_scene.instantiate();
-			npc.setup(dynamic_level_data);
+			npc.setup(dynamic_level_data, effect_manager);
 			turn_manager.add_entity(npc);
 			add_child(npc);
 

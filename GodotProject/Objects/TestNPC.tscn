@@ -1,17 +1,26 @@
-[gd_scene load_steps=8 format=3 uid="uid://dtpn1mb2y6tde"]
+[gd_scene load_steps=9 format=3 uid="uid://dtpn1mb2y6tde"]
 
 [ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_wfbte"]
 [ext_resource type="ArrayMesh" uid="uid://cc4j2sikq1tq5" path="res://VisualAssets/Blender/Characters/Fish1.res" id="2_gmfhb"]
+[ext_resource type="Script" path="res://addons/SharkMafia/game_NPCBehaviorBasicAttacker.gd" id="2_l5jxx"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="2_neiyk"]
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="3_cmyqx"]
 [ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="3_riyet"]
 [ext_resource type="PackedScene" uid="uid://bwnqrwtod7fyj" path="res://Objects/TileIndicator.tscn" id="6_0cqn1"]
+[ext_resource type="Script" path="res://addons/SharkMafia/game_NPCBehaviorCircle.gd" id="7_xpx1k"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_neiyk"]
-
-[node name="TestNpc" type="Node3D" node_paths=PackedStringArray("popup_maker")]
+[node name="TestNpc" type="Node3D" node_paths=PackedStringArray("behavior", "popup_maker")]
 script = ExtResource("1_wfbte")
+behavior = NodePath("NPCBehaviorBasicAttacker")
 popup_maker = NodePath("MeshRotator/MeshHolder/PopupMaker")
+
+[node name="NPCBehaviorBasicAttacker" type="Node" parent="."]
+script = ExtResource("2_l5jxx")
+metadata/_custom_type_script = ExtResource("2_l5jxx")
+
+[node name="NPCBehaviorCircle" type="Node" parent="."]
+script = ExtResource("7_xpx1k")
+metadata/_custom_type_script = ExtResource("7_xpx1k")
 
 [node name="MeshRotator" type="Node3D" parent="."]
 
@@ -48,6 +57,5 @@ mesh_manipulator = NodePath("../MeshRotator/MeshHolder/MeshManipulator")
 mesh_holder = NodePath("../MeshRotator/MeshHolder")
 shadow = NodePath("../MeshRotator/MeshHolder/Shadow")
 tile_indicator = NodePath("../MeshRotator/TileIndicator")
-default_mesh = SubResource("BoxMesh_neiyk")
 base_scale = 1.5
 metadata/_custom_type_script = ExtResource("3_riyet")

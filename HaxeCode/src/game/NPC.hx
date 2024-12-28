@@ -1,5 +1,6 @@
 package game;
 
+import game.npc.NPCBehaviorBase;
 import game.Constants.JUMP_HEIGHT;
 import game.data.Direction;
 
@@ -8,6 +9,8 @@ import GDScript as GD;
 
 class NPC extends TurnSlave {
 	@:const var FAST_PARTICLES: PackedScene = GD.preload("res://Objects/Particles/FastParticles.tscn");
+
+	@:export var behavior: NPCBehaviorBase;
 
 	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$MeshRotator");
@@ -20,12 +23,11 @@ class NPC extends TurnSlave {
 	var move_particles: Null<GPUParticles3D> = null;
 
 	var level_data: DynamicLevelData;
-	var tilemap_position: Vector3i;
+	var effect_manager: EffectManager;
 
-	var phase = 0;
-
-	public function setup(level_data: DynamicLevelData) {
+	public function setup(level_data: DynamicLevelData, effect_manager: EffectManager) {
 		this.level_data = level_data;
+		this.effect_manager = effect_manager;
 
 		stats.generate_id();
 		stats.randomize();
@@ -39,13 +41,24 @@ class NPC extends TurnSlave {
 		return false;
 	}
 
-	public function set_tilemap_position(pos: Vector3i): Bool {
+	public override function set_tilemap_position(pos: Vector3i): Bool {
 		final previous = tilemap_position;
 		if(level_data.move_entity(stats.id, previous, pos)) {
 			apply_position(pos);
 			return true;
 		}
 		return false;
+	}
+
+	override function set_direction(direction: Direction) {
+		look_direction = direction;
+		mesh_rotator.rotation.y = direction.rotation();
+
+		mesh_manipulator.rotation_degrees.x = switch(direction) {
+			case Left: -30.0;
+			case Right: 30.0;
+			case _: 0.0;
+		}
 	}
 
 	function apply_position(pos: Vector3i) {
@@ -85,40 +98,14 @@ class NPC extends TurnSlave {
 		}
 	}
 
+	override function preprocess_turn() {
+		if(behavior != null) {
+			queued_turn_action = behavior.decide(this, level_data);
+		}
+	}
+
 	override function process_turn() {
-		if(Math.random() < 0.2) {
-			final is_up = tilemap_position.z == 0;
-			final next_position = tilemap_position + new Vector3i(0, 0, is_up ? 1 : -1);
-			if(level_data.tile_free(next_position)) {
-				if(set_tilemap_position(next_position)) {
-					character_animator.animation = is_up ? GoUp : GoDown;
-					return;
-				}
-			}
-		}
-
-		final direction: Direction = {
-			switch(Math.round(phase / 2)) {
-				case 0: Right;
-				case 1: Down;
-				case 2: Left;
-				case 3: Up;
-				case _: Up;
-			}
-		}
-
-		character_animator.animation = Nothing;
-
-		final next_position = tilemap_position + direction.as_vec3i();
-		if(level_data.tile_free(next_position)) {
-			if(set_tilemap_position(next_position)) {
-				character_animator.animation = Move;
-				mesh_rotator.rotation.y = direction.rotation();
-
-				phase++;
-				if(phase >= 8) { phase = 0; }
-			}
-		}
+		default_turn_processing(character_animator, effect_manager, level_data, null);
 	}
 
 	override function process_animation(ratio: Float) {

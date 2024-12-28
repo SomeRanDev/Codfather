@@ -24,4 +24,9 @@ class Vector3iExtensions {
 	public static macro function to_vec2i(self: ExprOf<Vector3i>): ExprOf<Vector2i> {
 		return macro untyped __gdscript__("Vector2({0}.x, {0}.y)", $self);
 	}
+
+	public static macro function to_vec4i(self: ExprOf<Vector3i>, w: ExprOf<Int>): ExprOf<Vector4i> {
+		return macro untyped __gdscript__("Vector4({0}.x, {0}.y, {0}.z, {1})", $self, $w);
+	}
 }
+

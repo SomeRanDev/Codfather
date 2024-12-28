@@ -63,15 +63,10 @@ class Player extends TurnSlave {
 	//@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
 	@:onready var shadow: Sprite3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/Shadow");
 
-	var tilemap_position: Vector3i;
-
 	var turn_speed_ratio = 1.0;
 	var movement_cooldown: Float = 0.0;
 	var queued_actions: Array<QueueableAction> = [];
 	var last_moved_direction: Null<Direction> = null;
-	var look_direction: Direction = Right;
-
-	var queued_turn_action: Action = Nothing;
 	
 	var skills: Array<Int> = [0];
 	var teeth: Int = 10;
@@ -94,21 +89,57 @@ class Player extends TurnSlave {
 		refresh_teeth();
 	}
 
-	public override function get_speed(): Float {
-		return stats.speed + 0.0001;
-	}
+	// =====================================
 
-	public function set_starting_position(pos: Vector3i): Bool {
-		if(level_data.place_entity(stats.id, pos)) {
+	public override function set_tilemap_position(pos: Vector3i): Bool {
+		final previous = tilemap_position;
+		if(level_data.move_entity(stats.id, previous, pos)) {
 			apply_position(pos);
 			return true;
 		}
 		return false;
 	}
 
-	public function set_tilemap_position(pos: Vector3i): Bool {
-		final previous = tilemap_position;
-		if(level_data.move_entity(stats.id, previous, pos)) {
+	public override function get_speed(): Float {
+		return stats.speed + 0.0001;
+	}
+
+	public override function process_turn() {
+		turn_speed_ratio = default_turn_processing(character_animator, effect_manager, level_data, post_process);
+	}
+
+	override function process_animation(ratio: Float): Void {
+		// This function should remain empty...
+	}
+
+	override function on_successful_move(direction: Direction) {
+		last_moved_direction = direction;
+	}
+
+	override function set_direction(direction: Direction) {
+		look_direction = direction;
+		mesh_rotator.rotation.y = direction.rotation();
+
+		mesh_manipulator.rotation_degrees.x = switch(direction) {
+			case Left: -30.0;
+			case Right: 30.0;
+			case _: 0.0;
+		}
+	}
+
+	override function get_skill_money() {
+		return teeth;
+	}
+
+	override function take_skill_money(amount: Int) {
+		teeth -= amount;
+		refresh_teeth();
+	}
+
+	// =====================================
+
+	public function set_starting_position(pos: Vector3i): Bool {
+		if(level_data.place_entity(stats.id, pos)) {
 			apply_position(pos);
 			return true;
 		}
@@ -333,6 +364,8 @@ class Player extends TurnSlave {
 	}
 
 	function process_turns(action: Action) {
+		turn_manager.preprocess_turns();
+
 		queued_turn_action = action;
 		turn_manager.process_turns();
 		character_animator.start_animation();
@@ -344,108 +377,6 @@ class Player extends TurnSlave {
 	function refresh_movement_cooldown_animation() {
 		character_animator.update_animation(movement_cooldown);
 		turn_manager.process_animations(1.0 - movement_cooldown);
-	}
-
-	override function process_turn() {
-		character_animator.animation = Nothing;
-
-		if(queued_turn_action == Nothing) {
-			return;
-		}
-
-		turn_speed_ratio = 1.0;
-
-		switch(queued_turn_action) {
-			case Move(direction): {
-				final next_tile = tilemap_position + direction.as_vec3i();
-				if(level_data.tile_free(next_tile) && set_tilemap_position(next_tile)) {
-					last_moved_direction = direction;
-
-					character_animator.animation = Move;
-				} else {
-					character_animator.animation = Blocked;
-
-					popup_maker.popup("Blocked!");
-					post_process.play_distort();
-				}
-
-				set_direction(direction);
-			}
-			case Jump(is_up): {
-				final next = new Vector3i(0, 0, is_up ? 1 : -1);
-				final next_tile = tilemap_position + next;
-				if(level_data.tile_free(next_tile) && set_tilemap_position(next_tile)) {
-					character_animator.animation = is_up ? GoUp : GoDown;
-				} else {
-					character_animator.animation = is_up ? BlockedUp : BlockedDown;
-
-					popup_maker.popup("Blocked!");
-					post_process.play_distort();
-				}
-			}
-			case BasicAttack(direction): {
-				final attack_position = tilemap_position + direction.as_vec3i();
-				final entity = level_data.get_entity(attack_position);
-
-				character_animator.animation = DirectionalAttack;
-				turn_speed_ratio = 0.75;
-
-				set_direction(direction);
-
-				if(entity != null) {
-					if(entity.take_attack(this, -1)) {
-						effect_manager.add_blood_particles(entity.position);
-					} else {
-						popup_maker.popup("Failed!");
-					}
-				} else {
-					popup_maker.popup("Missed!");
-					post_process.play_distort();
-				}
-			}
-			case DoSkill(skill_id, targeted_positions): {
-				final skill = Skill.get_skill(skill_id);
-				if(skill.get_real_cost() > teeth) {
-					popup_maker.popup("Not enough teeth!");
-				} else {
-					teeth -= skill.get_real_cost();
-					refresh_teeth();
-
-					for(position in targeted_positions) {
-						final entity = level_data.get_entity(position);
-						if(entity != null) {
-							if(entity.take_attack(this, skill_id)) {
-								effect_manager.add_blood_particles(entity.position);
-							} else {
-								popup_maker.popup("Failed!");
-							}
-						}
-					}
-
-					set_direction(look_direction.reverse());
-					character_animator.animation = SpinAttack;
-					turn_speed_ratio = 0.75;
-				}
-			}
-			case Nothing: {}
-		}
-
-		queued_turn_action = Nothing;
-	}
-
-	override function process_animation(ratio: Float): Void {
-		// This function should remain empty...
-	}
-
-	function set_direction(direction: Direction) {
-		look_direction = direction;
-		mesh_rotator.rotation.y = direction.rotation();
-
-		mesh_manipulator.rotation_degrees.x = switch(direction) {
-			case Left: -30.0;
-			case Right: 30.0;
-			case _: 0.0;
-		}
 	}
 
 	function set_gameplay_controls_visible(visible: Bool) {

@@ -65,7 +65,7 @@ class CharacterAnimator extends Node {
 
 	public function end_animation() {
 		switch(animation) {
-			case DirectionalAttack: mesh.mesh = default_mesh;
+			case DirectionalAttack: if(default_mesh != null) mesh.mesh = default_mesh;
 			case _:
 		}
 	}

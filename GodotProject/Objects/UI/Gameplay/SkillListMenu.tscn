@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bqvw4aqghd16b"]
 
-[ext_resource type="Script" uid="uid://cd7avibdkafja" path="res://addons/SharkMafia/game_ui_SkillListMenu.gd" id="1_3i0h2"]
+[ext_resource type="Script" path="res://addons/SharkMafia/game_ui_SkillListMenu.gd" id="1_3i0h2"]
 [ext_resource type="PackedScene" uid="uid://bqd5qecc2ptbw" path="res://Objects/UI/Gameplay/SkillDescription.tscn" id="1_rpprd"]
 [ext_resource type="PackedScene" uid="uid://cwp0swdo3pdpp" path="res://Objects/UI/Gameplay/SkillList.tscn" id="2_3i0h2"]
 

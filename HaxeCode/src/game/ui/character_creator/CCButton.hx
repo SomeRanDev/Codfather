@@ -14,7 +14,7 @@ class CCButton extends CCEntry {
 	}
 
 	override function on_selected() {
-		description_label.text = "Start game!";
-		description_contents.text = "Press ENTER or A to begin!";
+		if(description_label != null) description_label.text = "Start game!";
+		if(description_contents != null) description_contents.text = "Press ENTER or A to begin!";
 	}
 }

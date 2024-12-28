@@ -31,6 +31,15 @@ class DirectionHelpers {
 		}
 	}
 
+	public static function rotated_cw(self: Direction): Direction {
+		return switch(self) {
+			case Up: Right;
+			case Down: Left;
+			case Left: Up;
+			case Right: Down;
+		}
+	}
+
 	public static function rotation(self: Direction): Float {
 		return rotation_ratio(self) * Math.PI;
 	}

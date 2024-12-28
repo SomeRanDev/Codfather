@@ -1,0 +1,118 @@
+[gd_scene load_steps=9 format=3 uid="uid://bqjv3lx5iry8v"]
+
+[ext_resource type="Material" uid="uid://bv872rqlrfdvo" path="res://VisualAssets/Materials/UI/CRT_2D_Material.tres" id="1_c4eo0"]
+[ext_resource type="Script" uid="uid://cq1t7f0742ycn" path="res://addons/SharkMafia/game_PostProcess2D.gd" id="2_w4u4o"]
+[ext_resource type="Script" path="res://addons/SharkMafia/game_Story.gd" id="3_6hqoj"]
+[ext_resource type="Script" uid="uid://cdaxvoeu651su" path="res://addons/SharkMafia/game_FullScreenPanelContainer.gd" id="4_6hqoj"]
+[ext_resource type="LabelSettings" uid="uid://bhic01n7eorym" path="res://VisualAssets/Fonts/Story/DescriptionLabelSettings.tres" id="5_w4u4o"]
+[ext_resource type="Script" uid="uid://recvei8m6d0u" path="res://addons/SharkMafia/game_ui_CCButton.gd" id="6_6hqoj"]
+[ext_resource type="LabelSettings" uid="uid://do0o6dikdydrs" path="res://VisualAssets/Fonts/CharacterCreator/BaseFontSize.tres" id="7_vyd76"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lyl2m"]
+
+[node name="Story" type="CanvasGroup"]
+material = ExtResource("1_c4eo0")
+script = ExtResource("2_w4u4o")
+
+[node name="Story" type="Node" parent="." node_paths=PackedStringArray("effect", "container", "play_tutorial", "skip_tutorial")]
+script = ExtResource("3_6hqoj")
+effect = NodePath("..")
+container = NodePath("../PanelContainer")
+play_tutorial = NodePath("../PanelContainer/VBoxContainer/HBoxContainer/PlayTutorial")
+skip_tutorial = NodePath("../PanelContainer/VBoxContainer/HBoxContainer/SkipTutorial")
+metadata/_custom_type_script = ExtResource("3_6hqoj")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+script = ExtResource("4_6hqoj")
+resize_label_settings = Array[LabelSettings]([ExtResource("5_w4u4o")])
+
+[node name="Background" type="ColorRect" parent="PanelContainer"]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PaddingTop" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TitleContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PaddingLeft" type="Control" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Story" type="Label" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+text = "TODO: Watch the Godfather and actually think
+of a story for this game...."
+label_settings = ExtResource("5_w4u4o")
+
+[node name="PaddingRight" type="Control" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PaddingMiddle" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LeftPadding" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayTutorial" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_lyl2m")
+script = ExtResource("6_6hqoj")
+
+[node name="Select" type="ColorRect" parent="PanelContainer/VBoxContainer/HBoxContainer/PlayTutorial"]
+visible = false
+layout_mode = 2
+color = Color(1, 0.09, 0.09, 1)
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/PlayTutorial"]
+layout_mode = 2
+text = "Play Tutorial"
+label_settings = ExtResource("7_vyd76")
+horizontal_alignment = 1
+
+[node name="MiddlePadding" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkipTutorial" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_lyl2m")
+script = ExtResource("6_6hqoj")
+
+[node name="Select" type="ColorRect" parent="PanelContainer/VBoxContainer/HBoxContainer/SkipTutorial"]
+visible = false
+layout_mode = 2
+color = Color(1, 0.09, 0.09, 1)
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/SkipTutorial"]
+layout_mode = 2
+text = "Skip Tutorial"
+label_settings = ExtResource("7_vyd76")
+horizontal_alignment = 1
+
+[node name="RightPadding" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PaddingBottom" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

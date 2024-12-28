@@ -7,6 +7,13 @@ class TurnManager extends Node {
 	var entities: Array<TurnSlave> = [];
 	var entity_map: Dictionary = new Dictionary();
 
+	public function preprocess_turns(): Bool {
+		for (e in entities)
+			e.preprocess_turn();
+
+		return true;
+	}
+
 	public function process_turns(): Bool {
 		cast(entities, GodotArray).sort_custom(new Callable(this, "sort_entities"));
 
