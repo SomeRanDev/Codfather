@@ -2,7 +2,9 @@ package game;
 
 enum Attack {
 	BasicAttack;
+	SingleAttack;
 	SurrondAttack;
+	Self;
 	Projectile;
 }
 
@@ -14,9 +16,11 @@ class Skill {
 	public var max_power(default, null): Float;
 	public var knockback(default, null): Int;
 	public var cost(default, null): Int;
+	public var healing(default, null): Int;
 
 	public function new(
-		name: String, description: String, attack_type: Null<Attack>, min_power: Int, max_power: Int, cost: Int, knockback: Int
+		name: String, description: String, attack_type: Null<Attack>, min_power: Int, max_power: Int, cost: Int,
+		knockback: Int, healing: Int
 	) {
 		this.name = name;
 		this.description = description;
@@ -25,6 +29,7 @@ class Skill {
 		this.max_power = max_power;
 		this.cost = cost;
 		this.knockback = knockback;
+		this.healing = healing;
 	}
 
 	public static function get_skill(id: Int) {
@@ -51,9 +56,11 @@ final NULL_SKILL_ID = -2;
 final CANCEL_SKILL_ID = -3;
 final BASIC_SKILL_ID = -1;
 
-final BASIC_SKILL = new Skill("Chomp", "Your default attack.", BasicAttack, 2, 3, 0, 0);
+final BASIC_SKILL = new Skill("Chomp", "Your default attack.", BasicAttack, 2, 3, 0, 0, 0);
 
 final ALL_SKILLS = [
-	new Skill("Spin Attack", "Hits all enemies around you.", SurrondAttack, 2, 3, 2, 0),
-	new Skill("Bubble", "Shoots a bubble.", Projectile, 2, 3, 2, 0),
+	new Skill("Spin Attack", "Hits all enemies around you.", SurrondAttack, 2, 4, 2, 0, 0),
+	new Skill("Bubble", "Shoots a bubble.", Projectile, 2, 5, 2, 0, 0),
+	new Skill("Crushing Crunch", "Hits a single enemy for BIG damage.", SingleAttack, 7, 15, 5, 0, 0),
+	new Skill("Plankton Snack", "Restores HP to full.", Self, 0, 0, 10, 0, 999),
 ];

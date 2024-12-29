@@ -67,7 +67,6 @@ class CCStatManager extends Node {
 		stat_allocators[4].set_base_value(luk);
 		current_stat_points = 10;
 		refresh_label();
-		trace("test");
 	}
 
 	public function get_final_stats(): Array<Int> {

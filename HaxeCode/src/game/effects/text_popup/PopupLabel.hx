@@ -49,4 +49,9 @@ class PopupLabel extends Label3D {
 	public function shift_up() {
 		target_y_offset += 0.7;
 	}
+
+	public function make_green() {
+		modulate.r = 0.5;
+		modulate.b = 0.5;
+	}
 }

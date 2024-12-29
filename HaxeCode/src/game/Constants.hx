@@ -16,4 +16,4 @@ import GDScript as GD;
 @:const final WSharkHatPosition = new Vector3(-0.345, 0.196, 0.027);
 @:const final WSharkHatRotation = new Vector3(-3.1, 127.5, -0.4);
 
-@:const final PROJECTILE_SCENE: PackedScene = GD.preload("res://Objects/NPCs/Projectile.tscn");
+//@:const final PROJECTILE_SCENE: PackedScene = GD.preload("res://Objects/NPCs/Projectile.tscn");

@@ -35,18 +35,19 @@ class World extends Node3D {
 			level_text.override_text(level_data.custom_map.text, level_data.custom_map.subtext);
 		} else if(WorldManager.should_randomize) {
 			level_data.randomize_noise();
+
 			if(WorldManager.floor == 5) {
 				level_data.randomize_size(80, 100);
 				level_data.desired_enemy_count.x = 15;
 				level_data.desired_enemy_count.y = 20;
-			} else if(WorldManager.floor < 3) {
-				level_data.randomize_size(40, 60);
-				level_data.desired_enemy_count.x = 10;
-				level_data.desired_enemy_count.y = 15;
-			} else {
+			} else if(WorldManager.floor == 1) {
 				level_data.randomize_size(50, 75);
-				level_data.desired_enemy_count.x = 5;
-				level_data.desired_enemy_count.y = 8;
+				level_data.desired_enemy_count.x = 3;
+				level_data.desired_enemy_count.y = 5;
+			} else {
+				level_data.randomize_size(40, 60);
+				level_data.desired_enemy_count.x = 6;
+				level_data.desired_enemy_count.y = 10 * Math.floor(Math.min(WorldManager.floor - 1, 2.0));
 			}
 		} else {
 			world_changed = false;
@@ -80,10 +81,10 @@ class World extends Node3D {
 		player.set_world(this);
 		turn_manager.add_entity(player);
 
-		final npc_scene = cast(GD.load("res://Objects/TestNPC.tscn"), PackedScene);
 		for(npc_data in level_data.npcs) {
 			switch(npc_data.kind) {
 				case TestNPC: {
+					final npc_scene = cast(GD.load("res://Objects/TestNPC.tscn"), PackedScene);
 					var npc: NPC = cast npc_scene.instantiate();
 					npc.set_world(this);
 					npc.setup(dynamic_level_data, turn_manager, effect_manager);

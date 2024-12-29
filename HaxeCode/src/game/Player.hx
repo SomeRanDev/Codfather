@@ -139,6 +139,12 @@ class Player extends TurnSlave {
 			case _: WSharkHatRotation;
 		}
 
+		skills = switch(StaticPlayerData.species) {
+			case 1: [1, 2];
+			case 2: [1, 3];
+			case _: [0, 2];
+		}//: Array<Int> = ;
+
 		stats = StaticPlayerData.stats;
 		stats.id = 2;
 		//stats.max_health = stats.health = 1000;
@@ -233,6 +239,11 @@ class Player extends TurnSlave {
 		}
 		teeth -= amount;
 		refresh_teeth();
+	}
+
+	public override function heal_self(skill_id: Int) {
+		super.heal_self(skill_id);
+		refresh_health_bar();
 	}
 
 	public override function on_damaged() {
@@ -391,6 +402,10 @@ class Player extends TurnSlave {
 				if(r > 0.8) {
 					final r = (r - 0.8) / 0.2;
 					mesh_holder.scale = Vector3.ONE * (1.0 - r);
+				}
+
+				if(previous > 0.8 && intro_outro_animation <= 0.8) {
+					MyAudioPlayer.stairs2.play();
 				}
 
 				if(intro_outro_animation == 0.0) {

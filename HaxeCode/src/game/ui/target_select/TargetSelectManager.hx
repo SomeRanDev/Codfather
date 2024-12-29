@@ -21,12 +21,13 @@ enum abstract TargetDirection(Int) from Int to Int {
 }
 
 enum TargetType {
+	Self;
 	AroundPlayer(allowed_spots: Int); // Mask with each bit corresponding to numpad. Ie: 2^7 is up-left.
 }
 
 enum TargetCount {
 	One;
-	All;
+	NotChangeable;
 }
 
 class TargetSelectManager extends Node {
@@ -50,19 +51,32 @@ class TargetSelectManager extends Node {
 
 		target_type = switch(skill.attack_type) {
 			case BasicAttack: AroundPlayer(Up | Down | Left | Right);
+			case SingleAttack: AroundPlayer(Up | Down | Left | Right);
+			case Self: Self;
 			case SurrondAttack: AroundPlayer(Up | Down | Left | Right | UpLeft | UpRight | DownLeft | DownRight);
 			case Projectile: AroundPlayer(Up | Down | Left | Right);
 		}
 
 		target_count = switch(skill.attack_type) {
 			case BasicAttack: One;
-			case SurrondAttack: All;
+			case SingleAttack: One;
+			case Self: NotChangeable;
+			case SurrondAttack: NotChangeable;
 			case Projectile: One;
 		}
 
 		selectable_tiles.clear();
 
 		switch(target_type) {
+			case Self: {
+				final tile: SelectableTile = cast SELECTABLE_TILE.instantiate();
+				get_tree().get_current_scene().add_child(tile);
+
+				tile.set_tilemap_position(player_position);
+
+				tiles.push(tile);
+				selectable_tiles.set(level_data.get_3d_index(player_position), tile);
+			}
 			case AroundPlayer(allowed_spots): {
 				for(d in ALL_DIRECTIONS) {
 					if((allowed_spots & d) != 0) {
@@ -94,7 +108,7 @@ class TargetSelectManager extends Node {
 					selected_indexes.push(level_data.get_3d_index(tiles[0].tilemap_position));
 				}
 			}
-			case All: {
+			case NotChangeable: {
 				for(t in tiles) {
 					t.set_selected(true);
 				}
@@ -180,9 +194,10 @@ class TargetSelectManager extends Node {
 							set_selected_indexes([index], level_data);
 						}
 					}
+					case Self: // impossible atm
 				}
 			}
-			case All: // do nothing...
+			case NotChangeable: // do nothing...
 		}
 
 		return 0;

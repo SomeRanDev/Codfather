@@ -1,7 +1,7 @@
 package game;
 
 import game.AudioPlayer.MyAudioPlayer;
-import game.Constants.PROJECTILE_SCENE;
+//import game.Constants.PROJECTILE_SCENE;
 import game.npc.NPCBehaviorProjectile;
 import game.Attack.BASIC_SKILL_ID;
 import game.data.Direction;
@@ -172,7 +172,16 @@ class TurnSlave extends Node3D {
 					popup_maker.popup("Not enough teeth!");
 				} else {
 					take_skill_money(skill.get_real_cost());
+
+					if(skill.healing > 0) {
+						heal_self(skill_id);
+					}
+
 					for(position in targeted_positions) {
+						if(position == tilemap_position) {
+							continue;
+						}
+
 						final p = position;
 						if(skill.is_projectile()) {
 							if(level_data.is_attackable_or_empty(p)) {
@@ -192,8 +201,17 @@ class TurnSlave extends Node3D {
 						}
 					}
 
-					set_direction(look_direction.reverse());
-					character_animator.animation = SpinAttack;
+					if(post_process != null || level_data.distance_to_player_squared(tilemap_position) < 100) {
+						MyAudioPlayer.special_attack.play();
+					}
+					character_animator.animation = switch(skill.attack_type) {
+						case SurrondAttack: SpinAttack;
+						case Self: Nothing;
+						case _: DirectionalAttack;
+					};
+					if(skill.attack_type == SurrondAttack) {
+						set_direction(look_direction.reverse());
+					}
 					turn_speed_ratio = 0.75;
 				}
 			}
@@ -223,13 +241,11 @@ class TurnSlave extends Node3D {
 			case Nothing: popup_maker.popup("Failed!");
 			case Damaged: {
 				effect_manager.add_blood_particles(entity.position);
-				if(camera != null) MyAudioPlayer.special_attack.play();
 			}
 			case Killed: {
 				effect_manager.add_bone_particles(entity.position, 5.0);
 				effect_manager.add_blood_particles(entity.position, 10.0);
 				if(camera != null) camera.shake();
-				if(camera != null) MyAudioPlayer.special_attack.play();
 			}
 		}
 	}
@@ -238,7 +254,7 @@ class TurnSlave extends Node3D {
 		position: Vector3i, skill_id: Int, direction: Direction,
 		dynamic_level_data: DynamicLevelData, turn_manager: TurnManager, effect_manager: EffectManager, world: World
 	) {
-		final projectile: NPC = cast PROJECTILE_SCENE.instantiate();
+		final projectile: NPC = cast GD.load("res://Objects/NPCs/Projectile.tscn").instantiate();
 		projectile.stats.speed = 999 + projectile.stats.id;
 
 		final projectile_behavior = cast(@:privateAccess projectile.behavior, NPCBehaviorProjectile);
@@ -277,6 +293,21 @@ class TurnSlave extends Node3D {
 		}
 
 		return killed ? Killed : (damage > 0 ? Damaged : Nothing);
+	}
+
+	public function heal_self(skill_id: Int) {
+		final skill = Skill.get_skill(skill_id);
+		final heal = skill.healing;
+
+		if(heal > 0) {
+			final previous_health = stats.health;
+			stats.health += heal;
+			if(stats.health >= stats.max_health) {
+				stats.health = stats.max_health;
+			}
+
+			popup_maker.popup_green(Std.string(stats.health - previous_health));
+		}
 	}
 
 	public function on_damaged() {

@@ -19,6 +19,12 @@ class PopupMaker extends Node3D {
 		l.text = text;
 		l.setup(global_position, global_position + new Vector3(0, 2, 0));
 		popups.push(l);
+		return l;
+	}
+
+	public function popup_green(text: String) {
+		final l = popup(text);
+		l.make_green();
 	}
 
 	public function update(delta: Float) {

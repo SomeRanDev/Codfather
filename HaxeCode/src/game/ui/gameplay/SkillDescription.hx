@@ -21,7 +21,10 @@ class SkillDescription extends PanelContainer {
 		cost_label.modulate = current_teeth_count < cost ? Color.RED : Color.WHITE;
 
 		target_label.text = switch(skill.attack_type) {
-			case BasicAttack: {
+			case BasicAttack | SingleAttack: {
+				"1";
+			}
+			case Self: {
 				"1";
 			}
 			case SurrondAttack: {
@@ -32,8 +35,11 @@ class SkillDescription extends PanelContainer {
 			}
 		}
 		range_label.text = switch(skill.attack_type) {
-			case BasicAttack: {
+			case BasicAttack | SingleAttack: {
 				"Next to You";
+			}
+			case Self: {
+				"Yourself";
 			}
 			case SurrondAttack: {
 				"Next to You";
