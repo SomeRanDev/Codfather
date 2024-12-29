@@ -49,8 +49,16 @@ size_flags_horizontal = 3
 
 [node name="Story" type="Label" parent="PanelContainer/VBoxContainer/TitleContainer"]
 layout_mode = 2
-text = "TODO: Watch the Godfather and actually think
-of a story for this game...."
+text = "Somefish has betrayed the great Gambusia family!
+They cannot be left unconsumed!
+
+You have been chosen by the Codfather himself to
+hunt down & devour this traitor at any cost!
+
+But be careful, this COWARD has hidden themselves
+deep in enemy territory. Everyfish will be out for YOU.
+
+Good luck..."
 label_settings = ExtResource("5_w4u4o")
 
 [node name="PaddingRight" type="Control" parent="PanelContainer/VBoxContainer/TitleContainer"]
@@ -60,7 +68,7 @@ size_flags_horizontal = 3
 [node name="PaddingMiddle" type="Control" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
+size_flags_stretch_ratio = 0.5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
