@@ -1,5 +1,6 @@
 package game;
 
+import game.data.Direction.DirectionHelpers;
 import game.npc.NPCBehaviorBasicAttacker;
 import game.npc.NPCBehaviorShooter;
 import game.npc.NPCBehaviorStillAttacker;
@@ -11,7 +12,7 @@ class EnemyMaker {
 	public static function random_enemy_type(): EnemyType {
 		return switch(Godot.randi_range(0, 6)) {
 			case 0: Crab;
-			case 1: CrabShooter;
+			case 1: CrabShooter(null);
 			case 2: Fish1;
 			case 3: Fish2;
 			case 4: FlatFish;
@@ -34,9 +35,15 @@ class EnemyMaker {
 				npc.set_behavior(attacker);
 				npc.set_all_stats(Godot.randi_range(10, 15), Godot.randi_range(1, 1), Godot.randi_range(4, 6), Godot.randi_range(1, 2), 0);
 			}
-			case CrabShooter: {
+			case CrabShooter(direction): {
 				npc.set_mesh("res://VisualAssets/Blender/Characters/Crab.res");
-				npc.set_behavior(new NPCBehaviorShooter());
+				final shooter = new NPCBehaviorShooter();
+				if(direction != null) {
+					shooter.direction = direction;
+				} else {
+					shooter.direction = DirectionHelpers.random();
+				}
+				npc.set_behavior(shooter);
 				npc.set_all_stats(Godot.randi_range(10, 15), Godot.randi_range(1, 1), Godot.randi_range(4, 6), Godot.randi_range(1, 2), 0);
 			}
 			case Fish1: {

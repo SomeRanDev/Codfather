@@ -7,8 +7,8 @@ class StaticPlayerData {
 
 	public static var species: Int = 0;
 	public static var class_kind: Int = 0;
-	public static var teeth: Int = 10;
-	public static var max_teeth: Int = 10;
+	public static var teeth: Int = 14;
+	public static var max_teeth: Int = 14;
 
 	public static function reset() {
 		stats = new Stats();

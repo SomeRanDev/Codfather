@@ -201,7 +201,7 @@ class TurnSlave extends Node3D {
 						}
 					}
 
-					if(post_process != null || level_data.distance_to_player_squared(tilemap_position) < 100) {
+					if(post_process != null) {
 						MyAudioPlayer.special_attack.play();
 					}
 					character_animator.animation = switch(skill.attack_type) {

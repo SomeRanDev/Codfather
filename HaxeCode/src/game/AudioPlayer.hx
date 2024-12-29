@@ -31,6 +31,7 @@ class AudioPlayer extends Node {
 
 	override function _ready() {
 		music_player = new AudioStreamPlayer();
+		music_player.volume_db = -5.0;
 		add_child(music_player);
 
 		cursor_move = make_player("CursorMove", -5.0);
@@ -55,7 +56,7 @@ class AudioPlayer extends Node {
 
 	public function play_footstep() {
 		footstep.pitch_scale = Godot.randf_range(0.5, 1.5);
-		footstep.volume_db = Godot.randf_range(-17.0, -12.0);
+		footstep.volume_db = Godot.randf_range(-14.0, -8.0);
 		footstep.play();
 	}
 

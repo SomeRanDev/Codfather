@@ -1,5 +1,6 @@
 package game.ui.gameplay;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.Attack.CANCEL_SKILL_ID;
 import game.Attack.Skill;
 import game.Attack.BASIC_SKILL_ID;
@@ -37,8 +38,10 @@ class SkillListMenu extends VBoxContainer {
 				// Play bad sound effect...
 				return NULL_SKILL_ID;
 			}
+			MyAudioPlayer.start.play();
 			return skill_list.get_current_skill_id();
 		} else if(Input.is_action_just_pressed("back")) {
+			MyAudioPlayer.subtract_stat.play();
 			return CANCEL_SKILL_ID;
 		}
 		return NULL_SKILL_ID;

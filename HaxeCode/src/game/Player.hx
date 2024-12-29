@@ -81,8 +81,8 @@ class Player extends TurnSlave {
 	var last_moved_direction: Null<Direction> = null;
 	
 	var skills: Array<Int> = [0, 1];
-	var teeth: Int = 10;
-	var max_teeth: Int = 10;
+	var teeth: Int = 14;
+	var max_teeth: Int = 14;
 	var turns_until_next_tooth: Int = -1;
 
 	var skill_list_menu: Null<SkillListMenu> = null;
@@ -466,6 +466,8 @@ class Player extends TurnSlave {
 				skill_list_menu = cast SKILL_LIST_MENU.instantiate();
 				_2d.add_child(skill_list_menu);
 				skill_list_menu.setup(skills, teeth);
+
+				MyAudioPlayer.add_stat.play();
 
 				in_menu = true;
 				refresh_gameplay_controls();

@@ -1,5 +1,6 @@
 package game.ui.target_select;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.Attack.BASIC_SKILL_ID;
 import game.Player.QueueableAction;
 import game.Attack.NULL_SKILL_ID;
@@ -164,8 +165,10 @@ class TargetSelectManager extends Node {
 
 	public function update(delta: Float, player_position: Vector3i, level_data: DynamicLevelData): Int {
 		if(Input.is_action_just_pressed("ok")) {
+			MyAudioPlayer.start.play();
 			return 1;
 		} else if(Input.is_action_just_pressed("back")) {
+			MyAudioPlayer.subtract_stat.play();
 			return 2;
 		}
 
@@ -216,6 +219,8 @@ class TargetSelectManager extends Node {
 			for(t in tiles) {
 				t.setup_walls(selectable_tiles, level_data);
 			}
+
+			MyAudioPlayer.cursor_move.play();
 		}
 	}
 

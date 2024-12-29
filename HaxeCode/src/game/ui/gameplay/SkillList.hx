@@ -1,5 +1,6 @@
 package game.ui.gameplay;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.Attack.Skill;
 import game.Attack.BASIC_SKILL_ID;
 import game.Attack.NULL_SKILL_ID;
@@ -88,6 +89,8 @@ class SkillList extends PanelContainer {
 			if(current_index < 0) current_index = items.length - 1;
 			items[current_index].set_selected(true);
 
+			MyAudioPlayer.cursor_move.play();
+
 			return get_current_skill_id();
 		} else if(move_input == 1) {
 			items[current_index].set_selected(false);
@@ -95,6 +98,8 @@ class SkillList extends PanelContainer {
 			current_index++;
 			if(current_index >= items.length) current_index = 0;
 			items[current_index].set_selected(true);
+
+			MyAudioPlayer.cursor_move.play();
 
 			return get_current_skill_id();
 		}

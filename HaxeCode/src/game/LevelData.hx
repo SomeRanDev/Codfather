@@ -1,5 +1,6 @@
 package game;
 
+import game.data.Direction;
 import game.CustomMap.EnemyCustomEntity;
 import game.CustomMap.SignCustomEntity;
 import godot.*;
@@ -13,7 +14,7 @@ enum NPCType {
 enum EnemyType {
 	TestFish;
 	Crab;
-	CrabShooter;
+	CrabShooter(direction: Null<Direction>);
 	Fish1;
 	Fish2;
 	FlatFish;
