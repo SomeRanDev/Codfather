@@ -47,7 +47,8 @@ class WorldManager {
 		custom_map.custom_entities.set(103, SignCustomEntity.make("Press Z to change your swimming layer. Use this to dodge the bubbles!"));
 		custom_map.custom_entities.set(104, SignCustomEntity.make("Enemies with yellow indicators are FASTER! They will attack or move before you do. This can cause you to miss or die early."));
 		custom_map.custom_entities.set(105, SignCustomEntity.make("Use the stairs to enter the next floor! Good luck!"));
-		custom_map.custom_entities.set(106, EnemyCustomEntity.make(Crab));
+		custom_map.custom_entities.set(106, EnemyCustomEntity.make(CrabShooter));
+		custom_map.custom_entities.set(107, EnemyCustomEntity.make(CrabShooter));
 	}
 
 	public static function go_to_new_floor() {

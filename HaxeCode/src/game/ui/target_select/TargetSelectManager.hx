@@ -51,11 +51,13 @@ class TargetSelectManager extends Node {
 		target_type = switch(skill.attack_type) {
 			case BasicAttack: AroundPlayer(Up | Down | Left | Right);
 			case SurrondAttack: AroundPlayer(Up | Down | Left | Right | UpLeft | UpRight | DownLeft | DownRight);
+			case Projectile: AroundPlayer(Up | Down | Left | Right);
 		}
 
 		target_count = switch(skill.attack_type) {
 			case BasicAttack: One;
 			case SurrondAttack: All;
+			case Projectile: One;
 		}
 
 		selectable_tiles.clear();

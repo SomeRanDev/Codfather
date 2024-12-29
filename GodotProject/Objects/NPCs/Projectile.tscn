@@ -1,0 +1,79 @@
+[gd_scene load_steps=12 format=3 uid="uid://by0ibs7rlh73j"]
+
+[ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_y5nap"]
+[ext_resource type="Script" uid="uid://bl8dyp2s0vpt3" path="res://addons/SharkMafia/game_NPCBehaviorProjectile.gd" id="2_8nuxl"]
+[ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="4_6k7rh"]
+[ext_resource type="ArrayMesh" uid="uid://duxi6e0csjxh5" path="res://VisualAssets/Blender/UI/ExclamationPoint.res" id="5_5gdvt"]
+[ext_resource type="Script" uid="uid://e40w3x3tewj3" path="res://addons/SharkMafia/game_Exclamation.gd" id="6_flo8l"]
+[ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="7_04xhj"]
+[ext_resource type="PackedScene" uid="uid://bwnqrwtod7fyj" path="res://Objects/TileIndicator.tscn" id="8_dcmws"]
+[ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="9_h0teb"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_8nuxl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y5nap"]
+albedo_color = Color(0, 1, 1, 1)
+metallic_specular = 1.0
+roughness = 0.0
+emission_enabled = true
+emission = Color(0.424762, 0.606788, 1, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_karc0"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 0.5
+
+[node name="Projectile" type="Node3D" node_paths=PackedStringArray("behavior", "popup_maker")]
+script = ExtResource("1_y5nap")
+behavior = NodePath("NPCBehaviorProjectile")
+popup_maker = NodePath("MeshRotator/MeshHolder/PopupMaker")
+
+[node name="NPCBehaviorProjectile" type="Node" parent="."]
+script = ExtResource("2_8nuxl")
+metadata/_custom_type_script = ExtResource("2_8nuxl")
+
+[node name="MeshRotator" type="Node3D" parent="."]
+
+[node name="MeshHolder" type="Node3D" parent="MeshRotator"]
+
+[node name="MeshManipulator" type="Node3D" parent="MeshRotator/MeshHolder"]
+
+[node name="Mesh" type="MeshInstance3D" parent="MeshRotator/MeshHolder/MeshManipulator"]
+layers = 3
+cast_shadow = 0
+mesh = SubResource("SphereMesh_8nuxl")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_y5nap")
+
+[node name="Shadow" type="Sprite3D" parent="MeshRotator/MeshHolder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.49, 0)
+modulate = Color(1, 1, 1, 0.435294)
+pixel_size = 0.02
+axis = 1
+alpha_cut = 1
+alpha_scissor_threshold = 0.257
+texture = ExtResource("4_6k7rh")
+
+[node name="Exclamation" type="MeshInstance3D" parent="MeshRotator/MeshHolder"]
+transform = Transform3D(0.333, 0, 0, 0, 0.333, 0, 0, 0, 0.333, 0, 0.31076, 0)
+mesh = ExtResource("5_5gdvt")
+surface_material_override/0 = SubResource("StandardMaterial3D_karc0")
+script = ExtResource("6_flo8l")
+
+[node name="PopupMaker" type="Node3D" parent="MeshRotator/MeshHolder"]
+script = ExtResource("7_04xhj")
+metadata/_custom_type_script = ExtResource("7_04xhj")
+
+[node name="TileIndicator" parent="MeshRotator" instance=ExtResource("8_dcmws")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.48, 0)
+
+[node name="CharacterAnimator" type="Node" parent="." node_paths=PackedStringArray("mesh", "mesh_manipulator", "mesh_holder", "shadow", "tile_indicator")]
+script = ExtResource("9_h0teb")
+mesh = NodePath("../MeshRotator/MeshHolder/MeshManipulator/Mesh")
+mesh_manipulator = NodePath("../MeshRotator/MeshHolder/MeshManipulator")
+mesh_holder = NodePath("../MeshRotator/MeshHolder")
+shadow = NodePath("../MeshRotator/MeshHolder/Shadow")
+tile_indicator = NodePath("../MeshRotator/TileIndicator")
+metadata/_custom_type_script = ExtResource("9_h0teb")

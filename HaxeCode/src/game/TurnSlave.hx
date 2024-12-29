@@ -1,5 +1,7 @@
 package game;
 
+import game.Constants.PROJECTILE_SCENE;
+import game.npc.NPCBehaviorProjectile;
 import game.Attack.BASIC_SKILL_ID;
 import game.data.Direction;
 import game.Attack.Skill;
@@ -8,6 +10,7 @@ import game.Attack.ALL_SKILLS;
 import game.effects.text_popup.PopupMaker;
 
 import godot.*;
+import GDScript as GD;
 
 enum TakeAttackResult {
 	Interaction;
@@ -19,11 +22,17 @@ enum TakeAttackResult {
 class TurnSlave extends Node3D {
 	@:export var popup_maker: PopupMaker;
 
+	var world: World;
+
 	var tilemap_position: Vector3i;
 	var queued_turn_action: Action = Nothing;
 	var look_direction: Direction = Right;
 
 	public var stats(default, null) = new Stats();
+
+	public function set_world(world: World) {
+		this.world = world;
+	}
 
 	public function get_speed(): Float {
 		return stats.speed;
@@ -56,7 +65,7 @@ class TurnSlave extends Node3D {
 	}
 
 	public function default_turn_processing(
-		character_animator: CharacterAnimator, effect_manager: EffectManager, level_data: DynamicLevelData,
+		character_animator: CharacterAnimator, effect_manager: EffectManager, level_data: DynamicLevelData, turn_manager: TurnManager,
 		post_process: Null<PostProcess>, camera: Null<Camera>,
 	): Float {
 		character_animator.animation = Nothing;
@@ -68,6 +77,9 @@ class TurnSlave extends Node3D {
 		var turn_speed_ratio = 1.0;
 
 		switch(queued_turn_action) {
+			case Suicide: {
+				kill();
+			}
 			case Move(direction): {
 				final next_tile = tilemap_position + direction.as_vec3i();
 				if(level_data.tile_free(next_tile) && set_tilemap_position(next_tile)) {
@@ -109,9 +121,25 @@ class TurnSlave extends Node3D {
 				set_direction(direction);
 
 				if(entity != null) {
-					switch(entity.take_attack(this, BASIC_SKILL_ID)) {
+					hit_entity_with_skill(entity, BASIC_SKILL_ID, effect_manager, camera);
+				} else {
+					popup_maker.popup("Missed!");
+					if(post_process != null) {
+						post_process.play_distort();
+					}
+				}
+			}
+			case ProjectileAttack(direction, skill_id): {
+				final attack_position = tilemap_position + direction.as_vec3i();
+				final entity = level_data.get_entity(attack_position);
+
+				character_animator.animation = Move;
+				set_direction(direction);
+
+				if(entity != null) {
+					switch(entity.take_attack(this, skill_id)) {
 						case Interaction: {}
-						case Nothing: popup_maker.popup("Failed!");
+						case Nothing: {}
 						case Damaged: effect_manager.add_blood_particles(entity.position);
 						case Killed: {
 							effect_manager.add_bone_particles(entity.position, 5.0);
@@ -119,11 +147,8 @@ class TurnSlave extends Node3D {
 							if(camera != null) camera.shake();
 						}
 					}
-				} else {
-					popup_maker.popup("Missed!");
-					if(post_process != null) {
-						post_process.play_distort();
-					}
+
+					kill();
 				}
 			}
 			case DoSkill(skill_id, targeted_positions): {
@@ -132,20 +157,20 @@ class TurnSlave extends Node3D {
 					popup_maker.popup("Not enough teeth!");
 				} else {
 					take_skill_money(skill.get_real_cost());
-
 					for(position in targeted_positions) {
-						final entity = level_data.get_entity(position);
-						if(entity != null) {
-							switch(entity.take_attack(this, skill_id)) {
-								case Interaction: {}
-								case Nothing: popup_maker.popup("Failed!");
-								case Damaged: effect_manager.add_blood_particles(entity.position);
-								case Killed: {
-									effect_manager.add_bone_particles(entity.position, 5.0);
-									effect_manager.add_blood_particles(entity.position, 10.0);
-									if(camera != null) camera.shake();
+						final p = position;
+						if(skill.is_projectile()) {
+							if(level_data.is_attackable_or_empty(p)) {
+								if(level_data.is_attackable(p)) {
+									final entity = level_data.get_entity(p);
+									if(entity != null) hit_entity_with_skill(entity, skill_id, effect_manager, camera);
+								} else {
+									spawn_projectile(p, skill_id, level_data, turn_manager, effect_manager, world);
 								}
 							}
+						} else {
+							final entity = level_data.get_entity(p);
+							if(entity != null) hit_entity_with_skill(entity, skill_id, effect_manager, camera);
 						}
 					}
 
@@ -160,6 +185,36 @@ class TurnSlave extends Node3D {
 		queued_turn_action = Nothing;
 
 		return turn_speed_ratio;
+	}
+
+	function hit_entity_with_skill(entity: TurnSlave, skill_id: Int, effect_manager: EffectManager, camera: Null<Camera>) {
+		switch(entity.take_attack(this, skill_id)) {
+			case Interaction: {}
+			case Nothing: popup_maker.popup("Failed!");
+			case Damaged: effect_manager.add_blood_particles(entity.position);
+			case Killed: {
+				effect_manager.add_bone_particles(entity.position, 5.0);
+				effect_manager.add_blood_particles(entity.position, 10.0);
+				if(camera != null) camera.shake();
+			}
+		}
+	}
+
+	function spawn_projectile(
+		position: Vector3i, skill_id: Int,
+		dynamic_level_data: DynamicLevelData, turn_manager: TurnManager, effect_manager: EffectManager, world: World
+	) {
+		final projectile: NPC = cast PROJECTILE_SCENE.instantiate();
+		final projectile_behavior = cast(@:privateAccess projectile.behavior, NPCBehaviorProjectile);
+		if(projectile_behavior != null) {
+			projectile_behavior.direction = Left;
+		}
+
+		projectile.setup(dynamic_level_data, turn_manager, effect_manager);
+		turn_manager.queue_add_entity(projectile);
+		world.add_child(projectile);
+
+		projectile.set_starting_position(position);
 	}
 
 	public function take_attack(attacker: TurnSlave, skill_id: Int): TakeAttackResult {

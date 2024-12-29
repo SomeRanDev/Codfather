@@ -4,12 +4,11 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b5inmidwd0rei"
-path="res://.godot/imported/GreatWhiteShark_MouthOpen.blend-0dca9119ea03e36106b631b8b560a365.scn"
+valid=false
 
 [deps]
 
 source_file="res://VisualAssets/Blender/Characters/GreatWhiteShark_MouthOpen.blend"
-dest_files=["res://.godot/imported/GreatWhiteShark_MouthOpen.blend-0dca9119ea03e36106b631b8b560a365.scn"]
 
 [params]
 

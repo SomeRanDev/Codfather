@@ -12,6 +12,7 @@ enum NPCType {
 
 enum EnemyType {
 	Crab;
+	CrabShooter;
 }
 
 @:tool

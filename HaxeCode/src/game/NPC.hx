@@ -116,7 +116,14 @@ class NPC extends TurnSlave {
 	}
 
 	override function process_turn() {
-		default_turn_processing(character_animator, effect_manager, level_data, null, null);
+		if(behavior != null) {
+			final new_action = behavior.right_before_decide(queued_turn_action, this, level_data);
+			if(new_action != null) {
+				queued_turn_action = new_action;
+			}
+		}
+
+		default_turn_processing(character_animator, effect_manager, level_data, turn_manager, null, null);
 	}
 
 	override function process_animation(ratio: Float) {
@@ -140,7 +147,6 @@ class NPC extends TurnSlave {
 
 		level_data.remove_id(stats.id, tilemap_position);
 		turn_manager.remove_entity(this);
-		queue_free();
 	}
 
 	public function start_exclamation() {

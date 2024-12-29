@@ -78,7 +78,7 @@ class Player extends TurnSlave {
 	
 	var skills: Array<Int> = [0];
 	var teeth: Int = 10;
-	var max_teeth: Int = 24;
+	var max_teeth: Int = 10;
 	var turns_until_next_tooth: Int = -1;
 
 	var skill_list_menu: Null<SkillListMenu> = null;
@@ -128,7 +128,7 @@ class Player extends TurnSlave {
 	}
 
 	public override function process_turn() {
-		turn_speed_ratio = default_turn_processing(character_animator, effect_manager, level_data, post_process, camera);
+		turn_speed_ratio = default_turn_processing(character_animator, effect_manager, level_data, turn_manager, post_process, camera);
 	}
 
 	override function process_animation(ratio: Float): Void {

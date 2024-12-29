@@ -6,17 +6,17 @@ import game.data.Direction.DirectionHelpers;
 
 import godot.*;
 
-enum BasicAttackerDecision {
-	Notice;
-	Move(direction: Direction);
-	Attack(direction: Direction);
-}
+// enum BasicAttackerDecision {
+// 	Notice;
+// 	Move(direction: Direction);
+// 	Attack(direction: Direction);
+// }
 
 @:access(game.NPC)
 class NPCBehaviorBasicAttacker extends NPCBehaviorBase {
 	@:export var wander = true;
 
-	var decision: BasicAttackerDecision = Move(Left);
+	//var decision: BasicAttackerDecision = Move(Left);
 	var going_after_player: Bool = false;
 
 	public override function decide(npc: NPC, level_data: DynamicLevelData): Action {

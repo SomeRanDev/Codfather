@@ -56,6 +56,7 @@ class World extends Node3D {
 
 	function setup_entities() {
 		player.set_starting_position(level_data.player_start_position.to_vec3i(0));
+		player.set_world(this);
 		turn_manager.add_entity(player);
 
 		final npc_scene = cast(GD.load("res://Objects/TestNPC.tscn"), PackedScene);
@@ -63,6 +64,7 @@ class World extends Node3D {
 			switch(npc_data.kind) {
 				case TestNPC: {
 					var npc: NPC = cast npc_scene.instantiate();
+					npc.set_world(this);
 					npc.setup(dynamic_level_data, turn_manager, effect_manager);
 					turn_manager.add_entity(npc);
 					add_child(npc);
@@ -76,6 +78,7 @@ class World extends Node3D {
 					final sign: Sign = cast SIGN_SCENE.instantiate();
 					sign.sign_text = text;
 
+					sign.set_world(this);
 					sign.setup(dynamic_level_data, turn_manager, effect_manager);
 					sign.setup_sign(dialogue_box_manager);
 					turn_manager.add_entity(sign);
@@ -86,10 +89,12 @@ class World extends Node3D {
 				case Enemy(enemy_type): {
 					final scene_path = switch(enemy_type) {
 						case Crab: "res://Objects/NPCs/Crab.tscn";
+						case CrabShooter: "res://Objects/NPCs/CrabShooter.tscn";
 					}
 
 					final enemy: NPC = cast GD.load(scene_path).instantiate();
 
+					enemy.set_world(this);
 					enemy.setup(dynamic_level_data, turn_manager, effect_manager);
 					turn_manager.add_entity(enemy);
 					add_child(enemy);

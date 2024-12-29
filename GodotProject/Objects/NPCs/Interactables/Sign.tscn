@@ -16,10 +16,9 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 0.5
 
-[node name="Sign" type="Node3D" node_paths=PackedStringArray("behavior", "popup_maker")]
+[node name="Sign" type="Node3D" node_paths=PackedStringArray("popup_maker")]
 script = ExtResource("1_ynnx7")
 sign_text = "This is a test!"
-behavior = NodePath("NPCBehaviorDoNothing")
 popup_maker = NodePath("MeshRotator/MeshHolder/PopupMaker")
 
 [node name="NPCBehaviorDoNothing" type="Node" parent="."]

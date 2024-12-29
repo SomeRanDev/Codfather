@@ -27,6 +27,9 @@ class SkillDescription extends PanelContainer {
 			case SurrondAttack: {
 				"8";
 			}
+			case Projectile: {
+				"1";
+			}
 		}
 		range_label.text = switch(skill.attack_type) {
 			case BasicAttack: {
@@ -34,6 +37,9 @@ class SkillDescription extends PanelContainer {
 			}
 			case SurrondAttack: {
 				"Next to You";
+			}
+			case Projectile: {
+				"Projectile";
 			}
 		}
 	}

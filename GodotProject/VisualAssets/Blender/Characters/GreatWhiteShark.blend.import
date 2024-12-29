@@ -4,12 +4,11 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b11awksngsxvt"
-path="res://.godot/imported/GreatWhiteShark.blend-26cd858c6c4bb721ac733ce633c9c470.scn"
+valid=false
 
 [deps]
 
 source_file="res://VisualAssets/Blender/Characters/GreatWhiteShark.blend"
-dest_files=["res://.godot/imported/GreatWhiteShark.blend-26cd858c6c4bb721ac733ce633c9c470.scn"]
 
 [params]
 

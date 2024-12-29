@@ -6,6 +6,8 @@ import GDScript as GD;
 class TurnManager extends Node {
 	var entities: Array<TurnSlave> = [];
 	var entity_map: Dictionary = new Dictionary();
+	var to_be_added_entities: Array<TurnSlave> = [];
+	var to_be_deleted_entities: Array<TurnSlave> = [];
 
 	public function preprocess_turns(): Bool {
 		for (e in entities)
@@ -17,8 +19,25 @@ class TurnManager extends Node {
 	public function process_turns(): Bool {
 		cast(entities, GodotArray).sort_custom(new Callable(this, "sort_entities"));
 
-		for (e in entities)
+		for(e in entities) {
 			e.process_turn();
+		}
+
+		if(to_be_added_entities.length > 0) {
+			for(tba in to_be_added_entities) {
+				add_entity(tba);
+			}
+			to_be_added_entities = [];
+		}
+
+		if(to_be_deleted_entities.length > 0) {
+			for(tbd in to_be_deleted_entities) {
+				entities.remove(tbd);
+				entity_map.erase(tbd.stats.id);
+				tbd.queue_free();
+			}
+			to_be_deleted_entities = [];
+		}
 
 		return true;
 	}
@@ -39,9 +58,12 @@ class TurnManager extends Node {
 		entity_map.set(entity.stats.id, entity);
 	}
 
+	public function queue_add_entity(entity: TurnSlave) {
+		to_be_added_entities.push(entity);
+	}
+
 	public function remove_entity(entity: TurnSlave) {
-		entities.remove(entity);
-		entity_map.erase(entity.stats.id);
+		to_be_deleted_entities.push(entity);
 	}
 
 	public function get_entity(id: Int): Null<TurnSlave> {

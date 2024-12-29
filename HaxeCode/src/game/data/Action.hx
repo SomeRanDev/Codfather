@@ -7,9 +7,11 @@ import godot.Vector3i;
 @:using(game.data.Action.ActionHelpers)
 enum Action {
 	Nothing;
+	Suicide;
 	Move(direction: Direction);
 	Jump(is_up: Bool);
 	BasicAttack(direction: Direction);
+	ProjectileAttack(direction: Direction, skill_id: Int);
 	DoSkill(skill_id: Int, targeted_positions: Array<Vector3i>);
 }
 
