@@ -11,7 +11,7 @@ import godot.*;
 class NPCBehaviorShooter extends NPCBehaviorBase {
 	public var direction: Direction = Left;
 	
-	var cooldown_time = 3;
+	var cooldown_time = 4;
 	var cooldown = 0;
 
 	public override function decide(npc: NPC, level_data: DynamicLevelData): Action {
@@ -19,7 +19,7 @@ class NPCBehaviorShooter extends NPCBehaviorBase {
 
 		if(cooldown > 0) {
 			cooldown--;
-			return Nothing;
+			return cooldown == 1 ? Jump(npc_position.z == 0) : Nothing;
 		} else {
 			cooldown = cooldown_time;
 		}

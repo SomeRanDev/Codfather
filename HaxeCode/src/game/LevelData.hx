@@ -11,6 +11,7 @@ enum NPCType {
 }
 
 enum EnemyType {
+	TestFish;
 	Crab;
 	CrabShooter;
 }
@@ -53,14 +54,12 @@ class LevelData extends Node {
 	public function randomize_noise() {
 		if(world_generation_noise != null) {
 			world_generation_noise.seed = Godot.randi_range(0, 9999999);
-			trace(world_generation_noise.seed);
 		}
 	}
 
 	public function randomize_size(min_size: Int, max_size: Int) {
 		width = Godot.randi_range(min_size, max_size);
 		height = Godot.randi_range(min_size, max_size);
-		trace(width, height);
 	}
 
 	function generate_custom_world() {

@@ -165,7 +165,10 @@ class TurnSlave extends Node3D {
 									final entity = level_data.get_entity(p);
 									if(entity != null) hit_entity_with_skill(entity, skill_id, effect_manager, camera);
 								} else {
-									spawn_projectile(p, skill_id, level_data, turn_manager, effect_manager, world);
+									final d = get_direction_from_offset(p - tilemap_position);
+									if(d != null) {
+										spawn_projectile(p, skill_id, d, level_data, turn_manager, effect_manager, world);
+									}
 								}
 							}
 						} else {
@@ -187,6 +190,18 @@ class TurnSlave extends Node3D {
 		return turn_speed_ratio;
 	}
 
+	function get_direction_from_offset(offset: Vector3i): Null<Direction> {
+		return if(offset.x == 0) {
+			if(offset.y == -1) Up;
+			else if(offset.y == 1) Down;
+			else null;
+		} else if(offset.y == 0) {
+			if(offset.x == -1) Left;
+			else if(offset.x == 1) Right;
+			else null;
+		} else null;
+	}
+
 	function hit_entity_with_skill(entity: TurnSlave, skill_id: Int, effect_manager: EffectManager, camera: Null<Camera>) {
 		switch(entity.take_attack(this, skill_id)) {
 			case Interaction: {}
@@ -201,13 +216,15 @@ class TurnSlave extends Node3D {
 	}
 
 	function spawn_projectile(
-		position: Vector3i, skill_id: Int,
+		position: Vector3i, skill_id: Int, direction: Direction,
 		dynamic_level_data: DynamicLevelData, turn_manager: TurnManager, effect_manager: EffectManager, world: World
 	) {
 		final projectile: NPC = cast PROJECTILE_SCENE.instantiate();
+		projectile.stats.speed = 999 + projectile.stats.id;
+
 		final projectile_behavior = cast(@:privateAccess projectile.behavior, NPCBehaviorProjectile);
 		if(projectile_behavior != null) {
-			projectile_behavior.direction = Left;
+			projectile_behavior.direction = direction;
 		}
 
 		projectile.setup(dynamic_level_data, turn_manager, effect_manager);
@@ -215,6 +232,7 @@ class TurnSlave extends Node3D {
 		world.add_child(projectile);
 
 		projectile.set_starting_position(position);
+		projectile.set_is_faster_than_player(true);
 	}
 
 	public function take_attack(attacker: TurnSlave, skill_id: Int): TakeAttackResult {

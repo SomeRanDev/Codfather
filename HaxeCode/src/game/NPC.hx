@@ -79,7 +79,10 @@ class NPC extends TurnSlave {
 	}
 
 	public function refresh_speed_relation(player: Player) {
-		final is_fast = stats.speed > player.stats.speed;
+		set_is_faster_than_player(stats.speed > player.stats.speed);
+	}
+
+	public function set_is_faster_than_player(is_fast: Bool) {
 		show_speed_particles(is_fast);
 		tile_indicator.set_fast(is_fast);
 

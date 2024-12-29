@@ -76,7 +76,7 @@ class Player extends TurnSlave {
 	var queued_actions: Array<QueueableAction> = [];
 	var last_moved_direction: Null<Direction> = null;
 	
-	var skills: Array<Int> = [0];
+	var skills: Array<Int> = [0, 1];
 	var teeth: Int = 10;
 	var max_teeth: Int = 10;
 	var turns_until_next_tooth: Int = -1;

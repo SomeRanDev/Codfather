@@ -88,6 +88,7 @@ class World extends Node3D {
 				}
 				case Enemy(enemy_type): {
 					final scene_path = switch(enemy_type) {
+						case TestFish: "res://Objects/TestNPC.tscn";
 						case Crab: "res://Objects/NPCs/Crab.tscn";
 						case CrabShooter: "res://Objects/NPCs/CrabShooter.tscn";
 					}
@@ -100,6 +101,7 @@ class World extends Node3D {
 					add_child(enemy);
 
 					enemy.set_starting_position(npc_data.position);
+					enemy.refresh_speed_relation(player);
 				}
 			}
 		}
