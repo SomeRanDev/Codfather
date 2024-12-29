@@ -176,8 +176,10 @@ description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContai
 [node name="LuckyContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
 layout_mode = 2
 manager = NodePath("../../../../CCStatManager")
-label = "Lucky"
-description = "The higher this stat is, the more items are spawned in a level. Also lowers the prices of items in stores."
+label = "Teeth"
+description = "The higher this stat is, the faster your teeth regrow!
+
+The number of turns until a tooth regrows is: (30 - TEETH_STAT)."
 description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
 description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
 

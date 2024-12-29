@@ -64,6 +64,7 @@ class Player extends TurnSlave {
 	@:export var health_bar_amount: Label;
 
 	@:export var tooth_container: GridContainer;
+	@:export var tooth_counter: Label;
 
 	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$PlayerMeshRotator");
@@ -175,6 +176,31 @@ class Player extends TurnSlave {
 		turn_speed_ratio = default_turn_processing(
 			character_animator, effect_manager, level_data, turn_manager, post_process, camera,
 		);
+
+		if(turns_until_next_tooth > 0) {
+			turns_until_next_tooth--;
+			show_tooth_counter();
+			if(turns_until_next_tooth == 0) {
+				teeth++;
+				if(teeth >= max_teeth) {
+					teeth = max_teeth;
+					tooth_counter.visible = false;
+				} else {
+					reset_turns_until_next_tooth();
+					show_tooth_counter();
+				}
+				refresh_teeth();
+			}
+		}
+	}
+
+	function show_tooth_counter() {
+		tooth_counter.text = Std.string(turns_until_next_tooth);
+		tooth_counter.visible = true;
+	}
+
+	function reset_turns_until_next_tooth() {
+		turns_until_next_tooth = Math.floor(Math.max(30 - stats.luck, 1));
 	}
 
 	override function process_animation(ratio: Float): Void {
@@ -201,6 +227,10 @@ class Player extends TurnSlave {
 	}
 
 	override function take_skill_money(amount: Int) {
+		if(teeth == max_teeth && amount > 0) {
+			reset_turns_until_next_tooth();
+			show_tooth_counter();
+		}
 		teeth -= amount;
 		refresh_teeth();
 	}
@@ -220,6 +250,8 @@ class Player extends TurnSlave {
 
 		is_death_animation = true;
 		intro_outro_animation = 1.0;
+
+		MyAudioPlayer.player_kill.play();
 	}
 
 	// =====================================
@@ -611,19 +643,23 @@ class Player extends TurnSlave {
 	}
 
 	function refresh_teeth() {
-		var count = tooth_container.get_child_count();
+		var count = tooth_container.get_child_count() - 1;
+		var added_teeth = false;
 		while(count < max_teeth) {
 			final tr = cast(TOOTH_SCENE.instantiate(), TextureRect);
 			tr.texture = EMPTY_TOOTH_TEXTURE;
 			tooth_container.add_child(tr);
-			count = tooth_container.get_child_count();
+			count = tooth_container.get_child_count() - 1;
+			added_teeth = true;
 		}
 		while(count > max_teeth) {
-			tooth_container.remove_child(tooth_container.get_child(tooth_container.get_child_count() - 1));
-			count = tooth_container.get_child_count();
+			tooth_container.remove_child(tooth_container.get_child(tooth_container.get_child_count() - 2));
+			count = tooth_container.get_child_count() - 1;
 		}
 		
-		
+		if(added_teeth) {
+			tooth_container.move_child(tooth_counter, tooth_container.get_child_count() - 1);
+		}
 
 		for(i in 0...count) {
 			final tooth = cast(tooth_container.get_child(i), TextureRect);

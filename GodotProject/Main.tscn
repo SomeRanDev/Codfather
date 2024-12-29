@@ -254,6 +254,10 @@ columns = 15
 [node name="Tooth" parent="2D/FullScreenPanelContainer/UIContainer/PlayerStats/ToothContainer" instance=ExtResource("9_40n85")]
 layout_mode = 2
 
+[node name="ToothCounter" type="Label" parent="2D/FullScreenPanelContainer/UIContainer/PlayerStats/ToothContainer"]
+layout_mode = 2
+label_settings = ExtResource("7_40n85")
+
 [node name="Control" type="Control" parent="2D/FullScreenPanelContainer/UIContainer/PlayerStats"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -28520,7 +28524,7 @@ offset = Vector3(0, 7, 4)
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_03owx")
 
-[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("camera", "level_data", "map", "turn_manager", "post_process", "_2d", "effect_manager", "fade_in_out", "level_text", "dialogue_box_manager", "gameplay_controls", "gameplay_controls_stairs", "menu_controls", "health_bar", "health_bar_padding", "health_bar_amount", "tooth_container", "popup_maker")]
+[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("camera", "level_data", "map", "turn_manager", "post_process", "_2d", "effect_manager", "fade_in_out", "level_text", "dialogue_box_manager", "gameplay_controls", "gameplay_controls_stairs", "menu_controls", "health_bar", "health_bar_padding", "health_bar_amount", "tooth_container", "tooth_counter", "popup_maker")]
 script = ExtResource("11_sc1dx")
 camera = NodePath("../Camera3D")
 level_data = NodePath("../DynamicLevelData")
@@ -28539,6 +28543,7 @@ health_bar = NodePath("../2D/FullScreenPanelContainer/UIContainer/PlayerStats/He
 health_bar_padding = NodePath("../2D/FullScreenPanelContainer/UIContainer/PlayerStats/HealthMargin/HealthBarContainer/HealthBarPadding")
 health_bar_amount = NodePath("../2D/FullScreenPanelContainer/UIContainer/PlayerStats/HealthMargin/HealthBarAmount")
 tooth_container = NodePath("../2D/FullScreenPanelContainer/UIContainer/PlayerStats/ToothContainer")
+tooth_counter = NodePath("../2D/FullScreenPanelContainer/UIContainer/PlayerStats/ToothContainer/ToothCounter")
 popup_maker = NodePath("PlayerMeshRotator/PlayerMeshHolder/PopupMaker")
 
 [node name="PlayerMeshRotator" type="Node3D" parent="Player"]
