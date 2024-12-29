@@ -13,6 +13,7 @@ config_version=5
 config/name="SharkMafia"
 run/main_scene="uid://b83mqrlegu4h4"
 config/features=PackedStringArray("4.4", "Forward Plus")
+boot_splash/image="uid://b6x7lf5it3v8k"
 config/icon="res://icon.svg"
 
 [autoload]
