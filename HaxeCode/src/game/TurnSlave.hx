@@ -131,7 +131,12 @@ class TurnSlave extends Node3D {
 				set_direction(direction);
 
 				if(entity != null) {
-					hit_entity_with_skill(entity, BASIC_SKILL_ID, effect_manager, camera);
+					switch(hit_entity_with_skill(entity, BASIC_SKILL_ID, effect_manager, camera)) {
+						case Killed if(post_process != null): {
+							heal_self_by(4);
+						}
+						case _:
+					}
 				} else {
 					popup_maker.popup("Missed!");
 					if(post_process != null) {
@@ -236,7 +241,8 @@ class TurnSlave extends Node3D {
 	}
 
 	function hit_entity_with_skill(entity: TurnSlave, skill_id: Int, effect_manager: EffectManager, camera: Null<Camera>) {
-		switch(entity.take_attack(this, skill_id)) {
+		final result = entity.take_attack(this, skill_id);
+		switch(result) {
 			case Interaction: {}
 			case Nothing: popup_maker.popup("Failed!");
 			case Damaged: {
@@ -248,6 +254,7 @@ class TurnSlave extends Node3D {
 				if(camera != null) camera.shake();
 			}
 		}
+		return result;
 	}
 
 	function spawn_projectile(
@@ -298,10 +305,13 @@ class TurnSlave extends Node3D {
 	public function heal_self(skill_id: Int) {
 		final skill = Skill.get_skill(skill_id);
 		final heal = skill.healing;
+		heal_self_by(heal);
+	}
 
-		if(heal > 0) {
+	function heal_self_by(amount: Int) {
+		if(amount > 0) {
 			final previous_health = stats.health;
-			stats.health += heal;
+			stats.health += amount;
 			if(stats.health >= stats.max_health) {
 				stats.health = stats.max_health;
 			}

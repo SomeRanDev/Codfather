@@ -56,7 +56,7 @@ final NULL_SKILL_ID = -2;
 final CANCEL_SKILL_ID = -3;
 final BASIC_SKILL_ID = -1;
 
-final BASIC_SKILL = new Skill("Chomp", "Your default attack.", BasicAttack, 2, 3, 0, 0, 0);
+final BASIC_SKILL = new Skill("Chomp", "Your default attack.\nRestores health on kill.", BasicAttack, 2, 3, 0, 0, 0);
 
 final ALL_SKILLS = [
 	new Skill("Spin Attack", "Hits all enemies around you.", SurrondAttack, 2, 4, 2, 0, 0),

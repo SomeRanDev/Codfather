@@ -228,6 +228,17 @@ class LevelData extends Node {
 				possible_enemy_positions.remove(p);
 				npcs.push(NPCData.create_npc_data(Enemy(EnemyMaker.random_enemy_type()), new Vector3i(p.x, p.y, 0)));
 			}
+
+			// Add some star fish to heal with...
+			final star_fish_count = 8;
+			for(i in 0...star_fish_count) {
+				if(possible_enemy_positions.length == 0) {
+					break;
+				}
+				final p = possible_enemy_positions[Godot.randi_range(0, possible_enemy_positions.length - 1)];
+				possible_enemy_positions.remove(p);
+				npcs.push(NPCData.create_npc_data(Enemy(StarFish), new Vector3i(p.x, p.y, 0)));
+			}
 		}
 	}
 
