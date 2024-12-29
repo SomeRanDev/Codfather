@@ -58,4 +58,19 @@ class CCStatManager extends Node {
 			sa.refresh_arrows();
 		}
 	}
+
+	public function set_base_stats(hp: Int, atk: Int, def: Int, spd: Int, luk: Int) {
+		stat_allocators[0].set_base_value(hp);
+		stat_allocators[1].set_base_value(atk);
+		stat_allocators[2].set_base_value(def);
+		stat_allocators[3].set_base_value(spd);
+		stat_allocators[4].set_base_value(luk);
+		current_stat_points = 10;
+		refresh_label();
+		trace("test");
+	}
+
+	public function get_final_stats(): Array<Int> {
+		return stat_allocators.map(sa -> sa.get_final_value());
+	}
 }

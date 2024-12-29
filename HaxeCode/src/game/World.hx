@@ -34,7 +34,11 @@ class World extends Node3D {
 			level_text.override_text(level_data.custom_map.text, level_data.custom_map.subtext);
 		} else if(WorldManager.should_randomize) {
 			level_data.randomize_noise();
-			level_data.randomize_size(70, 100);
+			if(WorldManager.floor < 3) {
+				level_data.randomize_size(50, 70);
+			} else {
+				level_data.randomize_size(70, 100);
+			}
 		} else {
 			world_changed = false;
 		}
@@ -87,13 +91,8 @@ class World extends Node3D {
 					sign.set_starting_position(npc_data.position);
 				}
 				case Enemy(enemy_type): {
-					final scene_path = switch(enemy_type) {
-						case TestFish: "res://Objects/TestNPC.tscn";
-						case Crab: "res://Objects/NPCs/Crab.tscn";
-						case CrabShooter: "res://Objects/NPCs/CrabShooter.tscn";
-					}
-
-					final enemy: NPC = cast GD.load(scene_path).instantiate();
+					final enemy: NPC = cast GD.load("res://Objects/NPCs/BaseEnemy.tscn").instantiate();
+					EnemyMaker.make_enemy(enemy, enemy_type);
 
 					enemy.set_world(this);
 					enemy.setup(dynamic_level_data, turn_manager, effect_manager);

@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cvowdyytfcw6e"
+uid="uid://bjs2ev1w4imcn"
 path="res://.godot/imported/Fish1.blend-75374eb715908130fb8c54cad78ccb66.scn"
 
 [deps]
@@ -38,13 +38,33 @@ _subresources={
 "use_external/enabled": true,
 "use_external/path": "uid://pbytfab7ehhw"
 },
+"CrabBody": {
+"use_external/enabled": true,
+"use_external/path": "uid://k4ioinablvgk"
+},
 "Eyes": {
 "use_external/enabled": true,
 "use_external/path": "uid://p3p55l76yh7m"
 },
+"Fish2Material": {
+"use_external/enabled": true,
+"use_external/path": "uid://2wvg0kn0pf6d"
+},
+"FlatFishMaterial": {
+"use_external/enabled": true,
+"use_external/path": "uid://dvlcq2goqxwrx"
+},
 "Mouth": {
 "use_external/enabled": true,
 "use_external/path": "uid://k4ioinablvgk"
+},
+"StarFishBody": {
+"use_external/enabled": true,
+"use_external/path": "uid://c7ge4d3xaulit"
+},
+"SwordFishMaterial": {
+"use_external/enabled": true,
+"use_external/path": "uid://crf1e7bsxmgu1"
 }
 },
 "meshes": {
@@ -63,6 +83,38 @@ _subresources={
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
 "save_to_file/path": "res://VisualAssets/Blender/Characters/Fish1.res"
+},
+"Fish1_Fish2": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"save_to_file/enabled": true,
+"save_to_file/path": "res://VisualAssets/Blender/Characters/Fish2.res"
+},
+"Fish1_FlatFish": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"save_to_file/enabled": true,
+"save_to_file/path": "res://VisualAssets/Blender/Characters/FlatFish.res"
+},
+"Fish1_StarFish": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"save_to_file/enabled": true,
+"save_to_file/path": "res://VisualAssets/Blender/Characters/StarFish.res"
+},
+"Fish1_SwordFish": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"save_to_file/enabled": true,
+"save_to_file/path": "res://VisualAssets/Blender/Characters/SwordFish.res"
 }
 }
 }

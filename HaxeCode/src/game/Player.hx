@@ -15,6 +15,7 @@ import game.CharacterAnimator.CharacterAnimation;
 import game.effects.text_popup.PopupMaker;
 import game.data.Action;
 import game.data.Direction;
+import game.Constants;
 
 import godot.*;
 import GDScript as GD;
@@ -68,6 +69,7 @@ class Player extends TurnSlave {
 	@:onready var mesh_holder: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder");
 	@:onready var mesh_manipulator: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator");
 	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator/PlayerMesh");
+	@:onready var mesh_hat: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator/PlayerMesh/PlayerHat");
 	//@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
 	@:onready var shadow: Sprite3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/Shadow");
 
@@ -95,9 +97,6 @@ class Player extends TurnSlave {
 	static final GAME_SPEED = 7.5;
 
 	public function manual_ready() {
-		stats.id = 2;
-		stats.speed = 3;
-
 		set_direction(Right);
 
 		refresh_health_bar();
@@ -105,6 +104,42 @@ class Player extends TurnSlave {
 
 		get_viewport().connect("size_changed", new Callable(this, "refresh_tooth_container_size"));
 		refresh_tooth_container_size();
+
+		switch(StaticPlayerData.species) {
+			case 1: {
+				mesh.mesh = GD.load("res://VisualAssets/Blender/Characters/Player/HammerheadShark.res");
+				character_animator.set_meshes(null, null);
+			}
+			case 2: {
+				mesh.mesh = GD.load("res://VisualAssets/Blender/Characters/Player/WhaleShark.res");
+				character_animator.set_meshes(null, null);
+			}
+			case _: {
+				// mesh.mesh = GD.load("res://VisualAssets/Blender/Characters/Player/GreatWhiteShark.res");
+				character_animator.set_meshes(mesh.mesh, GD.load("res://VisualAssets/Blender/Characters/Player/GreatWhiteShark_MouthOpen.res"));
+			}
+		}
+
+		mesh_hat.mesh = switch(StaticPlayerData.class_kind) {
+			case 1: GD.load("res://VisualAssets/Blender/Characters/PlayerHats/Disposer.res");
+			case 2: GD.load("res://VisualAssets/Blender/Characters/PlayerHats/Capo.res");
+			case _: GD.load("res://VisualAssets/Blender/Characters/PlayerHats/Brute.res");
+		}
+
+		mesh_hat.position = switch(StaticPlayerData.species) {
+			case 0: GWSharkHatPosition;
+			case 1: HHSharkHatPosition;
+			case _: WSharkHatPosition;
+		}
+		mesh_hat.rotation_degrees = switch(StaticPlayerData.species) {
+			case 0: GWSharkHatRotation;
+			case 1: HHSharkHatRotation;
+			case _: WSharkHatRotation;
+		}
+
+		stats = StaticPlayerData.stats;
+		stats.id = 2;
+
 		//connect("tree_exiting", new Callable(this, "test"));
 	}
 
@@ -319,6 +354,7 @@ class Player extends TurnSlave {
 		} else if(is_stairs_animation) {
 			if(!fade_in_out.update_fade_out(delta)) {
 				WorldManager.next_floor();
+				StaticPlayerData.stats = stats;
 				get_tree().change_scene_to_file("res://Main.tscn");
 			}
 			return;

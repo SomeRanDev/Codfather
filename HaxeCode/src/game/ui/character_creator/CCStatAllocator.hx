@@ -11,6 +11,7 @@ class CCStatAllocator extends CCEntry {
 	@:export var description_contents: Label;
 
 	var entry_label: Label;
+	var base_value_label: Label;
 	var value_label: Label;
 
 	var left_arrow: TextureRect;
@@ -23,6 +24,7 @@ class CCStatAllocator extends CCEntry {
 		super.manual_ready();
 
 		entry_label = untyped __gdscript__("$Container/Label");
+		base_value_label = untyped __gdscript__("$Container/BaseValue");
 		value_label = untyped __gdscript__("$Container/Value");
 
 		left_arrow = untyped __gdscript__("$Container/LeftArrow");
@@ -73,6 +75,13 @@ class CCStatAllocator extends CCEntry {
 		return false;
 	}
 
+	public function set_base_value(base_value: Int) {
+		this.base_value = base_value;
+		base_value_label.text = Std.string(base_value);
+		value_offset = 0;
+		refresh_label();
+	}
+
 	public function refresh_arrows() {
 		left_arrow.self_modulate.a = can_subtract() ? 1.0 : 0.2;
 		right_arrow.self_modulate.a = can_add() ? 1.0 : 0.2;
@@ -83,7 +92,7 @@ class CCStatAllocator extends CCEntry {
 	}
 
 	function can_subtract() {
-		return base_value + value_offset > 0;
+		return base_value + value_offset > 1;
 	}
 
 	function refresh_label() {
@@ -92,5 +101,9 @@ class CCStatAllocator extends CCEntry {
 		} else {
 			value_label.text = "(" + (value_offset > 0 ? "+" : "") + Std.string(value_offset) + ")";
 		}
+	}
+
+	public function get_final_value() {
+		return base_value + value_offset;
 	}
 }

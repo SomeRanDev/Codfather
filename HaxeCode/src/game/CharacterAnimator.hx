@@ -42,6 +42,11 @@ class CharacterAnimator extends Node {
 
 	public var animation: CharacterAnimation = Nothing;
 
+	public function set_meshes(default_mesh: Mesh, attack_mesh: Mesh) {
+		this.default_mesh = default_mesh;
+		this.attack_mesh = attack_mesh;
+	}
+
 	public function start_animation() {
 		switch(animation) {
 			case DirectionalAttack if(attack_mesh != null): mesh.mesh = attack_mesh;

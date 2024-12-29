@@ -18,6 +18,7 @@ class CharacterCreator extends Node {
 	@:export var container: FullScreenPanelContainer;
 	@:export var entries: Array<CCEntry> = [];
 	@:export var start_button: CCButton;
+	@:export var stat_manager: CCStatManager;
 
 	@:export var species_selection: CCOption;
 	@:export var class_selection: CCOption;
@@ -40,6 +41,8 @@ class CharacterCreator extends Node {
 		class_selection.connect("on_choice_changed", new Callable(this, "update_hat"));
 
 		container.manual_ready();
+
+		stat_manager.set_base_stats(20, 7, 3, 3, 5);
 	}
 
 	override function _process(delta: Float) {
@@ -53,6 +56,9 @@ class CharacterCreator extends Node {
 			if(transition_animation >= 1.0) transition_animation = 1.0;
 			effect.set_transition_amount(transition_animation);
 			if(transition_animation >= 1.0) {
+				StaticPlayerData.species = species_selection.get_selected_index();
+				StaticPlayerData.class_kind = class_selection.get_selected_index();
+				StaticPlayerData.set_base_stats(stat_manager.get_final_stats());
 				get_tree().change_scene_to_file("res://Story.tscn");
 			}
 			return;
@@ -116,5 +122,11 @@ class CharacterCreator extends Node {
 			case 1: GD.load("res://VisualAssets/Materials/Fish/Orange.tres");
 			case _: GD.load("res://VisualAssets/Materials/Fish/Brown.tres");
 		});
+
+		switch(index) {
+			case 0: stat_manager.set_base_stats(20, 7, 3, 3, 5);
+			case 1: stat_manager.set_base_stats(25, 3, 6, 6, 6);
+			case 2: stat_manager.set_base_stats(20, 5, 8, 5, 2);
+		}
 	}
 }

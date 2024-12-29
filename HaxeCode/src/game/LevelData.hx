@@ -14,6 +14,12 @@ enum EnemyType {
 	TestFish;
 	Crab;
 	CrabShooter;
+	Fish1;
+	Fish2;
+	FlatFish;
+	StarFish;
+	SwordFish;
+	AlwaysFastTutorialFish;
 }
 
 @:tool
@@ -141,7 +147,7 @@ class LevelData extends Node {
 		var new_index = 2;
 		for(x in 0...width) {
 			for(y in 0...height) {
-				if(recusive_set_area_id(x, y, new_index)) {
+				if(recusive_set_area_id(x, y, new_index, 0)) {
 					new_index += 1;
 				}
 			}
@@ -214,12 +220,12 @@ class LevelData extends Node {
 		}
 		final enemy_count = Godot.randi_range(desired_enemy_count.x, desired_enemy_count.y);
 		if(possible_enemy_positions.length <= enemy_count) {
-			npcs = possible_enemy_positions.map(ep -> NPCData.create_npc_data(TestNPC, new Vector3i(ep.x, ep.y, 0)));
+			npcs = possible_enemy_positions.map(ep -> NPCData.create_npc_data(Enemy(EnemyMaker.random_enemy_type()), new Vector3i(ep.x, ep.y, 0)));
 		} else {
 			for(i in 0...enemy_count) {
 				final p = possible_enemy_positions[Godot.randi_range(0, possible_enemy_positions.length - 1)];
 				possible_enemy_positions.remove(p);
-				npcs.push(NPCData.create_npc_data(TestNPC, new Vector3i(p.x, p.y, 0)));
+				npcs.push(NPCData.create_npc_data(Enemy(EnemyMaker.random_enemy_type()), new Vector3i(p.x, p.y, 0)));
 			}
 		}
 	}
@@ -248,7 +254,7 @@ class LevelData extends Node {
 		return has_tile(pos.x, pos.y);
 	}
 
-	function recusive_set_area_id(x: Int, y: Int, id: Int): Bool {
+	function recusive_set_area_id(x: Int, y: Int, id: Int, depth: Int): Bool {
 		if(x < 0 || x >= width || y < 0 || y >= height) return false;
 		final index = (y * width) + x;
 		if(tiles[index] == 1) {
@@ -257,10 +263,13 @@ class LevelData extends Node {
 				tile_type_count.set(id, 0);
 			}
 			tile_type_count.set(id, tile_type_count.get(id) + 1);
-			recusive_set_area_id(x + 1, y, id);
-			recusive_set_area_id(x - 1, y, id);
-			recusive_set_area_id(x, y + 1, id);
-			recusive_set_area_id(x, y - 1, id);
+			if(depth < 1020) {
+				final new_depth = depth + 1;
+				recusive_set_area_id(x + 1, y, id, new_depth);
+				recusive_set_area_id(x - 1, y, id, new_depth);
+				recusive_set_area_id(x, y + 1, id, new_depth);
+				recusive_set_area_id(x, y - 1, id, new_depth);
+			}
 			return true;
 		} else {
 			return false;

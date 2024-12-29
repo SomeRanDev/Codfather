@@ -49,6 +49,10 @@ class CCOption extends CCEntry {
 		return false;
 	}
 
+	public function get_selected_index(): Int {
+		return selected_index;
+	}
+
 	function set_index(index: Int) {
 		if(selected_index != index) {
 			selected_index = index;

@@ -1,5 +1,6 @@
 package game;
 
+import game.CustomMap.TypedDictionary;
 import game.effects.Exclamation;
 import game.npc.NPCBehaviorBase;
 import game.Constants.JUMP_HEIGHT;
@@ -12,6 +13,7 @@ class NPC extends TurnSlave {
 	@:const var FAST_PARTICLES: PackedScene = GD.preload("res://Objects/Particles/FastParticles.tscn");
 
 	@:export var behavior: NPCBehaviorBase;
+	@:export var random_stats: TypedDictionary<Int, Vector2i>;
 
 	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
 	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$MeshRotator");
@@ -30,17 +32,46 @@ class NPC extends TurnSlave {
 
 	var offset_y: Float = 0.5;
 
+	public function set_mesh(path: String) {
+		if(mesh == null) {
+			mesh = untyped __gdscript__("$MeshRotator/MeshHolder/MeshManipulator/Mesh");
+		}
+		mesh.mesh = GD.load(path);
+	}
+
+	public function set_behavior(behavior: NPCBehaviorBase) {
+		this.behavior = behavior;
+		add_child(behavior);
+	}
+
+	public function set_all_stats(max_hp: Int, atk: Int, def: Int, spd: Int, luk: Int) {
+		stats.max_health = stats.health = max_hp;
+		stats.power = atk;
+		stats.tough = def;
+		stats.speed = spd;
+		stats.luck = luk;
+	}
+
 	public function setup(level_data: DynamicLevelData, turn_manager: TurnManager, effect_manager: EffectManager) {
 		this.level_data = level_data;
 		this.turn_manager = turn_manager;
 		this.effect_manager = effect_manager;
 
 		stats.generate_id();
-		stats.randomize();
-
-		stats.power = 1;
-		stats.max_health = 5;
-		stats.health = 5;
+		if(random_stats != null) {
+			final keys = random_stats.keys();
+			for(key in 0...keys.size()) {
+				final key = keys.get(key);
+				final min_max = random_stats.get(key);
+				switch(key) {
+					case 0: stats.health = stats.max_health = Godot.randi_range(min_max.x, min_max.y);
+					case 1: stats.power = Godot.randi_range(min_max.x, min_max.y);
+					case 2: stats.tough = Godot.randi_range(min_max.x, min_max.y);
+					case 3: stats.speed = Godot.randi_range(min_max.x, min_max.y);
+					case 4: stats.luck = Godot.randi_range(min_max.x, min_max.y);
+				}
+			}
+		}
 	}
 
 	public function set_starting_position(pos: Vector3i): Bool {

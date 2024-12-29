@@ -24,15 +24,16 @@ script = ExtResource("2_uju85")
 [node name="CCStatManager" type="Node" parent="." node_paths=PackedStringArray("stat_point_label", "stat_allocators")]
 script = ExtResource("2_lg66x")
 stat_point_label = NodePath("../PanelContainer/Container/ConfigContainer/PointsContainer/Points")
-stat_allocators = [NodePath("../PanelContainer/Container/ConfigContainer/PowerContainer"), NodePath("../PanelContainer/Container/ConfigContainer/ToughContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpeedContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpecialContainer"), NodePath("../PanelContainer/Container/ConfigContainer/LuckyContainer")]
+stat_allocators = [NodePath("../PanelContainer/Container/ConfigContainer/HealthContainer"), NodePath("../PanelContainer/Container/ConfigContainer/PowerContainer"), NodePath("../PanelContainer/Container/ConfigContainer/ToughContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpeedContainer"), NodePath("../PanelContainer/Container/ConfigContainer/LuckyContainer")]
 metadata/_custom_type_script = ExtResource("2_lg66x")
 
-[node name="CharacterCreator" type="Node" parent="." node_paths=PackedStringArray("effect", "container", "entries", "start_button", "species_selection", "class_selection", "display_model", "hat")]
+[node name="CharacterCreator" type="Node" parent="." node_paths=PackedStringArray("effect", "container", "entries", "start_button", "stat_manager", "species_selection", "class_selection", "display_model", "hat")]
 script = ExtResource("3_ce0my")
 effect = NodePath("..")
 container = NodePath("../PanelContainer")
-entries = [NodePath("../PanelContainer/Container/ConfigContainer/Species"), NodePath("../PanelContainer/Container/ConfigContainer/Class"), NodePath("../PanelContainer/Container/ConfigContainer/PowerContainer"), NodePath("../PanelContainer/Container/ConfigContainer/ToughContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpeedContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpecialContainer"), NodePath("../PanelContainer/Container/ConfigContainer/LuckyContainer"), NodePath("../PanelContainer/Container/ConfigContainer/Continue")]
+entries = [NodePath("../PanelContainer/Container/ConfigContainer/Species"), NodePath("../PanelContainer/Container/ConfigContainer/Class"), NodePath("../PanelContainer/Container/ConfigContainer/HealthContainer"), NodePath("../PanelContainer/Container/ConfigContainer/PowerContainer"), NodePath("../PanelContainer/Container/ConfigContainer/ToughContainer"), NodePath("../PanelContainer/Container/ConfigContainer/SpeedContainer"), NodePath("../PanelContainer/Container/ConfigContainer/LuckyContainer"), NodePath("../PanelContainer/Container/ConfigContainer/Continue")]
 start_button = NodePath("../PanelContainer/Container/ConfigContainer/Continue")
+stat_manager = NodePath("../CCStatManager")
 species_selection = NodePath("../PanelContainer/Container/ConfigContainer/Species")
 class_selection = NodePath("../PanelContainer/Container/ConfigContainer/Class")
 display_model = NodePath("../PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport/SharkDisplay")
@@ -134,6 +135,14 @@ label_settings = ExtResource("4_jnasw")
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 
+[node name="HealthContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
+layout_mode = 2
+manager = NodePath("../../../../CCStatManager")
+label = "Health"
+description = "Your starting health points and the maximum amount your body can contain."
+description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
+description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
+
 [node name="PowerContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
 layout_mode = 2
 manager = NodePath("../../../../CCStatManager")
@@ -161,14 +170,6 @@ layout_mode = 2
 manager = NodePath("../../../../CCStatManager")
 label = "Speed"
 description = "Enemies with higher speed than yours will move before you. If they move away when you attack, you'll \"MISS!\""
-description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
-description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
-
-[node name="SpecialContainer" parent="PanelContainer/Container/ConfigContainer" node_paths=PackedStringArray("manager", "description_label", "description_contents") instance=ExtResource("3_54jy1")]
-layout_mode = 2
-manager = NodePath("../../../../CCStatManager")
-label = "Special"
-description = "Makes you more special. :)"
 description_label = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/DescriptionLabel")
 description_contents = NodePath("../../DisplayContainer/HBoxContainer/VBoxContainer/Description")
 
@@ -224,7 +225,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="PanelContainer/Container/DisplayContainer/SubViewportContainer"]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(524, 288)
 render_target_update_mode = 4
 
 [node name="Camera3D" type="Camera3D" parent="PanelContainer/Container/DisplayContainer/SubViewportContainer/SubViewport"]

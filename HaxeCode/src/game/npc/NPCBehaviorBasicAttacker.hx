@@ -14,7 +14,7 @@ import godot.*;
 
 @:access(game.NPC)
 class NPCBehaviorBasicAttacker extends NPCBehaviorBase {
-	@:export var wander = true;
+	@:export public var wander = true;
 
 	//var decision: BasicAttackerDecision = Move(Left);
 	var going_after_player: Bool = false;
