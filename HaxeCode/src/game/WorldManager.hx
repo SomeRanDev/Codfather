@@ -13,16 +13,24 @@ class WorldManager {
 	public static var should_randomize = false;
 
 	public static var no_more_floors = false;
+	public static var is_boss = false;
+	public static var boss_dead = false;
 
 	public static var custom_map: CustomMap = null;
 
 	public static function next_floor() {
+		if(no_more_floors) {
+			return;
+		}
+
 		go_to_new_floor();
 		if(floors_remaining > 0) {
 			floor += 1;
 			floors_remaining -= 1;
 			should_randomize = true;
 		} else {
+			go_to_boss();
+			is_boss = true;
 			no_more_floors = true;
 		}
 	}
@@ -51,6 +59,14 @@ class WorldManager {
 		custom_map.custom_entities.set(106, EnemyCustomEntity.make(StarFish));
 		custom_map.custom_entities.set(107, EnemyCustomEntity.make(CrabShooter));
 		custom_map.custom_entities.set(108, EnemyCustomEntity.make(AlwaysFastTutorialFish));
+	}
+
+	public static function go_to_boss() {
+		custom_map = new CustomMap();
+		custom_map.custom_map = GD.load("res://VisualAssets/CustomMaps/BossRoom.aseprite");
+		custom_map.text = "Defeat Them";
+		custom_map.subtext = "(Their fishy betrayal shall not go unpunished.)";
+		custom_map.custom_entities.set(100, EnemyCustomEntity.make(SwordFish));
 	}
 
 	public static function go_to_new_floor() {

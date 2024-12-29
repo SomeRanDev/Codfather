@@ -80,6 +80,7 @@ class CCStatAllocator extends CCEntry {
 		base_value_label.text = Std.string(base_value);
 		value_offset = 0;
 		refresh_label();
+		refresh_arrows();
 	}
 
 	public function refresh_arrows() {

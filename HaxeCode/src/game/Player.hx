@@ -139,6 +139,13 @@ class Player extends TurnSlave {
 
 		stats = StaticPlayerData.stats;
 		stats.id = 2;
+		stats.max_health = stats.health = 1000;
+
+		teeth = StaticPlayerData.teeth;
+		max_teeth = StaticPlayerData.max_teeth;
+
+		refresh_health_bar();
+		refresh_teeth();
 
 		//connect("tree_exiting", new Callable(this, "test"));
 	}
@@ -286,6 +293,13 @@ class Player extends TurnSlave {
 	}
 
 	override function _process(delta: Float): Void {
+		if(WorldManager.boss_dead) {
+			if(!fade_in_out.update_fade_out(delta)) {
+				get_tree().change_scene_to_file("res://Win.tscn");
+			}
+			return;
+		}
+
 		if(intro_outro_animation > 0.0) {
 			var update_animation = true;
 			if(!is_stairs_animation) {
@@ -355,6 +369,8 @@ class Player extends TurnSlave {
 			if(!fade_in_out.update_fade_out(delta)) {
 				WorldManager.next_floor();
 				StaticPlayerData.stats = stats;
+				StaticPlayerData.teeth = teeth;
+				StaticPlayerData.max_teeth = max_teeth;
 				get_tree().change_scene_to_file("res://Main.tscn");
 			}
 			return;

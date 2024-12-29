@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://c3tff8ndq4057"]
+[gd_scene load_steps=11 format=3 uid="uid://c3tff8ndq4057"]
 
 [ext_resource type="Script" uid="uid://h30txtxj1x7g" path="res://addons/SharkMafia/NPC.gd" id="1_kgndk"]
 [ext_resource type="ArrayMesh" uid="uid://dbtq5tu1844j4" path="res://VisualAssets/Blender/Characters/Crab.res" id="3_cubwy"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="4_qu3u7"]
 [ext_resource type="ArrayMesh" uid="uid://duxi6e0csjxh5" path="res://VisualAssets/Blender/UI/ExclamationPoint.res" id="5_wj3es"]
 [ext_resource type="Script" uid="uid://e40w3x3tewj3" path="res://addons/SharkMafia/game_Exclamation.gd" id="6_d4s3c"]
+[ext_resource type="Texture2D" uid="uid://cel88g7ix2tqd" path="res://VisualAssets/2D/EnemyHealth.aseprite" id="7_kgndk"]
 [ext_resource type="Script" uid="uid://baih8us8i7cmg" path="res://addons/SharkMafia/game_effects_PopupMaker.gd" id="7_q84cf"]
 [ext_resource type="PackedScene" uid="uid://bwnqrwtod7fyj" path="res://Objects/TileIndicator.tscn" id="8_qg8gn"]
 [ext_resource type="Script" uid="uid://rcqemp1q7p57" path="res://addons/SharkMafia/CharacterAnimator.gd" id="9_gma00"]
@@ -15,8 +16,9 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 0.5
 
-[node name="BaseEnemy" type="Node3D" node_paths=PackedStringArray("popup_maker")]
+[node name="BaseEnemy" type="Node3D" node_paths=PackedStringArray("health_bar", "popup_maker")]
 script = ExtResource("1_kgndk")
+health_bar = NodePath("MeshRotator/MeshHolder/HealthBar")
 popup_maker = NodePath("MeshRotator/MeshHolder/PopupMaker")
 
 [node name="MeshRotator" type="Node3D" parent="."]
@@ -49,6 +51,15 @@ script = ExtResource("6_d4s3c")
 [node name="PopupMaker" type="Node3D" parent="MeshRotator/MeshHolder"]
 script = ExtResource("7_q84cf")
 metadata/_custom_type_script = ExtResource("7_q84cf")
+
+[node name="HealthBar" type="Sprite3D" parent="MeshRotator/MeshHolder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.416192, 0)
+visible = false
+pixel_size = 0.02
+billboard = 1
+double_sided = false
+alpha_cut = 1
+texture = ExtResource("7_kgndk")
 
 [node name="TileIndicator" parent="MeshRotator" instance=ExtResource("8_qg8gn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.48, 0)

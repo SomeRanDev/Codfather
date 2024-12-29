@@ -38,8 +38,8 @@ class LevelText extends Node {
 
 	public function set_death_text() {
 		make_visible();
-		floor_text.text = "DEAD";
-		floor_subtext.text = "Press ENTER to restart...";
+		floor_text.text = WorldManager.is_boss ? "DEAD" : "DEAD";
+		floor_subtext.text = WorldManager.is_boss ? "You are a failure.\n(ENTER to restart)" : "Press ENTER to restart...";
 	}
 
 	public function override_text(text: String, subtext: String) {

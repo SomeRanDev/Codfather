@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://dtrou5eexmlqs"]
+
+[ext_resource type="Material" uid="uid://bv872rqlrfdvo" path="res://VisualAssets/Materials/UI/CRT_2D_Material.tres" id="1_a60vi"]
+[ext_resource type="Script" uid="uid://cq1t7f0742ycn" path="res://addons/SharkMafia/game_PostProcess2D.gd" id="2_uvp4b"]
+[ext_resource type="Script" path="res://addons/SharkMafia/game_Win.gd" id="3_tplom"]
+[ext_resource type="Script" uid="uid://cdaxvoeu651su" path="res://addons/SharkMafia/game_FullScreenPanelContainer.gd" id="4_0n18o"]
+[ext_resource type="LabelSettings" uid="uid://bhic01n7eorym" path="res://VisualAssets/Fonts/Story/DescriptionLabelSettings.tres" id="5_4epma"]
+
+[node name="Win" type="CanvasGroup"]
+material = ExtResource("1_a60vi")
+script = ExtResource("2_uvp4b")
+
+[node name="Win" type="Node" parent="." node_paths=PackedStringArray("effect", "container")]
+script = ExtResource("3_tplom")
+effect = NodePath("..")
+container = NodePath("../PanelContainer")
+metadata/_custom_type_script = ExtResource("3_tplom")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+script = ExtResource("4_0n18o")
+resize_label_settings = Array[LabelSettings]([ExtResource("5_4epma")])
+
+[node name="Background" type="ColorRect" parent="PanelContainer"]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PaddingTop" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TitleContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PaddingLeft" type="Control" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Story" type="Label" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+text = "You win!!
+
+(Press ENTER to restart)"
+label_settings = ExtResource("5_4epma")
+
+[node name="PaddingRight" type="Control" parent="PanelContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PaddingBottom" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

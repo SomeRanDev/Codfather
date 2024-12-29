@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://by0ibs7rlh73j"]
 
-[ext_resource type="Script" uid="uid://djaixgwgj7u7l" path="res://addons/SharkMafia/NPC.gd" id="1_y5nap"]
+[ext_resource type="Script" uid="uid://h30txtxj1x7g" path="res://addons/SharkMafia/NPC.gd" id="1_y5nap"]
 [ext_resource type="Script" uid="uid://bl8dyp2s0vpt3" path="res://addons/SharkMafia/game_NPCBehaviorProjectile.gd" id="2_8nuxl"]
 [ext_resource type="Texture2D" uid="uid://bdshihmglwrtt" path="res://VisualAssets/2D/Shadow.aseprite" id="4_6k7rh"]
 [ext_resource type="ArrayMesh" uid="uid://duxi6e0csjxh5" path="res://VisualAssets/Blender/UI/ExclamationPoint.res" id="5_5gdvt"]

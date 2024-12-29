@@ -13,6 +13,7 @@ class NPC extends TurnSlave {
 	@:const var FAST_PARTICLES: PackedScene = GD.preload("res://Objects/Particles/FastParticles.tscn");
 
 	@:export var behavior: NPCBehaviorBase;
+	@:export var health_bar: Sprite3D;
 	@:export var random_stats: TypedDictionary<Int, Vector2i>;
 
 	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
@@ -176,11 +177,22 @@ class NPC extends TurnSlave {
 		popup_maker.update(delta);
 	}
 
+	public override function on_damaged() {
+		if(health_bar != null) {
+			if(!health_bar.visible) health_bar.visible = true;
+			health_bar.scale = new Vector3((cast(stats.health, Float) / stats.max_health) * 2.0, 1.0, 1.0);
+		}
+	}
+
 	public override function kill() {
 		popup_maker.detatch_and_delete_when_possible();
 
 		level_data.remove_id(stats.id, tilemap_position);
 		turn_manager.remove_entity(this);
+
+		if(WorldManager.is_boss) {
+			WorldManager.boss_dead = true;
+		}
 	}
 
 	public function start_exclamation() {
