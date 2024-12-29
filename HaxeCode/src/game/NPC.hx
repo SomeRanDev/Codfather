@@ -28,6 +28,8 @@ class NPC extends TurnSlave {
 	var turn_manager: TurnManager;
 	var effect_manager: EffectManager;
 
+	var offset_y: Float = 0.5;
+
 	public function setup(level_data: DynamicLevelData, turn_manager: TurnManager, effect_manager: EffectManager) {
 		this.level_data = level_data;
 		this.turn_manager = turn_manager;
@@ -72,7 +74,7 @@ class NPC extends TurnSlave {
 
 	function apply_position(pos: Vector3i) {
 		tilemap_position = pos;
-		position = new Vector3(pos.x, 0.5 + (pos.z == 1 ? JUMP_HEIGHT : 0), pos.y);
+		position = new Vector3(pos.x, offset_y + (pos.z == 1 ? JUMP_HEIGHT : 0), pos.y);
 		character_animator.is_up = pos.z == 1;
 	}
 

@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1j8foku151e2"
-path="res://.godot/imported/TileCorner.png-3cba41865f3b5f9042495403dc016354.ctex"
+uid="uid://dwlovrwa5cjwh"
+path="res://.godot/imported/Tutorial.aseprite-6c7d0e5c815233c922e1451fe7f1d4c9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://VisualAssets/2D/TileCorner.png"
-dest_files=["res://.godot/imported/TileCorner.png-3cba41865f3b5f9042495403dc016354.ctex"]
+source_file="res://VisualAssets/CustomMaps/Tutorial.aseprite"
+dest_files=["res://.godot/imported/Tutorial.aseprite-6c7d0e5c815233c922e1451fe7f1d4c9.ctex"]
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

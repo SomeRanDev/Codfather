@@ -14,6 +14,8 @@ enum BasicAttackerDecision {
 
 @:access(game.NPC)
 class NPCBehaviorBasicAttacker extends NPCBehaviorBase {
+	@:export var wander = true;
+
 	var decision: BasicAttackerDecision = Move(Left);
 	var going_after_player: Bool = false;
 
@@ -35,6 +37,10 @@ class NPCBehaviorBasicAttacker extends NPCBehaviorBase {
 		}
 
 		if(!going_after_player) {
+			if(!wander) {
+				return Nothing;
+			}
+
 			var direction = switch(Godot.randi_range(0, 4)) {
 				case 0: Up;
 				case 1: Down;
@@ -81,7 +87,6 @@ class NPCBehaviorBasicAttacker extends NPCBehaviorBase {
 					going_after_player = false;
 				} else {
 					final new_position = level_data.pathfind(npc_position, pp, 5);
-					trace(npc_position, pp, new_position, new_position - npc_position);
 					if(new_position != Vector3i.ZERO) {
 						final action = ActionHelpers.action_from_offset(new_position - npc_position);
 						if(action != Nothing) {

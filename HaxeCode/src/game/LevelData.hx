@@ -1,6 +1,31 @@
 package game;
 
+import game.CustomMap.EnemyCustomEntity;
+import game.CustomMap.SignCustomEntity;
 import godot.*;
+
+enum NPCType {
+	Sign(text: String);
+	TestNPC;
+	Enemy(enemy_type: EnemyType);
+}
+
+enum EnemyType {
+	Crab;
+}
+
+@:tool
+class NPCData extends Resource {
+	@:export public var kind: NPCType;
+	@:export public var position: Vector3i;
+
+	public static function create_npc_data(kind: NPCType, position: Vector3i) {
+		final npc = new NPCData();
+		npc.kind = kind;
+		npc.position = position;
+		return npc;
+	}
+}
 
 @:tool
 class LevelData extends Node {
@@ -17,25 +42,81 @@ class LevelData extends Node {
 	var tile_type_count: Dictionary = new Dictionary();
 
 	@:export public var player_start_position(default, null): Vector2i;
-	@:export public var test_npcs(default, null): Array<Vector2i>;
+	@:export public var npcs(default, null): Array<NPCData>;
 	@:export public var stairs_position(default, null): Vector2i;
 
 	@:export public var desired_enemy_count: Vector2i; // x = min, y = max
 
+	@:export public var custom_map: CustomMap;
+
 	public function randomize_noise() {
 		if(world_generation_noise != null) {
 			world_generation_noise.seed = Godot.randi_range(0, 9999999);
+			trace(world_generation_noise.seed);
 		}
 	}
 
-	public function build_world() {
-		tiles = [];
-		tile_type_count = new Dictionary();
+	public function randomize_size(min_size: Int, max_size: Int) {
+		width = Godot.randi_range(min_size, max_size);
+		height = Godot.randi_range(min_size, max_size);
+		trace(width, height);
+	}
 
+	function generate_custom_world() {
+		final image = custom_map.custom_map.get_image();
+		if(image.is_compressed()) {
+			image.decompress();
+		}
+
+		width = image.get_width();
+		height = image.get_height();
+
+		stairs_position = new Vector2i(-1, 0);
+		player_start_position = new Vector2i(Math.floor(width / 2), Math.floor(height / 2));
+
+		npcs = [];
+
+		for(y in 0...height) {
+			for(x in 0...width) {
+				final c = image.get_pixel(x, y);
+				tiles.push(switch(Math.round(c.r * 10) + Math.round(c.g * 100) + Math.round(c.b * 1000)) {
+					case 1110: 1;
+					case 10: { // #f00
+						player_start_position = new Vector2i(x, y);
+						1;
+					}
+					case 1000: { // #00f
+						stairs_position = new Vector2i(x, y);
+						1;
+					}
+					case 0: 0;
+					case value: {
+						if(custom_map.custom_entities.has(value)) {
+							final object = custom_map.custom_entities.get(value);
+
+							final sign = cast(object, SignCustomEntity);
+							if(sign != null) {
+								npcs.push(NPCData.create_npc_data(Sign(sign.sign_text), new Vector3i(x, y, 0)));
+							}
+
+							final enemy = cast(object, EnemyCustomEntity);
+							if(enemy != null) {
+								npcs.push(NPCData.create_npc_data(Enemy(enemy.enemy), new Vector3i(x, y, 0)));
+							}
+						}
+
+						1;
+					}
+				});
+			}
+		}
+	}
+
+	function generate_random_world() {
 		// Use noise to make general level...
 		final LEVEL_EDGES_BUFFER = 10;
-		for(x in 0...width) {
-			for(y in 0...height) {
+		for(y in 0...height) {
+			for(x in 0...width) {
 				final level_edges_buffer_f: Float = LEVEL_EDGES_BUFFER;
 				final force_wall_amount = if(x == 0 || x == width - 1 || y == 0 || y == height - 1) {
 					1;
@@ -127,19 +208,30 @@ class LevelData extends Node {
 		stairs_position = possible_stair_positions[Godot.randi_range(0, possible_stair_positions.length - 1)];
 
 		// Make enemy positions 
-		test_npcs = [];
+		npcs = [];
 		if(possible_enemy_positions.contains(stairs_position)) {
 			possible_enemy_positions.remove(stairs_position);
 		}
 		final enemy_count = Godot.randi_range(desired_enemy_count.x, desired_enemy_count.y);
 		if(possible_enemy_positions.length <= enemy_count) {
-			test_npcs = possible_enemy_positions;
+			npcs = possible_enemy_positions.map(ep -> NPCData.create_npc_data(TestNPC, new Vector3i(ep.x, ep.y, 0)));
 		} else {
 			for(i in 0...enemy_count) {
 				final p = possible_enemy_positions[Godot.randi_range(0, possible_enemy_positions.length - 1)];
 				possible_enemy_positions.remove(p);
-				test_npcs.push(p);
+				npcs.push(NPCData.create_npc_data(TestNPC, new Vector3i(p.x, p.y, 0)));
 			}
+		}
+	}
+
+	public function build_world() {
+		tiles = [];
+		tile_type_count = new Dictionary();
+
+		if(custom_map != null) {
+			generate_custom_world();
+		} else {
+			generate_random_world();
 		}
 
 		// Empty tile type count cache

@@ -10,6 +10,7 @@ import game.effects.text_popup.PopupMaker;
 import godot.*;
 
 enum TakeAttackResult {
+	Interaction;
 	Nothing;
 	Damaged;
 	Killed;
@@ -109,6 +110,7 @@ class TurnSlave extends Node3D {
 
 				if(entity != null) {
 					switch(entity.take_attack(this, BASIC_SKILL_ID)) {
+						case Interaction: {}
 						case Nothing: popup_maker.popup("Failed!");
 						case Damaged: effect_manager.add_blood_particles(entity.position);
 						case Killed: {
@@ -135,6 +137,7 @@ class TurnSlave extends Node3D {
 						final entity = level_data.get_entity(position);
 						if(entity != null) {
 							switch(entity.take_attack(this, skill_id)) {
+								case Interaction: {}
 								case Nothing: popup_maker.popup("Failed!");
 								case Damaged: effect_manager.add_blood_particles(entity.position);
 								case Killed: {

@@ -13,7 +13,7 @@ class LevelText extends Node {
 		floor_text.modulate.a = floor_subtext.modulate.a = 1.0;
 	}
 
-	override function _ready() {
+	public function manual_ready() {
 		make_visible();
 		floor_text.text = "Floor " + Std.string(WorldManager.floor);
 		floor_subtext.text = "(" + WorldManager.floors_remaining + " floors remaining)";
@@ -40,5 +40,10 @@ class LevelText extends Node {
 		make_visible();
 		floor_text.text = "DEAD";
 		floor_subtext.text = "Press ENTER to restart...";
+	}
+
+	public function override_text(text: String, subtext: String) {
+		floor_text.text = text;
+		floor_subtext.text = subtext;
 	}
 }

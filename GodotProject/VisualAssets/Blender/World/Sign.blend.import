@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cvowdyytfcw6e"
-path="res://.godot/imported/Fish1.blend-75374eb715908130fb8c54cad78ccb66.scn"
+uid="uid://b0bc201qrb7su"
+path="res://.godot/imported/Sign.blend-689f4b7f5a783f3cecc5fc77ee60a3a0.scn"
 
 [deps]
 
-source_file="res://VisualAssets/Blender/Characters/Fish1.blend"
-dest_files=["res://.godot/imported/Fish1.blend-75374eb715908130fb8c54cad78ccb66.scn"]
+source_file="res://VisualAssets/Blender/World/Sign.blend"
+dest_files=["res://.godot/imported/Sign.blend-689f4b7f5a783f3cecc5fc77ee60a3a0.scn"]
 
 [params]
 
@@ -34,35 +34,23 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
-"Body": {
+"Paper": {
 "use_external/enabled": true,
-"use_external/path": "uid://pbytfab7ehhw"
+"use_external/path": "uid://cnb4whwf2rgvf"
 },
-"Eyes": {
+"Sign": {
 "use_external/enabled": true,
-"use_external/path": "uid://p3p55l76yh7m"
-},
-"Mouth": {
-"use_external/enabled": true,
-"use_external/path": "uid://k4ioinablvgk"
+"use_external/path": "uid://dynu3r8jatce"
 }
 },
 "meshes": {
-"Fish1_Crab": {
+"Sign_Cube": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://VisualAssets/Blender/Characters/Crab.res"
-},
-"Fish1_Fish": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"save_to_file/enabled": true,
-"save_to_file/path": "res://VisualAssets/Blender/Characters/Fish1.res"
+"save_to_file/path": "res://VisualAssets/Blender/World/Sign.res"
 }
 }
 }

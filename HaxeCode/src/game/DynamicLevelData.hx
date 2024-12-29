@@ -265,8 +265,8 @@ class DynamicLevelData extends Node {
 		return false;
 	}
 
-	static var pathfind_cache: Dictionary = new Dictionary();
-	static var pathfind_cache_keys: Array<Vector3i> = [];
+	var pathfind_cache: Dictionary = new Dictionary();
+	var pathfind_cache_keys: Array<Vector3i> = [];
 	public function pathfind(from: Vector3i, to: Vector3i, max_depth: Int): Vector3i {
 		if(pathfind_cache.has(to)) {
 			final previous_came_from: Dictionary = pathfind_cache.get(to);

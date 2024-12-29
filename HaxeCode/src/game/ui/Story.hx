@@ -45,6 +45,16 @@ class Story extends Node {
 
 		if(Input.is_action_just_pressed("start")) {
 			is_transition = true;
+			if(selected_button_index == 0) {
+				WorldManager.should_randomize = false;
+
+				WorldManager.floor = 0;
+				WorldManager.floors_remaining = 5;
+				WorldManager.go_to_tutorial();
+			} else {
+				WorldManager.should_randomize = true;
+				WorldManager.go_to_new_floor();
+			}
 		} else if(selected_button_index == 1 && Input.is_action_just_pressed("left")) {
 			play_tutorial.set_selected(true);
 			skip_tutorial.set_selected(false);

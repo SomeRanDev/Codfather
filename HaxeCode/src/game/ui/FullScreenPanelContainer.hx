@@ -39,4 +39,12 @@ class FullScreenPanelContainer extends PanelContainer {
 			resize_rich_texts[i].set("theme_override_font_sizes/normal_font_size", Math.round(resize_rich_text_sizes[i] * font_ratio));
 		}
 	}
+
+	public function _notification(what: Int) {
+		if(what == Object.NOTIFICATION_PREDELETE) {
+			for(i in 0...resize_label_settings.length) {
+				resize_label_settings[i].font_size = resize_label_settings_sizes[i];
+			}
+		}
+	}
 }

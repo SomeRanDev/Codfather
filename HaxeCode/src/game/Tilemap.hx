@@ -24,7 +24,6 @@ class Tilemap extends Node3D {
 	public function build_world() {
 		if(level_data == null)
 			return;
-
 		
 		while(get_child_count(true) > 0) {
 			final c = get_child(0, true);
@@ -48,8 +47,10 @@ class Tilemap extends Node3D {
 	}
 
 	function find_owner(): Node {
-		if(Engine.is_editor_hint())
-			return EditorInterface.get_edited_scene_root();
+		if(Engine.is_editor_hint()) {
+			var editor_interface = Engine.get_singleton("EditorInterface");
+			return editor_interface.call("get_edited_scene_root");
+		}
 		return get_tree().get_root();
 	}
 

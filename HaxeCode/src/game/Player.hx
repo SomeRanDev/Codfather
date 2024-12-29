@@ -1,5 +1,6 @@
 package game;
 
+import game.ui.dialogue.DialogueBoxManager;
 import game.ui.LevelText;
 import game.ui.FadeInOut;
 import game.Attack.Skill;
@@ -51,6 +52,7 @@ class Player extends TurnSlave {
 	@:export var effect_manager: EffectManager;
 	@:export var fade_in_out: FadeInOut;
 	@:export var level_text: LevelText;
+	@:export var dialogue_box_manager: DialogueBoxManager;
 	@:export var gameplay_controls: Label;
 	@:export var gameplay_controls_stairs: VBoxContainer;
 	@:export var menu_controls: Label;
@@ -76,7 +78,7 @@ class Player extends TurnSlave {
 	
 	var skills: Array<Int> = [0];
 	var teeth: Int = 10;
-	var max_teeth: Int = 10;
+	var max_teeth: Int = 24;
 	var turns_until_next_tooth: Int = -1;
 
 	var skill_list_menu: Null<SkillListMenu> = null;
@@ -101,6 +103,8 @@ class Player extends TurnSlave {
 		refresh_health_bar();
 		refresh_teeth();
 
+		get_viewport().connect("size_changed", new Callable(this, "refresh_tooth_container_size"));
+		refresh_tooth_container_size();
 		//connect("tree_exiting", new Callable(this, "test"));
 	}
 
@@ -239,6 +243,13 @@ class Player extends TurnSlave {
 		}
 	}
 
+	function check_reset_input() {
+		if(Input.is_action_just_pressed("start") || Input.is_action_just_pressed("ok")) {
+			WorldManager.reset();
+			get_tree().change_scene_to_file("res://Title.tscn");
+		}
+	}
+
 	override function _process(delta: Float): Void {
 		if(intro_outro_animation > 0.0) {
 			var update_animation = true;
@@ -274,11 +285,10 @@ class Player extends TurnSlave {
 				}
 
 				if(intro_outro_animation >= 0.3) {
-					if(Input.is_action_just_pressed("start")) {
-						WorldManager.reset();
-						get_tree().change_scene_to_file("res://Title.tscn");
-					}
+					check_reset_input();
 				}
+
+				popup_maker.update(delta);
 			} else if(is_stairs_animation) {
 				final r = 1.0 - intro_outro_animation;
 				if(r < 0.3) {
@@ -313,14 +323,14 @@ class Player extends TurnSlave {
 			}
 			return;
 		} else if(is_death_animation) {
-			if(Input.is_action_just_pressed("start")) {
-				WorldManager.reset();
-				get_tree().change_scene_to_file("res://Title.tscn");
-			}
+			check_reset_input();
+			popup_maker.update(delta);
 			return;
 		}
 
 		popup_maker.update(delta);
+
+		final can_input = !dialogue_box_manager.update(delta);
 
 		if(target_select_manager != null) {
 			final target_result = target_select_manager.update(delta, tilemap_position, level_data);
@@ -337,9 +347,11 @@ class Player extends TurnSlave {
 		} else if(skill_list_menu != null) {
 			update_skill_list();
 		} else {
-			update_gameplay();
+			if(can_input) {
+				update_gameplay();
+			}
 
-			if(Input.is_action_just_pressed("skills")) {
+			if(can_input && Input.is_action_just_pressed("skills")) {
 				queued_actions = [];
 
 				skill_list_menu = cast SKILL_LIST_MENU.instantiate();
@@ -548,6 +560,8 @@ class Player extends TurnSlave {
 			tooth_container.remove_child(tooth_container.get_child(tooth_container.get_child_count() - 1));
 			count = tooth_container.get_child_count();
 		}
+		
+		
 
 		for(i in 0...count) {
 			final tooth = cast(tooth_container.get_child(i), TextureRect);
@@ -555,5 +569,12 @@ class Player extends TurnSlave {
 				tooth.texture = i < teeth ? TOOTH_TEXTURE : EMPTY_TOOTH_TEXTURE;
 			}
 		}
+	}
+
+	function refresh_tooth_container_size() {
+		final new_size = DisplayServer.window_get_size();
+		final size_ratio = (new Vector2(new_size.x, new_size.y) / new Vector2(1152, 648));
+		final ratio = Math.max(size_ratio.x, size_ratio.y);
+		tooth_container.set_custom_minimum_size(new Vector2(0, (Math.floor(max_teeth / 15) + 1) * 28 * ratio));
 	}
 }

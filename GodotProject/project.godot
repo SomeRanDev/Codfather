@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="SharkMafia"
-run/main_scene="uid://bcftqd3cl6taf"
+run/main_scene="uid://b83mqrlegu4h4"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

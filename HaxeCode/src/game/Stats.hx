@@ -4,6 +4,7 @@ import godot.Godot;
 
 class Stats {
 	static var max_id = 10;
+	public static function reset() { max_id = 10; }
 
 	public var id = 0;
 

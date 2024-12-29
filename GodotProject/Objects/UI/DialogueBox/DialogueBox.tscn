@@ -1,0 +1,90 @@
+[gd_scene load_steps=5 format=3 uid="uid://b04sk64tvun73"]
+
+[ext_resource type="Script" uid="uid://ds50k508os1hx" path="res://addons/SharkMafia/game_ui_DialogueBox.gd" id="1_b0giy"]
+[ext_resource type="LabelSettings" uid="uid://cj1aeaqdw7smo" path="res://VisualAssets/Fonts/Game/DialogueFont.tres" id="2_mkd43"]
+[ext_resource type="Texture2D" uid="uid://cki0qfho3ute7" path="res://VisualAssets/2D/TargetSelectArrow.aseprite" id="3_pac2y"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mtwsw"]
+
+[node name="DialogueContainer" type="GridContainer"]
+offset_right = 1152.0
+offset_bottom = 648.0
+columns = 3
+script = ExtResource("1_b0giy")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control2" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control3" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control4" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="DialogueBox" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_override_styles/panel = SubResource("StyleBoxEmpty_mtwsw")
+
+[node name="Background" type="ColorRect" parent="DialogueBox"]
+layout_mode = 2
+color = Color(0, 0, 0, 0.631373)
+
+[node name="Margin" type="MarginContainer" parent="DialogueBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogueBox/Margin"]
+layout_mode = 2
+
+[node name="Text" type="Label" parent="DialogueBox/Margin/VBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Test test"
+label_settings = ExtResource("2_mkd43")
+autowrap_mode = 3
+
+[node name="ContinueArrow" type="TextureRect" parent="DialogueBox/Margin/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("3_pac2y")
+stretch_mode = 3
+
+[node name="Control5" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Control6" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control7" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control8" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
