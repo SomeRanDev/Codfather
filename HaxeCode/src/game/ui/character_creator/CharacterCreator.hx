@@ -1,5 +1,6 @@
 package game.ui.character_creator;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.Constants;
 
 import godot.*;
@@ -87,6 +88,7 @@ class CharacterCreator extends Node {
 			entries[current_index].set_selected(false);
 			entries[index].set_selected(true);
 			current_index = index;
+			MyAudioPlayer.cursor_move.play();
 		}
 	}
 

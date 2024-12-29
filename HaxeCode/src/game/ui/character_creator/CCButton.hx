@@ -1,5 +1,6 @@
 package game.ui.character_creator;
 
+import game.AudioPlayer.MyAudioPlayer;
 import godot.*;
 
 class CCButton extends CCEntry {
@@ -8,6 +9,7 @@ class CCButton extends CCEntry {
 
 	public override function update(): Bool {
 		if(Input.is_action_just_pressed("start")) {
+			MyAudioPlayer.start.play();
 			return true;
 		}
 		return false;

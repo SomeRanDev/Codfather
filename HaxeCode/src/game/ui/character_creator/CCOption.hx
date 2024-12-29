@@ -1,5 +1,6 @@
 package game.ui.character_creator;
 
+import game.AudioPlayer.MyAudioPlayer;
 import godot.*;
 
 class CCOption extends CCEntry {
@@ -42,8 +43,10 @@ class CCOption extends CCEntry {
 
 		if(offset == -1) {
 			set_index(selected_index == 0 ? choices.length - 1 : selected_index - 1);
+			MyAudioPlayer.selection_change.play();
 		} else if(offset == 1) {
 			set_index(selected_index == choices.length - 1 ? 0 : selected_index + 1);
+			MyAudioPlayer.selection_change.play();
 		}
 
 		return false;

@@ -1,5 +1,6 @@
 package game;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.Constants.PROJECTILE_SCENE;
 import game.npc.NPCBehaviorProjectile;
 import game.Attack.BASIC_SKILL_ID;
@@ -86,12 +87,16 @@ class TurnSlave extends Node3D {
 					on_successful_move(direction);
 
 					character_animator.animation = Move;
+					if(post_process != null) {
+						MyAudioPlayer.play_footstep();
+					}
 				} else {
 					character_animator.animation = Blocked;
 
 					popup_maker.popup("Blocked!");
 					if(post_process != null) {
 						post_process.play_distort();
+						MyAudioPlayer.blocked.play();
 					}
 				}
 
@@ -102,12 +107,17 @@ class TurnSlave extends Node3D {
 				final next_tile = tilemap_position + next;
 				if(level_data.tile_free(next_tile) && set_tilemap_position(next_tile)) {
 					character_animator.animation = is_up ? GoUp : GoDown;
+					if(post_process != null) {
+						if(is_up) MyAudioPlayer.go_up.play();
+						else MyAudioPlayer.go_down.play();
+					}
 				} else {
 					character_animator.animation = is_up ? BlockedUp : BlockedDown;
 
 					popup_maker.popup("Blocked!");
 					if(post_process != null) {
 						post_process.play_distort();
+						MyAudioPlayer.blocked.play();
 					}
 				}
 			}
@@ -126,6 +136,7 @@ class TurnSlave extends Node3D {
 					popup_maker.popup("Missed!");
 					if(post_process != null) {
 						post_process.play_distort();
+						MyAudioPlayer.attack1.play();
 					}
 				}
 			}
@@ -140,8 +151,12 @@ class TurnSlave extends Node3D {
 					switch(entity.take_attack(this, skill_id)) {
 						case Interaction: {}
 						case Nothing: {}
-						case Damaged: effect_manager.add_blood_particles(entity.position);
+						case Damaged: {
+							effect_manager.add_blood_particles(entity.position);
+							MyAudioPlayer.special_attack.play();
+						}
 						case Killed: {
+							MyAudioPlayer.special_attack.play();
 							effect_manager.add_bone_particles(entity.position, 5.0);
 							effect_manager.add_blood_particles(entity.position, 10.0);
 							if(camera != null) camera.shake();
@@ -206,11 +221,15 @@ class TurnSlave extends Node3D {
 		switch(entity.take_attack(this, skill_id)) {
 			case Interaction: {}
 			case Nothing: popup_maker.popup("Failed!");
-			case Damaged: effect_manager.add_blood_particles(entity.position);
+			case Damaged: {
+				effect_manager.add_blood_particles(entity.position);
+				if(camera != null) MyAudioPlayer.special_attack.play();
+			}
 			case Killed: {
 				effect_manager.add_bone_particles(entity.position, 5.0);
 				effect_manager.add_blood_particles(entity.position, 10.0);
 				if(camera != null) camera.shake();
+				if(camera != null) MyAudioPlayer.special_attack.play();
 			}
 		}
 	}
@@ -230,6 +249,7 @@ class TurnSlave extends Node3D {
 		projectile.setup(dynamic_level_data, turn_manager, effect_manager);
 		turn_manager.queue_add_entity(projectile);
 		world.add_child(projectile);
+		projectile.is_projectile = true;
 
 		projectile.set_starting_position(position);
 		projectile.set_is_faster_than_player(true);

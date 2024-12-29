@@ -1,5 +1,6 @@
 package game.ui.character_creator;
 
+import game.AudioPlayer.MyAudioPlayer;
 import godot.*;
 
 class CCStatAllocator extends CCEntry {
@@ -57,6 +58,7 @@ class CCStatAllocator extends CCEntry {
 				}
 				refresh_label();
 				manager.refresh_arrows();
+				MyAudioPlayer.subtract_stat.play();
 			}
 		} else if(offset == 1) {
 			if(can_add()) {
@@ -69,6 +71,7 @@ class CCStatAllocator extends CCEntry {
 				value_offset++;
 				refresh_label();
 				manager.refresh_arrows();
+				MyAudioPlayer.add_stat.play();
 			}
 		}
 

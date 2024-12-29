@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.ui.character_creator.CCButton;
 import godot.*;
 
@@ -33,6 +34,7 @@ class Win extends Node {
 
 		if(Input.is_action_just_pressed("start")) {
 			is_transition = true;
+			MyAudioPlayer.start.play();
 		}
 	}
 }

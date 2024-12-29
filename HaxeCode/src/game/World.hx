@@ -1,5 +1,6 @@
 package game;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.ui.LevelText;
 import game.ui.dialogue.DialogueBoxManager;
 import game.ui.FullScreenPanelContainer;
@@ -34,10 +35,18 @@ class World extends Node3D {
 			level_text.override_text(level_data.custom_map.text, level_data.custom_map.subtext);
 		} else if(WorldManager.should_randomize) {
 			level_data.randomize_noise();
-			if(WorldManager.floor < 3) {
-				level_data.randomize_size(50, 70);
+			if(WorldManager.floor == 5) {
+				level_data.randomize_size(80, 100);
+				level_data.desired_enemy_count.x = 15;
+				level_data.desired_enemy_count.y = 20;
+			} else if(WorldManager.floor < 3) {
+				level_data.randomize_size(40, 60);
+				level_data.desired_enemy_count.x = 10;
+				level_data.desired_enemy_count.y = 15;
 			} else {
-				level_data.randomize_size(70, 100);
+				level_data.randomize_size(50, 75);
+				level_data.desired_enemy_count.x = 5;
+				level_data.desired_enemy_count.y = 8;
 			}
 		} else {
 			world_changed = false;
@@ -56,6 +65,14 @@ class World extends Node3D {
 		map.set_top_left();
 
 		camera.snap_to_target();
+
+		if(WorldManager.custom_map != null && WorldManager.custom_map.resource_name == "Tutorial") {
+			MyAudioPlayer.play_tutorial_music();
+		} else if(WorldManager.is_boss) {
+			MyAudioPlayer.play_boss_music();
+		} else {
+			MyAudioPlayer.play_level_music();
+		}
 	}
 
 	function setup_entities() {

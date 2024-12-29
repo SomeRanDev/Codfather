@@ -1,5 +1,6 @@
 package game;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.CustomMap.TypedDictionary;
 import game.effects.Exclamation;
 import game.npc.NPCBehaviorBase;
@@ -31,6 +32,7 @@ class NPC extends TurnSlave {
 	var turn_manager: TurnManager;
 	var effect_manager: EffectManager;
 
+	public var is_projectile: Bool;
 	var offset_y: Float = 0.5;
 
 	public function set_mesh(path: String) {
@@ -190,6 +192,8 @@ class NPC extends TurnSlave {
 		level_data.remove_id(stats.id, tilemap_position);
 		turn_manager.remove_entity(this);
 
+		if(!is_projectile) MyAudioPlayer.enemy_kill.play();
+
 		if(WorldManager.is_boss) {
 			WorldManager.boss_dead = true;
 		}
@@ -197,5 +201,6 @@ class NPC extends TurnSlave {
 
 	public function start_exclamation() {
 		exclamation.start_effect();
+		MyAudioPlayer.enemy_notice.play();
 	}
 }

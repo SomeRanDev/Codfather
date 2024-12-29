@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.AudioPlayer.MyAudioPlayer;
 import godot.*;
 
 class Title extends Node {
@@ -11,6 +12,8 @@ class Title extends Node {
 
 	override function _ready() {
 		container.manual_ready();
+
+		MyAudioPlayer.play_title_music();
 	}
 
 	override function _process(delta: Float) {
@@ -29,6 +32,7 @@ class Title extends Node {
 
 		if(!is_transitioning && Input.is_action_just_pressed("start")) {
 			is_transitioning = true;
+			MyAudioPlayer.start.play();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package game;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.ui.dialogue.DialogueBoxManager;
 import game.TurnSlave.TakeAttackResult;
 
@@ -15,6 +16,7 @@ class Sign extends NPC {
 
 	public override function take_attack(attacker: TurnSlave, skill_id: Int): TakeAttackResult {
 		dialogue_box_manager.add_text(sign_text);
+		MyAudioPlayer.read_sign.play();
 		return Interaction;
 	}
 }

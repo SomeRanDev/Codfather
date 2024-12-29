@@ -47,6 +47,7 @@ class WorldManager {
 
 	public static function go_to_tutorial() {
 		custom_map = new CustomMap();
+		custom_map.resource_name = "Tutorial";
 		custom_map.custom_map = GD.load("res://VisualAssets/CustomMaps/Tutorial.aseprite");
 		custom_map.text = "Tutorial";
 		custom_map.subtext = "(Thank god you're actually playing the tutorial.)";

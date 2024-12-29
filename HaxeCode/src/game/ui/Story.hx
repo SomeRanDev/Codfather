@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.ui.character_creator.CCButton;
 import godot.*;
 
@@ -45,6 +46,7 @@ class Story extends Node {
 
 		if(Input.is_action_just_pressed("start")) {
 			is_transition = true;
+			MyAudioPlayer.start.play();
 			if(selected_button_index == 0) {
 				WorldManager.should_randomize = false;
 
@@ -59,10 +61,12 @@ class Story extends Node {
 			play_tutorial.set_selected(true);
 			skip_tutorial.set_selected(false);
 			selected_button_index = 0;
+			MyAudioPlayer.cursor_move.play();
 		} else if(selected_button_index == 0 && Input.is_action_just_pressed("right")) {
 			skip_tutorial.set_selected(true);
 			play_tutorial.set_selected(false);
 			selected_button_index = 1;
+			MyAudioPlayer.cursor_move.play();
 		}
 	}
 }

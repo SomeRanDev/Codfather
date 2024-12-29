@@ -1,5 +1,6 @@
 package game.ui.dialogue;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.ui.dialogue.DialogueBox;
 
 import godot.*;
@@ -39,6 +40,7 @@ class DialogueBoxManager extends Node {
 			dialogue_box.update(delta);
 			if(Input.is_action_just_pressed("ok")) {
 				if(!dialogue_box.snap_to_end()) {
+					MyAudioPlayer.finish_dialogue.play();
 					if(texts.length > 0) {
 						dialogue_box.set_text(texts.splice(0, 1)[0]);
 					} else {

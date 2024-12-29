@@ -1,5 +1,6 @@
 package game;
 
+import game.AudioPlayer.MyAudioPlayer;
 import game.ui.dialogue.DialogueBoxManager;
 import game.ui.LevelText;
 import game.ui.FadeInOut;
@@ -139,10 +140,11 @@ class Player extends TurnSlave {
 
 		stats = StaticPlayerData.stats;
 		stats.id = 2;
-		stats.max_health = stats.health = 1000;
+		//stats.max_health = stats.health = 1000;
 
 		teeth = StaticPlayerData.teeth;
 		max_teeth = StaticPlayerData.max_teeth;
+		teeth = max_teeth;
 
 		refresh_health_bar();
 		refresh_teeth();
@@ -170,7 +172,9 @@ class Player extends TurnSlave {
 	}
 
 	public override function process_turn() {
-		turn_speed_ratio = default_turn_processing(character_animator, effect_manager, level_data, turn_manager, post_process, camera);
+		turn_speed_ratio = default_turn_processing(
+			character_animator, effect_manager, level_data, turn_manager, post_process, camera,
+		);
 	}
 
 	override function process_animation(ratio: Float): Void {
@@ -203,6 +207,8 @@ class Player extends TurnSlave {
 
 	public override function on_damaged() {
 		refresh_health_bar();
+
+		MyAudioPlayer.attack1.play();
 	}
 
 	public override function kill() {
@@ -362,6 +368,10 @@ class Player extends TurnSlave {
 				final r = (1.0 - intro_outro_animation).cubicOut();
 				mesh.position = new Vector3(0, 5.0 - (r * 5.0), 0);
 				mesh.rotation.y = (1.0 - r) * 14.0;
+
+				if(previous >= 1.0 && intro_outro_animation < 1.0) {
+					MyAudioPlayer.player_enter.play();
+				}
 			}
 
 			return;
