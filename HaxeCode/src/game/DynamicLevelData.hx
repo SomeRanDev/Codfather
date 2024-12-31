@@ -1,7 +1,10 @@
 package game;
 
 import game.data.Direction;
+
 import godot.*;
+
+using gdscript.ArrayEx;
 
 class DynamicLevelData extends Node {
 	@:export var level_data: LevelData;
@@ -20,11 +23,11 @@ class DynamicLevelData extends Node {
 
 		entity_array = [];
 		entity_array.resize(size);
-		untyped __gdscript__("{0}.fill(0)", entity_array);
+		entity_array.fill(0);
 
 		hovered_entity_array = [];
 		hovered_entity_array.resize(size);
-		untyped __gdscript__("{0}.fill(0)", hovered_entity_array);
+		hovered_entity_array.fill(0);
 	}
 
 	public function get_id(pos: Vector3i): Int {

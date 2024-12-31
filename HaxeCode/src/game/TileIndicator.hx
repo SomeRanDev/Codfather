@@ -7,10 +7,10 @@ class TileIndicator extends Node3D {
 	@:export var fast_texture_1: Texture2D;
 	@:export var fast_texture_2: Texture2D;
 
-	@:onready var top_left: Sprite3D = untyped __gdscript__("$TopLeft");
-	@:onready var top_right: Sprite3D = untyped __gdscript__("$TopRight");
-	@:onready var bottom_left: Sprite3D = untyped __gdscript__("$BottomLeft");
-	@:onready var bottom_right: Sprite3D = untyped __gdscript__("$BottomRight");
+	@:onready(node = "TopLeft") var top_left: Sprite3D;
+	@:onready(node = "TopRight") var top_right: Sprite3D;
+	@:onready(node = "BottomLeft") var bottom_left: Sprite3D;
+	@:onready(node = "BottomRight") var bottom_right: Sprite3D;
 
 	var is_fast: Bool = false;
 	var timer: Float;

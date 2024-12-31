@@ -5,7 +5,7 @@ import godot.Vector3;
 
 import GDScript as GD;
 
-@:const final JUMP_HEIGHT = 1.4;
+@:const final JUMP_HEIGHT = 2.0;
 
 @:const final GWSharkHatPosition = new Vector3(-0.345, 0.227, 0.027);
 @:const final GWSharkHatRotation = new Vector3(-23.9, 138.6, -22.4);

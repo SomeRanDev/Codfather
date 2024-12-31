@@ -66,14 +66,26 @@ class Player extends TurnSlave {
 	@:export var tooth_container: GridContainer;
 	@:export var tooth_counter: Label;
 
-	@:onready var character_animator: CharacterAnimator = untyped __gdscript__("$CharacterAnimator");
-	@:onready var mesh_rotator: Node3D = untyped __gdscript__("$PlayerMeshRotator");
-	@:onready var mesh_holder: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder");
-	@:onready var mesh_manipulator: Node3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator");
-	@:onready var mesh: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator/PlayerMesh");
-	@:onready var mesh_hat: MeshInstance3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator/PlayerMesh/PlayerHat");
-	//@:onready var popup_maker: PopupMaker = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/PopupMaker");
-	@:onready var shadow: Sprite3D = untyped __gdscript__("$PlayerMeshRotator/PlayerMeshHolder/Shadow");
+	@:onready(node = "CharacterAnimator")
+	var character_animator: CharacterAnimator;
+
+	@:onready(node = "PlayerMeshRotator")
+	var mesh_rotator: Node3D;
+
+	@:onready(node = "PlayerMeshRotator/PlayerMeshHolder")
+	var mesh_holder: Node3D;
+
+	@:onready(node = "PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator")
+	var mesh_manipulator: Node3D;
+
+	@:onready(node = "PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator/PlayerMesh")
+	var mesh: MeshInstance3D;
+
+	@:onready(node = "PlayerMeshRotator/PlayerMeshHolder/PlayerMeshManipulator/PlayerMesh/PlayerHat")
+	var mesh_hat: MeshInstance3D;
+
+	@:onready(node = "PlayerMeshRotator/PlayerMeshHolder/Shadow")
+	var shadow: Sprite3D;
 
 	var turn_speed_ratio = 1.0;
 	var movement_cooldown: Float = 0.0;

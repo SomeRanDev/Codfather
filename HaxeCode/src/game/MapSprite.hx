@@ -2,6 +2,8 @@ package game;
 
 import godot.*;
 
+using gdscript.ArrayEx;
+
 @:tool
 class MapSprite extends Sprite2D {
 	@:exportToolButton("Build Map", "ColorRect")
@@ -94,7 +96,7 @@ class MapSprite extends Sprite2D {
 
 		handled_tiles = [];
 		handled_tiles.resize(level_data.width * level_data.height);
-		untyped __gdscript__("{0}.fill(0);", handled_tiles);
+		handled_tiles.fill(0);
 	}
 
 	function build_map() {

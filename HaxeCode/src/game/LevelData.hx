@@ -145,14 +145,7 @@ class LevelData extends Node {
 		}
 
 		// Find "clusters"
-		var new_index = 2;
-		for(x in 0...width) {
-			for(y in 0...height) {
-				if(recusive_set_area_id(x, y, new_index, 0)) {
-					new_index += 1;
-				}
-			}
-		}
+		find_clusters();
 
 		// Find the biggest cluster
 		var max_key = -1;
@@ -256,6 +249,12 @@ class LevelData extends Node {
 		tile_type_count = new Dictionary();
 	}
 
+	public function get_tile(x: Int, y: Int): Int {
+		if(x < 0 || x >= width || y < 0 || y >= height) return -1;
+		final index = (y * width) + x;
+		return tiles[index];
+	}
+
 	public function has_tile(x: Int, y: Int) {
 		if(x < 0 || x >= width || y < 0 || y >= height) return false;
 		final index = (y * width) + x;
@@ -266,25 +265,60 @@ class LevelData extends Node {
 		return has_tile(pos.x, pos.y);
 	}
 
-	function recusive_set_area_id(x: Int, y: Int, id: Int, depth: Int): Bool {
-		if(x < 0 || x >= width || y < 0 || y >= height) return false;
-		final index = (y * width) + x;
-		if(tiles[index] == 1) {
-			tiles[index] = id;
-			if(!tile_type_count.has(id)) {
-				tile_type_count.set(id, 0);
+	function find_clusters() {
+		var new_index = 2;
+		for(x in 0...width) {
+			for(y in 0...height) {
+				final index = (y * width) + x;
+
+				if(tiles[index] == 1) {
+					final up = get_tile(x, y - 1);
+					final down = get_tile(x, y + 1);
+					final left = get_tile(x - 1, y);
+					final right = get_tile(x + 1, y);
+
+					final options = [];
+					if(up > 2) options.push(up);
+					if(down > 2 && down != up) options.push(down);
+					if(left > 2 && left != up && left != down) options.push(left);
+					if(right > 2 && right != up && right != down && right != left) options.push(right);
+
+					final result = if(options.length == 1) {
+						options[0];
+					} else if(options.length == 0) {
+						final result = new_index;
+						if(!tile_type_count.has(result)) { tile_type_count.set(result, 0); }
+						new_index += 1;
+						result;
+					} else {
+						var min = options[0];
+						for(i in 1...options.length) {
+							if(options[i] < min) {
+								min = options[i];
+							}
+						}
+
+						for(option in options) {
+							if(option != min) {
+								convert_tiles(option, min);
+							}
+						}
+
+						min;
+					}
+
+					tiles[index] = result;
+					tile_type_count.set(result, tile_type_count.get(result) + 1);
+				}
 			}
-			tile_type_count.set(id, tile_type_count.get(id) + 1);
-			if(depth < 1020) {
-				final new_depth = depth + 1;
-				recusive_set_area_id(x + 1, y, id, new_depth);
-				recusive_set_area_id(x - 1, y, id, new_depth);
-				recusive_set_area_id(x, y + 1, id, new_depth);
-				recusive_set_area_id(x, y - 1, id, new_depth);
+		}
+	}
+
+	function convert_tiles(from: Int, to: Int) {
+		for(i in 0...tiles.length) {
+			if(tiles[i] == from) {
+				tiles[i] = to;
 			}
-			return true;
-		} else {
-			return false;
 		}
 	}
 

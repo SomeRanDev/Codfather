@@ -9,7 +9,8 @@ import godot.*;
 import GDScript as GD;
 
 class World extends Node3D {
-	@:const var SIGN_SCENE: PackedScene = GD.preload("res://Objects/NPCs/Interactables/Sign.tscn");
+	@:const(preload = "res://Objects/NPCs/Interactables/Sign.tscn")
+	var SIGN_SCENE: PackedScene;
 
 	@:export var level_data: LevelData;
 	@:export var dynamic_level_data: DynamicLevelData;
